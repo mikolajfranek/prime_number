@@ -2,16 +2,11 @@
 #include "SieveOfEratosthenes.h"
 using namespace std;
 
-SieveOfEratosthenes::SieveOfEratosthenes() {
-
-
-}
+SieveOfEratosthenes::SieveOfEratosthenes() {}
 
 void SieveOfEratosthenes::Factor(int n){
 	cout << n << endl;
 }
 
 
-SieveOfEratosthenes::~SieveOfEratosthenes() {
-
-}
+SieveOfEratosthenes::~SieveOfEratosthenes() {}
