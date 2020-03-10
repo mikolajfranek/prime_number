@@ -17,7 +17,6 @@ Prime number
 4. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Compiler => Miscellaneous => Other flags => Add "-lgmp -lgmpxx" (to the end of value)
 5. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C Compiler => Includes => Include paths => Add "${gmp_build}/include" 
 6. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C Compiler => Miscellaneous => Other flags => Add "-lgmp -lgmpxx" (to the end of value)
-
 7. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => Libraries => Libraries => Add "gmp"
 8. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => Libraries => Libraries => Add "gmpxx"
 9. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => Libraries => Libraries search path => Add "${gmp_build}/lib"
@@ -37,6 +36,9 @@ Prime number
 5. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => Libraries => Libraries => Add "benchmark"
 6. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => Libraries => Libraries search path => Add "${benchmark_build}/lib"
 7. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => General => Select Support for pthread
+8. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Compiler => Miscellaneous => Select Support for pthread
+9. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C Compiler => Miscellaneous => Select Support for pthread
 
 #### running benchmark in eclipse
 1. "sudo cpupower frequency-set --governor performance" => Disabling CPU Frequency Scaling
+2. Run => Run Configurations... => Arguments => Add value "--benchmark_format=json" to Program arguments
