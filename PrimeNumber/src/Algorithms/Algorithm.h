@@ -1,9 +1,4 @@
-/*
- * Algorithm.h
- *
- *  Created on: 8 mar 2020
- *      Author: ubuntu
- */
+#include "../Configurations/MyConfiguration.h"
 
 #ifndef ALGORITHMS_ALGORITHM_H_
 #define ALGORITHMS_ALGORITHM_H_
@@ -14,4 +9,4 @@ public:
 	virtual ~Algorithm();
 };
 
-#endif /* ALGORITHMS_ALGORITHM_H_ */
+#endif

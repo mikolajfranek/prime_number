@@ -1,10 +1,8 @@
-#include <iostream>
 #include "SieveOfEratosthenes.h"
-using namespace std;
 
 SieveOfEratosthenes::SieveOfEratosthenes() {}
 
-void SieveOfEratosthenes::Factor(int n){
+void SieveOfEratosthenes::Factor(mpz_t n){
 	cout << n << endl;
 }
 
