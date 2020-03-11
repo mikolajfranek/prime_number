@@ -6,7 +6,7 @@
 class SieveOfEratosthenes {
 public:
 	SieveOfEratosthenes();
-	void Factor(mpz_t n);
+	static void Factor(string n);
 	virtual ~SieveOfEratosthenes();
 };
 
