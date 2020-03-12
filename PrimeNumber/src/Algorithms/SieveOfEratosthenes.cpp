@@ -1,46 +1,43 @@
 #include "SieveOfEratosthenes.h"
-
 SieveOfEratosthenes::SieveOfEratosthenes() {}
 
 void SieveOfEratosthenes::Factor(string input){
-	const char *text = input.c_str();
 
+	//declare
 	mpz_t n;
 	mpz_t p;
 	mpz_t q;
 	mpz_t iterator;
-	mpz_t iterator_step;
-	mpz_t modulo;
 	mpz_t n_sqrt;
-	mpz_t n_div_iterator;
+	mpz_t n_mod_iterator;
 
-	mpz_init_set_str(n, text, 10);
+	//init
+	mpz_init_set_str(n, input.c_str(), 10);
 	mpz_init(p);
 	mpz_init(q);
-	mpz_init_set_str(iterator, "3", 10);
-	mpz_init_set_str(iterator_step, "2", 10);
-	mpz_init(modulo);
 	mpz_init(n_sqrt);
+	mpz_init(n_mod_iterator);
 
-	mpz_sqrt(n_sqrt, n);
-	while(iterator < n_sqrt){
-		mpz_mod(modulo, n, iterator);
-		if(modulo == 0){
+	//start algorithm
+	mpz_sqrt(n_sqrt, n); //Set n_sqrt to the truncated integer part of the square root of n.
+	for(mpz_init_set_str(iterator, "3", 10); mpz_cmp(iterator, n_sqrt) <= 0; mpz_add_ui(iterator, iterator, 2)){
+		mpz_mod(n_mod_iterator, n, iterator);
+		if(mpz_cmp_ui(n_mod_iterator, 0) == 0){
 			mpz_set(p, iterator);
-			mpz_div(n_div_iterator, n, iterator);
-			mpz_set(q, n_div_iterator);
-
-			gmp_printf("%Zd = %Zd * %Zd\n", n, p, q);
-			return;
+			mpz_div(q, n, iterator);
+			break;
 		}
-		mpz_add(iterator, iterator, iterator_step);
 	}
 
-	gmp_printf("%Zd = %Zd * %Zd\n", n, p, q);
+	Algorithm::CheckResult(n, p, q);
 
+	//clear
 	mpz_clear(n);
 	mpz_clear(p);
 	mpz_clear(q);
+	mpz_clear(iterator);
+	mpz_clear(n_sqrt);
+	mpz_clear(n_mod_iterator);
 }
 
 SieveOfEratosthenes::~SieveOfEratosthenes() {}

@@ -6,6 +6,7 @@
 class Algorithm {
 public:
 	Algorithm();
+	static void CheckResult(mpz_t n, mpz_t p, mpz_t q);
 	virtual ~Algorithm();
 };
 
