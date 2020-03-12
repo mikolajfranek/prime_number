@@ -38,6 +38,8 @@ Prime number
 7. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Linker => General => Select Support for pthread
 8. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Compiler => Miscellaneous => Select Support for pthread
 9. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C Compiler => Miscellaneous => Select Support for pthread
+10. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C++ Compiler => Miscellaneous => Other flags => Add "-lbenchmark"
+11. Project => Properties => C/C++ Build => Settings => Tool Settings => GCC C Compiler => Miscellaneous => Other flags => Add "-lbenchmark"
 
 #### running benchmark in eclipse
 1. "sudo cpupower frequency-set --governor performance" => Disabling CPU Frequency Scaling
