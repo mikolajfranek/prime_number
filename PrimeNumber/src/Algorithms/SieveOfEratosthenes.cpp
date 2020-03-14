@@ -1,43 +1,40 @@
 #include "SieveOfEratosthenes.h"
-SieveOfEratosthenes::SieveOfEratosthenes() {}
 
 void SieveOfEratosthenes::Factor(string input){
 
 	//declare
-	mpz_t n;
-	mpz_t p;
-	mpz_t q;
-	mpz_t iterator;
-	mpz_t n_sqrt;
-	mpz_t n_mod_iterator;
+	mpz_t z_n;
+	mpz_t z_p;
+	mpz_t z_q;
+	mpz_t z_iterator;
+	mpz_t z_nsqrt;
+	mpz_t z_nmoditerator;
 
 	//init
-	mpz_init_set_str(n, input.c_str(), 10);
-	mpz_init(p);
-	mpz_init(q);
-	mpz_init(n_sqrt);
-	mpz_init(n_mod_iterator);
+	mpz_init_set_str(z_n, input.c_str(), 10);
+	mpz_init(z_p);
+	mpz_init(z_q);
+	mpz_init(z_nsqrt);
+	mpz_init(z_nmoditerator);
 
 	//start algorithm
-	mpz_sqrt(n_sqrt, n); //Set n_sqrt to the truncated integer part of the square root of n.
-	for(mpz_init_set_str(iterator, "3", 10); mpz_cmp(iterator, n_sqrt) <= 0; mpz_add_ui(iterator, iterator, 2)){
-		mpz_mod(n_mod_iterator, n, iterator);
-		if(mpz_cmp_ui(n_mod_iterator, 0) == 0){
-			mpz_set(p, iterator);
-			mpz_div(q, n, iterator);
+	mpz_sqrt(z_nsqrt, z_n); //Set n_sqrt to the truncated integer part of the square root of n.
+	for(mpz_init_set_str(z_iterator, "3", 10); mpz_cmp(z_iterator, z_nsqrt) <= 0; mpz_add_ui(z_iterator, z_iterator, 2)){
+		mpz_mod(z_nmoditerator, z_n, z_iterator);
+		if(mpz_cmp_ui(z_nmoditerator, 0) == 0){
+			mpz_set(z_p, z_iterator);
+			mpz_div(z_q, z_n, z_iterator);
 			break;
 		}
 	}
 
-	Algorithm::CheckResult(n, p, q);
+	Algorithm::CheckResult(z_n, z_p, z_q);
 
 	//clear
-	mpz_clear(n);
-	mpz_clear(p);
-	mpz_clear(q);
-	mpz_clear(iterator);
-	mpz_clear(n_sqrt);
-	mpz_clear(n_mod_iterator);
+	mpz_clear(z_n);
+	mpz_clear(z_p);
+	mpz_clear(z_q);
+	mpz_clear(z_nsqrt);
+	mpz_clear(z_nmoditerator);
+	mpz_clear(z_iterator);
 }
-
-SieveOfEratosthenes::~SieveOfEratosthenes() {}
