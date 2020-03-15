@@ -4,9 +4,9 @@
 #include "Algorithms/Fermat.h"
 
 /* run benchmark macro */
-//BENCHMARK_MAIN();
+BENCHMARK_MAIN();
 
-int main(){
-	Fermat::Factor(MyConfiguration::GetSemiPrime(40));
-	return 0;
-}
+//int main(){
+	//Fermat::Factor(MyConfiguration::GetSemiPrime(40));
+	//return 0;
+//}

@@ -44,3 +44,4 @@ Prime number
 #### running benchmark in eclipse
 1. "sudo cpupower frequency-set --governor performance" => Disabling CPU Frequency Scaling
 2. Run => Run Configurations... => Arguments => Add value "--benchmark_format=json" to Program arguments
+3. "apt-get install gnulib"
