@@ -7,4 +7,4 @@ static void BM_Fermat(benchmark::State& state) {
 	}
 }
 /* register the function as benchmark with arguments */
-BENCHMARK(BM_Fermat)->Arg(10)->Arg(20)->Arg(40)->Arg(60)->Arg(80)->Arg(100);
+BENCHMARK(BM_Fermat)->Arg(10)->Arg(20)->Arg(30);
