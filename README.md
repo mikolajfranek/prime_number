@@ -2,7 +2,7 @@
 Prime number
 
 #### run eclipse
-/home/ubuntu/eclipse/cpp-2019-12/eclipse/eclipse
+"sudo nice -n -20 /home/ubuntu/eclipse/cpp-2019-12/eclipse/eclipse"
 
 #### install library gmp
 1. "./configure --prefix=${gmp_build} --build= --enable-cxx --with-gnu-ld" => Apparently if you don't explicitly tell GMP to build for your platform it builds everything, which is bad. The cxx option builds the C++ libraries and --with-gnu-ld allows it to work with ld.
