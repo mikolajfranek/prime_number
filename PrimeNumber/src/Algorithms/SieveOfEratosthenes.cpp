@@ -43,7 +43,6 @@ void SieveOfEratosthenes::Factor(string input){
 		}
 	}
 
-
 	Algorithm::CheckResult(z_n, z_p, z_q);
 
 	//clear

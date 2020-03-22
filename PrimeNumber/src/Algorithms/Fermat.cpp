@@ -4,6 +4,7 @@ void Fermat::Factor(string input){
 
 	//declare
 	mpz_t z_n;
+	mpz_t z_nmod2;
 	mpz_t z_p;
 	mpz_t z_q;
 	mpz_t z_y;
@@ -15,6 +16,7 @@ void Fermat::Factor(string input){
 
 	//init
 	mpz_init_set_str(z_n, input.c_str(), 10);
+	mpz_init(z_nmod2);
 	mpz_init(z_p);
 	mpz_init(z_q);
 	mpz_init(z_y);
@@ -25,26 +27,33 @@ void Fermat::Factor(string input){
 	mpz_init(z_xpow2minusn);
 
 	//start algorithm
-	mpz_sqrtrem(z_x, z_xrem, z_n);
-	if(mpz_cmp_ui(z_xrem, 0) != 0){
-		mpz_add_ui(z_x, z_x, 1);
-	}
-	while(true){
-		mpz_pow_ui(z_xpow2, z_x, 2);
-		mpz_sub(z_xpow2minusn, z_xpow2, z_n);
-		mpz_sqrtrem(z_y, z_yrem, z_xpow2minusn);
-		if(mpz_cmp_ui(z_yrem, 0) == 0){
-			mpz_sub(z_p, z_x, z_y);
-			mpz_add(z_q, z_x, z_y);
-			break;
+	mpz_mod_ui(z_nmod2, z_n, 2);
+	if(mpz_cmp_ui(z_nmod2, 0) == 0){
+		mpz_div_ui(z_q, z_n, 2);
+		mpz_set_ui(z_p, 2);
+	}else{
+		mpz_sqrtrem(z_x, z_xrem, z_n);
+		if(mpz_cmp_ui(z_xrem, 0) != 0){
+			mpz_add_ui(z_x, z_x, 1);
 		}
-		mpz_add_ui(z_x, z_x, 1);
+		while(true){
+			mpz_pow_ui(z_xpow2, z_x, 2);
+			mpz_sub(z_xpow2minusn, z_xpow2, z_n);
+			mpz_sqrtrem(z_y, z_yrem, z_xpow2minusn);
+			if(mpz_cmp_ui(z_yrem, 0) == 0){
+				mpz_add(z_q, z_x, z_y);
+				mpz_sub(z_p, z_x, z_y);
+				break;
+			}
+			mpz_add_ui(z_x, z_x, 1);
+		}
 	}
 
 	Algorithm::CheckResult(z_n, z_p, z_q);
 
 	//clear
 	mpz_clear(z_n);
+	mpz_clear(z_nmod2);
 	mpz_clear(z_p);
 	mpz_clear(z_q);
 	mpz_clear(z_y);
