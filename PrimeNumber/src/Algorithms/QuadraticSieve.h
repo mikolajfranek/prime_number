@@ -7,6 +7,11 @@
 class QuadraticSieve {
 public:
 	static void Factor(string n);
+
+	static bool Tonelli_Shanks(mpz_t n, mpz_t p);
+
+private:
+
 };
 
 #endif
