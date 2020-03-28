@@ -8,6 +8,7 @@ void QuadraticSieve::Factor(string input){
 	mpz_t z_nsqrt;
 	mpz_t z_p;
 	mpz_t z_q;
+	mpz_t z_iterator;
 
 	//init
 	mpz_init_set_str(z_n, input.c_str(), 10);
@@ -15,6 +16,7 @@ void QuadraticSieve::Factor(string input){
 	mpz_init(z_nsqrt);
 	mpz_init(z_p);
 	mpz_init(z_q);
+	mpz_init(z_iterator);
 
 	//start algorithm
 	mpz_mod_ui(z_nmod2, z_n, 2);
@@ -24,6 +26,24 @@ void QuadraticSieve::Factor(string input){
 	}else{
 		mpz_sqrt(z_nsqrt, z_n);
 
+
+		//wybierz B
+		//wubierz alfa
+
+		//utworz wektor do siewania
+		//utworz funkcje Qx
+		//zepelnij siewnik Qx
+
+		//dla kazdej liczby z bazy czynnikow:
+			//rozwiaz rownanie - Tonelli_Shanks
+			//rozwiazanie pozwala
+
+
+
+		//2, 23 - init condition failed
+		//17, 29 - ok
+		mpz_set_ui(z_iterator, 29);
+		Tonelli_Shanks(z_n, z_iterator);
 	}
 
 	Algorithm::CheckResult(z_n, z_p, z_q);
@@ -34,11 +54,14 @@ void QuadraticSieve::Factor(string input){
 	mpz_clear(z_nsqrt);
 	mpz_clear(z_p);
 	mpz_clear(z_q);
+	mpz_clear(z_iterator);
 }
 
 
 
 bool QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
+
+	bool result = false;
 
 
 	mpz_t m;
@@ -57,7 +80,7 @@ bool QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 	mpz_mod_ui(nmod4, p, 4);
 	if(mpz_cmp_ui(nmod4, 1) != 0 || mpz_jacobi(n, p) != 1){
 		gmp_printf("init condition failed\n");
-		return false;
+		//return false;
 	}
 	mpz_clear(nmod4);
 
@@ -122,47 +145,112 @@ bool QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 
 
 	gmp_printf(" n=%Zd, p=%Zd \n", n, p );
-	gmp_printf(" m=%Zd \n", m);
-	gmp_printf(" c=%Zd \n", c);
-	gmp_printf(" t=%Zd \n", t);
-	gmp_printf(" r=%Zd \n", r);
+	//gmp_printf(" m=%Zd \n", m);
+	//gmp_printf(" c=%Zd \n", c);
+	//gmp_printf(" t=%Zd \n", t);
+	//gmp_printf(" r=%Zd \n", r);
 
 
+	mpz_t b;
 	mpz_t tpow2;
+	mpz_t msub;
 	mpz_t tres;
 	mpz_t iterator;
+	mpz_t helper;
+	mpz_init(b);
 	mpz_init(tpow2);
+	mpz_init(msub);
 	mpz_init(tres);
 	mpz_init(iterator);
+	mpz_init(helper);
 
 
 //loop
 	while(true){
 		if(mpz_cmp_ui(t, 0) == 0){
 			gmp_printf(" FAILED r=0 \n");
+			result = false;
 			break;
 		}
 		if(mpz_cmp_ui(t, 1) == 0){
 			gmp_printf(" SUCCESS r=%Zd \n", r);
+			result = true;
 			break;
 		}
 
-		mpz_set_ui(iterator, 0);
-		while(mpz_cmp(iterator, t) < 0){
 
-			//todo
-			//t ^(2 ^(i)) # 1
+		mpz_set_ui(iterator, 1);
+		while(mpz_cmp(iterator, m) < 0){
+
+			//power
+			mpz_set_ui(tpow2, 2);
+			for(mpz_set_ui(helper, 2); mpz_cmp(helper, iterator) <= 0; mpz_add_ui(helper, helper, 1)){
+				mpz_mul_ui(tpow2, tpow2, 2);
+			}
+
+			//mul t
+			mpz_set(tres, t);
+			for(;mpz_cmp_ui(tpow2, 1) > 0; mpz_sub_ui(tpow2, tpow2, 1)){
+				mpz_mul(tres, tres, t);
+			}
+
+			//congruence
+			mpz_mod(tres, tres, p);
+			if(mpz_cmp_ui(tres, 1) == 0) break;
+
+
 			mpz_add_ui(iterator, iterator, 1);
 		}
 
+
+
+		//gmp_printf(" iterator=%Zd \n", iterator );
+
+
+		mpz_set(msub, m);
+		mpz_sub(msub, msub, iterator);
+		mpz_sub_ui(msub, msub, 1);
+
+
+
+		//power
+		mpz_set_ui(tpow2, 2);
+		for(mpz_set_ui(helper, 2); mpz_cmp(helper, msub) <= 0; mpz_add_ui(helper, helper, 1)){
+			mpz_mul_ui(tpow2, tpow2, 2);
+		}
+
+
+		//mul b
+		mpz_set(b, c);
+		if(mpz_cmp_ui(msub, 0) != 0){
+			for(;mpz_cmp_ui(tpow2, 1) > 0; mpz_sub_ui(tpow2, tpow2, 1)){
+				mpz_mul(b, b, c);
+			}
+		}
+		mpz_powm_ui(b, b, 1, p);
+
+
+
+		mpz_set(m, iterator);
+		mpz_powm_ui(m, m, 1, p);
+
+		mpz_powm_ui(c, b, 2, p);
+
+		mpz_mul(t, t, c);
+		mpz_powm_ui(t, t, 1, p);
+
+		mpz_mul(r, r, b);
+		mpz_powm_ui(r, r, 1, p);
+
+
 	}
 
+	mpz_clear(b);
 	mpz_clear(tpow2);
+	mpz_clear(msub);
 	mpz_clear(tres);
 	mpz_clear(iterator);
-
-
-
+	mpz_clear(helper);
 
 
 
@@ -171,7 +259,9 @@ bool QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 	mpz_clear(t);
 	mpz_clear(r);
 
-	return false;
+
+
+	return result;
 }
 
 
