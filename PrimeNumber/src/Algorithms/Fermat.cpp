@@ -3,63 +3,40 @@
 void Fermat::Factor(string input){
 
 	//declare
-	mpz_t z_n;
-	mpz_t z_nmod2;
-	mpz_t z_p;
-	mpz_t z_q;
-	mpz_t z_y;
-	mpz_t z_yrem;
-	mpz_t z_x;
-	mpz_t z_xrem;
-	mpz_t z_xpow2;
-	mpz_t z_xpow2minusn;
+	mpz_t n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn;
 
 	//init
-	mpz_init_set_str(z_n, input.c_str(), 10);
-	mpz_init(z_nmod2);
-	mpz_init(z_p);
-	mpz_init(z_q);
-	mpz_init(z_y);
-	mpz_init(z_yrem);
-	mpz_init(z_x);
-	mpz_init(z_xrem);
-	mpz_init(z_xpow2);
-	mpz_init(z_xpow2minusn);
+	mpz_inits(n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn);
+
+	//set
+	mpz_set_str(n, input.c_str(), 10);
 
 	//start algorithm
-	mpz_mod_ui(z_nmod2, z_n, 2);
-	if(mpz_cmp_ui(z_nmod2, 0) == 0){
-		mpz_div_ui(z_q, z_n, 2);
-		mpz_set_ui(z_p, 2);
+	mpz_mod_ui(nmod2, n, 2);
+	if(mpz_cmp_ui(nmod2, 0) == 0){
+		mpz_div_ui(q, n, 2);
+		mpz_set_ui(p, 2);
 	}else{
-		mpz_sqrtrem(z_x, z_xrem, z_n);
-		if(mpz_cmp_ui(z_xrem, 0) != 0){
-			mpz_add_ui(z_x, z_x, 1);
+		mpz_sqrtrem(x, xrem, n);
+		if(mpz_cmp_ui(xrem, 0) != 0){
+			mpz_add_ui(x, x, 1);
 		}
 		while(true){
-			mpz_pow_ui(z_xpow2, z_x, 2);
-			mpz_sub(z_xpow2minusn, z_xpow2, z_n);
-			mpz_sqrtrem(z_y, z_yrem, z_xpow2minusn);
-			if(mpz_cmp_ui(z_yrem, 0) == 0){
-				mpz_add(z_q, z_x, z_y);
-				mpz_sub(z_p, z_x, z_y);
+			mpz_pow_ui(xpow2, x, 2);
+			mpz_sub(xpow2minusn, xpow2, n);
+			mpz_sqrtrem(y, yrem, xpow2minusn);
+			if(mpz_cmp_ui(yrem, 0) == 0){
+				mpz_add(q, x, y);
+				mpz_sub(p, x, y);
 				break;
 			}
-			mpz_add_ui(z_x, z_x, 1);
+			mpz_add_ui(x, x, 1);
 		}
 	}
 
-	Algorithm::CheckResult(z_n, z_p, z_q);
+	//check
+	Algorithm::CheckResult(n, p, q);
 
 	//clear
-	mpz_clear(z_n);
-	mpz_clear(z_nmod2);
-	mpz_clear(z_p);
-	mpz_clear(z_q);
-	mpz_clear(z_y);
-	mpz_clear(z_yrem);
-	mpz_clear(z_x);
-	mpz_clear(z_xrem);
-	mpz_clear(z_xpow2);
-	mpz_clear(z_xpow2minusn);
+	mpz_clears(n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn);
 }

@@ -18,7 +18,9 @@ int main(){
 	//mpz_clear(n);
 	//mpz_clear(p);
 
-	QuadraticSieve::Factor("15347");
+	//QuadraticSieve::Factor("15347");
+
+	Fermat::Factor("15347");
 
 	return 0;
 }
