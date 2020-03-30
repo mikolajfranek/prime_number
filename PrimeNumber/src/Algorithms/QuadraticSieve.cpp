@@ -1,5 +1,7 @@
 #include "QuadraticSieve.h"
 
+#include <math.h>
+
 void QuadraticSieve::Factor(string input){
 
 	//declare
@@ -20,6 +22,7 @@ void QuadraticSieve::Factor(string input){
 	mpz_init(z_q);
 	mpz_init(z_prime);
 
+
 	//start algorithm
 	mpz_mod_ui(z_nmod2, z_n, 2);
 	if(mpz_cmp_ui(z_nmod2, 0) == 0){
@@ -33,53 +36,130 @@ void QuadraticSieve::Factor(string input){
 			mpz_add_ui(z_nsqrt, z_nsqrt, 1);
 		}
 
+		int size = 30;
 
-		mpz_t R[100];
-		for(int i=0;i<100;i++) mpz_init2(R[i], sizeof(mpz_t));
 
-		for(int i=0;i<100;i++){
+		mpz_t R[size];
+		mpz_t V[size];
+		for(int i=0;i<size;i++) mpz_init2(R[i], sizeof(mpz_t));
+		for(int i=0;i<size;i++) mpz_init2(V[i], sizeof(mpz_t));
+
+		for(int i=0;i<size;i++){
 			 mpz_set_ui(R[i], i);
 			 mpz_add(R[i], R[i], z_nsqrt);
 			 mpz_pow_ui(R[i], R[i], 2);
 			 mpz_sub(R[i], R[i], z_n);
+			 mpz_set(V[i], R[i]);
 		}
 
 
 
-		int primes[4] = {2,17,23,29};
-		for(int j = 0; j < 4; j++){
 
-			mpz_set_ui(z_prime, primes[j]);
+		int primes[] = {2,3,5,7,11,13,17,19,23,29,31,37,37,41,43,47,53,59,61,67,71, 73, 79, 83, 89, 97};
+		int selected[10];
+		int z = 0;
+		for(int i = 0; i < sizeof(primes)/2 ; i++){
+			mpz_set_ui(z_prime, primes[i]);
+			if(mpz_jacobi(z_n, z_prime) == 1){
+				selected[z++] = primes[i];
+			}
+		}
+
+
+
+
+		int countPrime = z;
+		for(int j = 0; j < countPrime+1; j++){
+
+			mpz_set_ui(z_prime, selected[j]);
 
 			//for p > 2 there is two result
 			long r1, r2;
 			Tonelli_Shanks(z_n, z_prime, r1, r2);
 
-
-			if(r1 != -1){
-				cout << r1 << endl;
-				r1 = (r1  - mpz_get_ui(z_nsqrt)) % primes[j];
-				cout << r1 << endl;
-
-				for(int x = r1; x < 100; x+=primes[j]){
+			if(selected[j] == 2){
+				for(int x = r1; x < size; x+=primes[j]){
 					mpz_div_ui(R[x], R[x], primes[j]);
 				}
-			}
+			}else{
+				if(r1 != -1){
+					r1 = (r1  - (long)mpz_get_ui(z_nsqrt)) % (long)selected[j];
+					r1 = r1 < 0 ? r1 + selected[j] : r1;
+					for(int x = r1; x < size; x+=selected[j]){
+						mpz_div_ui(R[x], R[x], selected[j]);
+					}
+				}
 
-			if(r2 != -1){
-				cout << r2 << endl;
-				r2 = (r2  - mpz_get_ui(z_nsqrt)) ;
-				cout << r2 << endl;
+				if(r2 != -1){
+					r2 = (r2  - (long)mpz_get_ui(z_nsqrt)) % (long)selected[j];
+					r2 = r2 < 0 ? r2 + selected[j] : r2;
 
-				for(int x = r2; x < 100; x+=primes[j]){
-					mpz_div_ui(R[x], R[x], primes[j]);
+					for(int x = r2; x < size; x+=selected[j]){
+						mpz_div_ui(R[x], R[x], selected[j]);
+					}
 				}
 			}
-
 
 		}
+		//how many R[i] = 1 must be?
+		//for(int i=0;i<size;i++) cout << R[i] << endl;
 
-		//for(int i=0;i<100;i++) cout << R[i] << endl;
+
+		//prepare X i Y
+		int x[3] = {0,0,0};
+		int y[3] = {0,0,0};
+
+		int j = 0;
+		for(int i=0;i<size;i++){
+			if((long)mpz_get_ui(R[i]) ==1){
+				x[j] = i +  (long)mpz_get_ui(z_nsqrt);
+				y[j++] = (long)mpz_get_ui(V[i]);
+				cout << j << endl;
+			}
+		}
+
+		return;
+
+
+
+
+		int s[3] = {0,0,0};
+		double matrix[4][4] = {
+				{0.0,0.0,0.0,0.0},
+				{0.0,0.0,0.0,0.0},
+				{0.0,0.0,0.0,0.0},
+				{0.0,0.0,0.0,0.0}
+		};
+
+
+
+		for(int i=0;i<4;i++) {
+			for(int j = 0; j < countPrime+1; j++){
+				if(y[i] % (int)primes[j] == 0){
+					matrix[i][j] = 1.0;
+					y[i] /= (int)primes[j];
+				}
+			}
+		}
+
+
+		//show matrix
+		for(int i=0;i<3;i++){
+			for(int j=0;j<4;j++){
+				cout << matrix[i][j];
+			}
+			cout << endl;
+		}
+
+		int zero[4] = {0,0,0,0};
+
+
+//
+		//solve equation
+		//gaussianElimination(matrix);
+
+
+
 
 		return;
 
@@ -88,30 +168,9 @@ void QuadraticSieve::Factor(string input){
 
 
 
+		for(int i=0;i<size;i++) mpz_clear(V[i]);
+		for(int i=0;i<size;i++) mpz_clear(R[i]);
 
-		for(int i=0;i<100;i++) mpz_clear(R[i]);
-
-
-
-
-
-		//wybierz B
-		//wubierz alfa
-
-		//utworz wektor do siewania
-		//utworz funkcje Qx
-		//zepelnij siewnik Qx
-
-		//dla kazdej liczby z bazy czynnikow:
-			//rozwiaz rownanie - Tonelli_Shanks
-			//rozwiazanie pozwala
-
-
-
-		//2, 23 - init condition failed
-		//17, 29 - ok
-		//mpz_set_ui(z_iterator, 29);
-		//Tonelli_Shanks(z_n, z_iterator);
 	}
 
 	Algorithm::CheckResult(z_n, z_p, z_q);
@@ -127,6 +186,134 @@ void QuadraticSieve::Factor(string input){
 }
 
 
+// function to get matrix content
+void QuadraticSieve::gaussianElimination(double mat[N][N+1])
+{
+    /* reduction into r.e.f. */
+    int singular_flag = forwardElim(mat);
+
+    /* if matrix is singular */
+    if (singular_flag != -1)
+    {
+        printf("Singular Matrix.\n");
+
+        /* if the RHS of equation corresponding to
+           zero row  is 0, * system has infinitely
+           many solutions, else inconsistent*/
+        if (mat[singular_flag][N])
+            printf("Inconsistent System.");
+        else
+            printf("May have infinitely many "
+                   "solutions.");
+
+        return;
+    }
+
+    /* get solution to system and print it using
+       backward substitution */
+    backSub(mat);
+}
+
+// function for elementary operation of swapping two rows
+void  QuadraticSieve::swap_row(double mat[N][N+1], int i, int j)
+{
+    //printf("Swapped rows %d and %d\n", i, j);
+
+    for (int k=0; k<=N; k++)
+    {
+        double temp = mat[i][k];
+        mat[i][k] = mat[j][k];
+        mat[j][k] = temp;
+    }
+}
+
+// function to print matrix content at any stage
+void  QuadraticSieve::print(double mat[N][N+1])
+{
+    for (int i=0; i<N; i++, printf("\n"))
+        for (int j=0; j<=N; j++)
+            printf("%lf ", mat[i][j]);
+
+    printf("\n");
+}
+
+// function to reduce matrix to r.e.f.
+int  QuadraticSieve::forwardElim(double mat[N][N+1])
+{
+    for (int k=0; k<N; k++)
+    {
+        // Initialize maximum value and index for pivot
+        int i_max = k;
+        int v_max = mat[i_max][k];
+
+        /* find greater amplitude for pivot if any */
+        for (int i = k+1; i < N; i++)
+            if (abs(mat[i][k]) > v_max)
+                v_max = mat[i][k], i_max = i;
+
+        /* if a prinicipal diagonal element  is zero,
+         * it denotes that matrix is singular, and
+         * will lead to a division-by-zero later. */
+        if (!mat[k][i_max])
+            return k; // Matrix is singular
+
+        /* Swap the greatest value row with current row */
+        if (i_max != k)
+            swap_row(mat, k, i_max);
+
+
+        for (int i=k+1; i<N; i++)
+        {
+            /* factor f to set current row kth element to 0,
+             * and subsequently remaining kth column to 0 */
+            double f = mat[i][k]/mat[k][k];
+
+            /* subtract fth multiple of corresponding kth
+               row element*/
+            for (int j=k+1; j<=N; j++)
+                mat[i][j] -= mat[k][j]*f;
+
+            /* filling lower triangular matrix with zeros*/
+            mat[i][k] = 0;
+        }
+
+        //print(mat);        //for matrix state
+    }
+    //print(mat);            //for matrix state
+    return -1;
+}
+
+// function to calculate the values of the unknowns
+void  QuadraticSieve::backSub(double mat[N][N+1])
+{
+    double x[N];  // An array to store solution
+
+    /* Start calculating from last equation up to the
+       first */
+    for (int i = N-1; i >= 0; i--)
+    {
+        /* start with the RHS of the equation */
+        x[i] = mat[i][N];
+
+        /* Initialize j to i+1 since matrix is upper
+           triangular*/
+        for (int j=i+1; j<N; j++)
+        {
+            /* subtract all the lhs values
+             * except the coefficient of the variable
+             * whose value is being calculated */
+            x[i] -= mat[i][j]*x[j];
+        }
+
+        /* divide the RHS by the coefficient of the
+           unknown being calculated */
+        x[i] = x[i]/mat[i][i];
+    }
+
+    printf("\nSolution for the system:\n");
+    for (int i=0; i<N; i++)
+        printf("%lf\n", x[i]);
+}
 
 void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
 
@@ -147,7 +334,7 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
 		gmp_printf("init condition failed\n");
 		r1 = -1;
 		r2 = -1;
-		//return false;
+		return;
 	}
 	mpz_clear(nmod4);
 
