@@ -12,13 +12,12 @@ public:
 
 
 
-#define N 3
+#define M 10
 
-	static void gaussianElimination(double mat[N][N+1]);
-	static void  swap_row(double mat[N][N+1], int i, int j);
-	static void  print(double mat[N][N+1]);
-	static int  forwardElim(double mat[N][N+1]);
-	static void  backSub(double mat[N][N+1]);
+	static void PrintMatrix(float a[][M], int n);
+	static int PerformOperation(float a[][M], int n);
+	static void PrintResult(float a[][M], int n, int flag);
+	static int CheckConsistency(float a[][M], int n, int flag);
 
 
 private:
