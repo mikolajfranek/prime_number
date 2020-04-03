@@ -18,6 +18,8 @@ int main(){
 	//mpz_clear(n);
 	//mpz_clear(p);
 
+	//15347
+
 	QuadraticSieve::Factor("15347");
 
 

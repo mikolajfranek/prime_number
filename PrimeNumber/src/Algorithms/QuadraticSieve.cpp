@@ -2,39 +2,61 @@
 
 #include <math.h>
 
+
 void QuadraticSieve::Factor(string input){
 
 	//declare
-	mpz_t z_n;
-	mpz_t z_nmod2;
-	mpz_t z_nsqrt;
-	mpz_t z_nsqrtrem;
-	mpz_t z_p;
-	mpz_t z_q;
-	mpz_t z_prime;
+	mpz_t n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2;
 
 	//init
-	mpz_init_set_str(z_n, input.c_str(), 10);
-	mpz_init(z_nmod2);
-	mpz_init(z_nsqrt);
-	mpz_init(z_nsqrtrem);
-	mpz_init(z_p);
-	mpz_init(z_q);
-	mpz_init(z_prime);
+	mpz_inits(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
 
+	//set
+	mpz_init_set_str(n, input.c_str(), 10);
 
 	//start algorithm
-	mpz_mod_ui(z_nmod2, z_n, 2);
-	if(mpz_cmp_ui(z_nmod2, 0) == 0){
-		mpz_div_ui(z_q, z_n, 2);
-		mpz_set_ui(z_p, 2);
+	mpz_mod_ui(nmod2, n, 2);
+	if(mpz_cmp_ui(nmod2, 0) == 0){
+		mpz_div_ui(q, n, 2);
+		mpz_set_ui(p, 2);
 	}else{
-
-		mpz_sqrt(z_nsqrt, z_n);
-		mpz_sqrtrem(z_nsqrt, z_nsqrtrem, z_n);
-		if(mpz_cmp_ui(z_nsqrt, 0) != 0){
-			mpz_add_ui(z_nsqrt, z_nsqrt, 1);
+		mpz_sqrtrem(nsqrt, nsqrtrem, n);
+		if(mpz_cmp_ui(nsqrtrem, 0) != 0){
+			mpz_add_ui(nsqrt, nsqrt, 1);
 		}
+
+
+
+
+
+
+
+		//work on select primes?
+		int b = 30;
+		int m = 100;
+
+		//(p-1)/2
+		mpz_sub_ui(temp1, n, 1);
+		mpz_div_ui(temp1, temp1, 2);
+
+		cout << "start" << endl;
+
+		for(mpz_set_ui(iterator, 1); mpz_cmp_ui(iterator, b) <= 0; mpz_add_ui(iterator, iterator, 1)){
+			mpz_powm(temp2, iterator, temp1, nsqrt);
+			if(mpz_cmp_ui(temp2, 1) == 0){
+				gmp_printf("Quadratic residue of n is %Zd\n", iterator);
+			}
+		}
+
+
+		mpz_clears(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
+
+
+cout << "__" << endl;
+		return;
+
+
+		cout << "???" << endl;
 
 		int size = 100;
 
@@ -45,51 +67,23 @@ void QuadraticSieve::Factor(string input){
 
 		for(int i=0;i<size;i++){
 			 mpz_set_si(R[i], i);
-			 mpz_add(R[i], R[i], z_nsqrt);
+			 mpz_add(R[i], R[i], nsqrt);
 			 mpz_pow_ui(R[i], R[i], 2);
-			 mpz_sub(R[i], R[i], z_n);
+			 mpz_sub(R[i], R[i], n);
 			 mpz_set(V[i], R[i]);
 		}
 
-/*
-		int countPrime = 25;
 
-		int primes[] = {2, 3, 5, 7, 11,
-				13, 17, 19, 23, 29,
-				31, 37, 41, 43, 47,
-				53, 59, 61, 67, 71,
-				73, 79, 83, 89, 97};
-		int selected[countPrime];
-		int z = 0;
-		int t = 0;
-		for(int i = 0; i < countPrime; i++){
-			mpz_set_ui(z_prime, primes[i]);
-			if(mpz_jacobi(z_prime, z_n) == 1){
-				selected[z++] = primes[i];
-				t++;
-			}else{
-				selected[z++] = 0;
-			}
-		}
-
-		int ppp[];
-
-		int w =0;
-		for(int j = 0; j < countPrime; j++){
-			if(selected[j]!=0) ppp[w++] = selected[j];
-		}
-
-		*/
 		int countPrime = 4;
 		int ppp[] = {2, 17, 23, 29};
 
 		for(int j = 0; j < countPrime; j++){
 
-			mpz_set_si(z_prime, ppp[j]);
+			mpz_set_si(temp1, ppp[j]);
 
 			//for p > 2 there is two result
 			long r1, r2;
-			Tonelli_Shanks(z_n, z_prime, r1, r2);
+			Tonelli_Shanks(n, temp1, r1, r2);
 
 			cout << r1 << " -- " << r2 << endl;
 
@@ -99,7 +93,7 @@ void QuadraticSieve::Factor(string input){
 				}
 			}else{
 				if(r1 != -1){
-					r1 = (r1  - (long)mpz_get_ui(z_nsqrt)) % (long)ppp[j];
+					r1 = (r1  - (long)mpz_get_ui(nsqrt)) % (long)ppp[j];
 					r1 = r1 < 0 ? r1 + ppp[j] : r1;
 					for(int x = r1; x < size; x+=ppp[j]){
 						mpz_div_ui(R[x], R[x], ppp[j]);
@@ -107,7 +101,7 @@ void QuadraticSieve::Factor(string input){
 				}
 
 				if(r2 != -1){
-					r2 = (r2  - (long)mpz_get_ui(z_nsqrt)) % (long)ppp[j];
+					r2 = (r2  - (long)mpz_get_ui(nsqrt)) % (long)ppp[j];
 					r2 = r2 < 0 ? r2 + ppp[j] : r2;
 
 					for(int x = r2; x < size; x+=ppp[j]){
@@ -121,18 +115,18 @@ void QuadraticSieve::Factor(string input){
 
 
 
-		//prepare X i Y
+		//124, 127, 195
 		int x[3] = {0,0,0};
 
 
 		//29, 782, 22678
-		int y[3] = {0,0,0};
+		int Q[3] = {0,0,0};
 
 		int j = 0;
 		for(int i=0;i<size;i++){
 			if((long)mpz_get_ui(R[i]) ==1){
-				x[j] = i +  (long)mpz_get_ui(z_nsqrt);
-				y[j++] = (long)mpz_get_ui(V[i]);
+				x[j] = i +  (long)mpz_get_ui(nsqrt);
+				Q[j++] = (long)mpz_get_ui(V[i]);
 
 			}
 		}
@@ -141,18 +135,18 @@ void QuadraticSieve::Factor(string input){
 
 		int s[3] = {0,0,0};
 		float matrix[M][M] = {
-				{0,0,0,0, 1,0,0},
-				{0,0,0,0, 0,1,0},
-				{0,0,0,0, 0,0,1},
+				{0,0,0,0, 0},
+				{0,0,0,0, 0},
+				{0,0,0,0, 0},
 		};
 
 
 
 		for(int i=0;i<3;i++) {
 			for(int j = 0; j < 4; j++){
-				if(y[i] % (int)ppp[j] == 0){
+				if(Q[i] % (int)ppp[j] == 0){
 					matrix[i][j] = 1.0;
-					y[i] /= (int)ppp[j];
+					//q[i] /= (int)ppp[j];
 				}
 			}
 		}
@@ -160,43 +154,41 @@ void QuadraticSieve::Factor(string input){
 
 		//show matrix
 		for(int i=0;i<3;i++){
-			for(int j=0;j<7;j++){
+			for(int j=0;j<5;j++){
 				cout << matrix[i][j];
 			}
 			cout << endl;
 		}
 
+		int nn = 2, flag = 0;
+		flag = PerformOperation(matrix, nn);
 
-		// Order of Matrix(n)
-		int n = 3, flag = 0;
-
-		// Performing Matrix transformation
-		flag = PerformOperation(matrix, n);
-
-		//if (flag == 1)
-			//flag = CheckConsistency(matrix, n, flag);
-
-		// Printing Final Matrix
-		cout << "Final Augumented Matrix is : " << endl;
-		PrintMatrix(matrix, n);
 		cout << endl;
+		//show matrix
 
+		long a = 1;
+		long bb = 1;
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++){
+				a = a * (int)(x[j]*matrix[i][j]);
+				bb = bb * (int)(Q[j]*matrix[i][j]);
+			}
+			break;
+		}
 
-//
-		//left null space
-		//gauss
-		//in equation is mod2
+		bb = sqrt(bb);
 
-		//from vectors build
-			//a=...
-			//b=...
-			//check a^2 = b^2
+		//cout << a << endl;
+		//cout << b << endl;
+		//cout << mpz_get_ui(z_n) << endl;
 
+		mpz_set_ui(p, a-bb);
+		mpz_set_ui(q, mpz_get_ui(n) );
 
-		return;
+		//gcd
+		mpz_gcd(p, p, q);
 
-
-
+		mpz_div(q, n, p);
 
 
 
@@ -205,16 +197,18 @@ void QuadraticSieve::Factor(string input){
 
 	}
 
-	Algorithm::CheckResult(z_n, z_p, z_q);
+	Algorithm::CheckResult(n, p, q);
 
 	//clear
-	mpz_clear(z_n);
-	mpz_clear(z_nmod2);
-	mpz_clear(z_nsqrt);
-	mpz_clear(z_nsqrtrem);
-	mpz_clear(z_p);
-	mpz_clear(z_q);
-	mpz_clear(z_prime);
+	mpz_clear(n);
+	mpz_clear(nmod2);
+	mpz_clear(nsqrt);
+	mpz_clear(nsqrtrem);
+	mpz_clear(p);
+	mpz_clear(q);
+	mpz_clear(temp1);
+
+
 }
 
 
