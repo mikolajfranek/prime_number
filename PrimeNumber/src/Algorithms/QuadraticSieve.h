@@ -14,9 +14,7 @@ public:
 
 #define M 10
 
-	static void PrintMatrix(float a[][M], int n);
 	static int PerformOperation(float a[][M], int n);
-	static void PrintResult(float a[][M], int n, int flag);
 	static int CheckConsistency(float a[][M], int n, int flag);
 
 

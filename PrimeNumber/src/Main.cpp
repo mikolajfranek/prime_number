@@ -7,7 +7,7 @@
 /* run benchmark macro */
 //BENCHMARK_MAIN();
 
-int main(){
+int main(int argc, char *argv[]){
 
 	//mpz_t n, p;
 	//mpz_init_set_str(n, "5", 10);
@@ -20,7 +20,7 @@ int main(){
 
 	//15347
 
-	QuadraticSieve::Factor("15347");
+	QuadraticSieve::Factor("11");
 
 
 	return 0;

@@ -1,8 +1,5 @@
 #include "QuadraticSieve.h"
 
-#include <math.h>
-
-
 void QuadraticSieve::Factor(string input){
 
 	//declare
@@ -13,21 +10,16 @@ void QuadraticSieve::Factor(string input){
 
 	//set
 	mpz_init_set_str(n, input.c_str(), 10);
-
 	//start algorithm
 	mpz_mod_ui(nmod2, n, 2);
-	if(mpz_cmp_ui(nmod2, 0) == 0){
-		mpz_div_ui(q, n, 2);
-		mpz_set_ui(p, 2);
-	}else{
+	//if(mpz_cmp_ui(nmod2, 0) == 0){
+		//mpz_div_ui(q, n, 2);
+		//mpz_set_ui(p, 2);
+	//}else{
 		mpz_sqrtrem(nsqrt, nsqrtrem, n);
 		if(mpz_cmp_ui(nsqrtrem, 0) != 0){
 			mpz_add_ui(nsqrt, nsqrt, 1);
 		}
-
-
-
-
 
 
 
@@ -39,9 +31,9 @@ void QuadraticSieve::Factor(string input){
 		mpz_sub_ui(temp1, n, 1);
 		mpz_div_ui(temp1, temp1, 2);
 
-		cout << "start" << endl;
 
-		for(mpz_set_ui(iterator, 1); mpz_cmp_ui(iterator, b) <= 0; mpz_add_ui(iterator, iterator, 1)){
+
+		for(mpz_set_ui(iterator, 0); mpz_cmp_ui(iterator, 15) <= 0; mpz_add_ui(iterator, iterator, 1)){
 			mpz_powm(temp2, iterator, temp1, nsqrt);
 			if(mpz_cmp_ui(temp2, 1) == 0){
 				gmp_printf("Quadratic residue of n is %Zd\n", iterator);
@@ -49,15 +41,17 @@ void QuadraticSieve::Factor(string input){
 		}
 
 
+		gmp_printf("This is not end of program\n");
 		mpz_clears(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
-
-
-cout << "__" << endl;
+		gmp_printf("End of program\n");
 		return;
+	//}
+}
 
 
-		cout << "???" << endl;
 
+
+		/*
 		int size = 100;
 
 		mpz_t R[size];
@@ -207,23 +201,9 @@ cout << "__" << endl;
 	mpz_clear(p);
 	mpz_clear(q);
 	mpz_clear(temp1);
+	*/
 
 
-}
-
-
-
-
-
-// Function to print the matrix
-void QuadraticSieve::PrintMatrix(float a[][M], int n)
-{
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j <= n; j++)
-          cout << a[i][j] << " ";
-        cout << endl;
-    }
-}
 
 // function to reduce matrix to reduced
 // row echelon form.
@@ -265,27 +245,6 @@ int QuadraticSieve::PerformOperation(float a[][M], int n)
     return flag;
 }
 
-// Function to print the desired result
-// if unique solutions exists, otherwise
-// prints no solution or infinite solutions
-// depending upon the input given.
-void QuadraticSieve::PrintResult(float a[][M], int n, int flag)
-{
-    cout << "Result is : ";
-
-    if (flag == 2)
-      cout << "Infinite Solutions Exists" << endl;
-    else if (flag == 3)
-      cout << "No Solution Exists" << endl;
-
-
-    // Printing the solution by dividing constants by
-    // their respective diagonal elements
-    else {
-        for (int i = 0; i < n; i++)
-            cout << a[i][n] / a[i][i] << " ";
-    }
-}
 
 // To check whether infinite solutions
 // exists or no solution exists
@@ -517,5 +476,6 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
 	mpz_clear(t);
 	mpz_clear(r);
 }
+
 
 

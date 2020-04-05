@@ -17,8 +17,6 @@ using namespace std;
 
 class MyConfiguration {
 public:
-	enum NUMBER_FACTORING {SIEVE_OF_ERATOSTHENES, FERMAT};
-	enum PRIMALITY_TESTING {EXAMPLE};
 	static string GetSemiPrime(int numberOfDigits);
 };
 
