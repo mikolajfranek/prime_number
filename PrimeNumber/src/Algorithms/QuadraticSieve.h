@@ -19,6 +19,10 @@ public:
 
 
 private:
+	static bool InputHasFormPowPToM(mpz_t n);
+
+
+
 	//static bool EulerCriterion(mpz_t a, mpz_t p, mpz_t exp, mpz_t tem);
 };
 

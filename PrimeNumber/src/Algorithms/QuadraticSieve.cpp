@@ -1,5 +1,35 @@
 #include "QuadraticSieve.h"
 
+/* TODO resolve problem with 'no source available' - then use inits and clears */
+bool QuadraticSieve::InputHasFormPowPToM(mpz_t n){
+	bool result = false;
+
+	//declare
+	mpz_t root, rem;
+
+	//init
+	mpz_inits(root, rem);
+	//mpz_init(root);
+	//mpz_init(rem);
+
+	for(long m = 2; ;m++){
+		mpz_rootrem(root, rem, n, m);
+		if(mpz_cmp_ui(rem, 0) == 0){
+			result = true;
+			break;
+		}else if(mpz_cmp_ui(root, 1) == 0){
+			break;
+		}
+	}
+
+	//clear
+	mpz_clears(root, rem);
+	//mpz_clear(root);
+	//mpz_clear(rem);
+
+	return result;
+}
+
 void QuadraticSieve::Factor(string input){
 
 	//declare
@@ -9,17 +39,23 @@ void QuadraticSieve::Factor(string input){
 	mpz_inits(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
 
 	//set
-	mpz_init_set_str(n, input.c_str(), 10);
+	mpz_set_str(n, input.c_str(), 10);
+
 	//start algorithm
 	mpz_mod_ui(nmod2, n, 2);
-	//if(mpz_cmp_ui(nmod2, 0) == 0){
-		//mpz_div_ui(q, n, 2);
-		//mpz_set_ui(p, 2);
-	//}else{
+	if(mpz_cmp_ui(nmod2, 0) == 0){
+		mpz_div_ui(q, n, 2);
+		mpz_set_ui(p, 2);
+	}else if(InputHasFormPowPToM(n)){
+		gmp_printf("Invalid input\n");
+	}else{
 		mpz_sqrtrem(nsqrt, nsqrtrem, n);
 		if(mpz_cmp_ui(nsqrtrem, 0) != 0){
 			mpz_add_ui(nsqrt, nsqrt, 1);
 		}
+		gmp_printf("End of program\n");
+
+
 
 
 
@@ -42,10 +78,16 @@ void QuadraticSieve::Factor(string input){
 
 
 		gmp_printf("This is not end of program\n");
-		mpz_clears(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
-		gmp_printf("End of program\n");
-		return;
-	//}
+
+	}
+
+
+
+	//clear
+	mpz_clears(n, nmod2, nsqrt, nsqrtrem, p, q, iterator, temp1, temp2);
+
+	gmp_printf("End of program\n");
+	return;
 }
 
 

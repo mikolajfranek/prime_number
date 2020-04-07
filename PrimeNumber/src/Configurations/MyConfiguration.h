@@ -1,3 +1,6 @@
+#ifndef CONFIGURATIONS_MYCONFIGURATION_H_
+#define CONFIGURATIONS_MYCONFIGURATION_H_
+
 /* general */
 #include <string>
 #include <iostream>
@@ -11,9 +14,6 @@
 
 /* using */
 using namespace std;
-
-#ifndef CONFIGURATIONS_MYCONFIGURATION_H_
-#define CONFIGURATIONS_MYCONFIGURATION_H_
 
 class MyConfiguration {
 public:

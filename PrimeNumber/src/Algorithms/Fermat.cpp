@@ -3,10 +3,10 @@
 void Fermat::Factor(string input){
 
 	//declare
-	mpz_t n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn;
+	mpz_t n, nmod2, q, p, y, yrem, x, xrem, xpow2, xpow2minusn;
 
 	//init
-	mpz_inits(n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn);
+	mpz_inits(n, nmod2, q, p, y, yrem, x, xrem, xpow2, xpow2minusn);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
@@ -35,8 +35,8 @@ void Fermat::Factor(string input){
 	}
 
 	//check
-	Algorithm::CheckResult(n, p, q);
+	Algorithm::CheckResult(n, q, p);
 
 	//clear
-	mpz_clears(n, nmod2, p, q, y, yrem, x, xrem, xpow2, xpow2minusn);
+	mpz_clears(n, nmod2, q, p, y, yrem, x, xrem, xpow2, xpow2minusn);
 }

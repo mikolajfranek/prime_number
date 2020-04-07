@@ -9,8 +9,8 @@
 
 int main(int argc, char *argv[]){
 
-	//mpz_t n, p;
-	//mpz_init_set_str(n, "5", 10);
+	//mpz_t n;
+	//mpz_init_set_str(n, "15347", 10);
 	//mpz_init_set_str(p, "41", 10);
 
 	//QuadraticSieve::Tonelli_Shanks(n, p);//MyConfiguration::GetSemiPrime(10));
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 
 	//15347
 
-	QuadraticSieve::Factor("11");
+	QuadraticSieve::Factor("15347");
 
 
 	return 0;
