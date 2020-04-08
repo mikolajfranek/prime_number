@@ -7,6 +7,7 @@
 /* run benchmark macro */
 //BENCHMARK_MAIN();
 
+
 int main(int argc, char *argv[]){
 
 	//mpz_t n;
@@ -20,8 +21,7 @@ int main(int argc, char *argv[]){
 
 	//15347
 
-	QuadraticSieve::Factor("15347");
-
+	SieveOfEratosthenes::Factor("15347");
 
 	return 0;
 }
