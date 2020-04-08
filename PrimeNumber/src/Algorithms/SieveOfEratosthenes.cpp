@@ -3,10 +3,10 @@
 void SieveOfEratosthenes::Factor(string input){
 
 	//declare
-	mpz_t n, nmod2, nsqrt, nmoditerator, q, p, iterator;
+	mpz_t n, q, p, nmod2, nsqrt, nmoditerator, iterator;
 
 	//init
-	mpz_inits(n, nmod2, nsqrt, nmoditerator, q, p, iterator);
+	mpz_inits(n, q, p, nmod2, nsqrt, nmoditerator, iterator, NULL);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
@@ -39,5 +39,5 @@ void SieveOfEratosthenes::Factor(string input){
 	Algorithm::CheckResult(n, q, p);
 
 	//clear
-	mpz_clears(n, nmod2, nsqrt, nmoditerator, q, p, iterator);
+	mpz_clears(n, q, p, nmod2, nsqrt, nmoditerator, iterator, NULL);
 }
