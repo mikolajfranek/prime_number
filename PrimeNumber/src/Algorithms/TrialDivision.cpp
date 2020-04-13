@@ -1,6 +1,6 @@
-#include "SieveOfEratosthenes.h"
+#include "TrialDivision.h"
 
-void SieveOfEratosthenes::Factor(string input){
+void TrialDivision::Factor(string input){
 
 	//declare
 	mpz_t n, q, p, nmod, nsqrt, i;

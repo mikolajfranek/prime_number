@@ -4,7 +4,7 @@
 #ifndef ALGORITHMS_SIEVEOFERATOSTHENES_H_
 #define ALGORITHMS_SIEVEOFERATOSTHENES_H_
 
-class SieveOfEratosthenes {
+class TrialDivision {
 public:
 	static void Factor(string n);
 };
