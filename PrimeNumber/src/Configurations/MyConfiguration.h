@@ -4,6 +4,8 @@
 /* general */
 #include <string>
 #include <iostream>
+#include <list>
+#include <math.h>
 
 /* gmp */
 #include <gmp.h>

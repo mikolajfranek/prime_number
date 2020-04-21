@@ -1,50 +1,43 @@
 #include "QuadraticSieve.h"
 
-bool QuadraticSieve::InputHasFormPowPToM(mpz_t n){
 
-	bool result = false;
-
-	//declare
-	mpz_t root, rem;
-
-	//init
-	mpz_inits(root, rem, NULL);
-
-	//start
-	for(long m = 2; ;m++){
-		mpz_rootrem(root, rem, n, m);
-		if(mpz_cmp_ui(rem, 0) == 0){
-			result = true;
-			break;
-		}else if(mpz_cmp_ui(root, 1) == 0){
-			break;
+list<int> QuadraticSieve::GetPrimeListBelowN(int n){
+	list<int> primes = {};
+	bool arr[n+1];
+	memset(arr, true, sizeof(arr));
+	int nsqrt = sqrt(n);
+	for(int i = 3; i <= nsqrt; i++){
+		if(arr[i]){
+			for(int j = i*i; j <= n; j += i){
+				arr[j] = false;
+			}
 		}
 	}
-
-	//clear
-	mpz_clears(root, rem, NULL);
-
-	return result;
+	for(int i = 3; i < n; i++){
+		if(arr[i]){
+			primes.push_back(i);
+		}
+	}
+	return primes;
 }
+
 
 void QuadraticSieve::Factor(string input){
 
 	//declare
-	mpz_t n, q, p, nmod2, nsqrt, nsqrtrem, iterator, temp1, temp2;
+	mpz_t n, q, p, nmod, nsqrt, nsqrtrem, temp;
 
 	//init
-	mpz_inits(n, q, p, nmod2, nsqrt, nsqrtrem, iterator, temp1, temp2, NULL);
+	mpz_inits(n, q, p, nmod, nsqrt, nsqrtrem, temp, NULL);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
 
 	//start algorithm
-	mpz_mod_ui(nmod2, n, 2);
-	if(mpz_cmp_ui(nmod2, 0) == 0){
+	mpz_mod_ui(nmod, n, 2);
+	if(mpz_cmp_ui(nmod, 0) == 0){
 		mpz_div_ui(q, n, 2);
 		mpz_set_ui(p, 2);
-	}else if(InputHasFormPowPToM(n)){
-		gmp_printf("Invalid input\n");
 	}else{
 		mpz_sqrtrem(nsqrt, nsqrtrem, n);
 		if(mpz_cmp_ui(nsqrtrem, 0) != 0){
@@ -52,34 +45,76 @@ void QuadraticSieve::Factor(string input){
 		}
 
 
-
-
-
-		//work on select primes?
 		int b = 30;
 		int m = 100;
 
-		//(p-1)/2
-		mpz_sub_ui(temp1, n, 1);
-		mpz_div_ui(temp1, temp1, 2);
 
-
-
-		for(mpz_set_ui(iterator, 0); mpz_cmp_ui(iterator, 15) <= 0; mpz_add_ui(iterator, iterator, 1)){
-			mpz_powm(temp2, iterator, temp1, nsqrt);
-			if(mpz_cmp_ui(temp2, 1) == 0){
-				gmp_printf("Quadratic residue of n is %Zd\n", iterator);
+		//quadratic residue
+		list<int> quadraticResidue = {2};
+		for (int prime : GetPrimeListBelowN(b)){
+			mpz_set_ui(temp, prime);
+			if(mpz_legendre(n, temp) == 1){
+				quadraticResidue.push_back(prime);
 			}
 		}
 
+		//define
+		mpz_t Y[m];
+		mpz_t V[m];
+		for(int i=0;i<m;i++) mpz_init2(Y[i], sizeof(mpz_t));
+		for(int i=0;i<m;i++) mpz_init2(V[i], sizeof(mpz_t));
 
-		gmp_printf("This is not end of program\n");
+		//calculate Q(x)
+		for(int i = 0; i < m; i++){
+			 mpz_set_ui(V[i], i);
+			 mpz_add(V[i], V[i], nsqrt);
+			 mpz_pow_ui(V[i], V[i], 2);
+			 mpz_sub(V[i], V[i], n);
+			 mpz_set(Y[i], V[i]);
+		}
+
+
+
+
+
+
+		for (int residue : quadraticResidue){
+			mpz_set_ui(temp, residue);
+
+			long r1, r2;
+			Tonelli_Shanks(n, temp, r1, r2);
+
+			cout << r1 << " -- " << r2 << endl;
+
+
+		}
+
+
+		//print
+		//for(int i=0;i<m;i++) {
+			//gmp_printf("--- %Zd\n", V[i]);
+		//}
+
+
+
+		//clear
+		for(int i=0;i<m;i++) mpz_clear(Y[i]);
+		for(int i=0;i<m;i++) mpz_clear(V[i]);
+
+
+
+
+
+
+
+
+
 
 	}
 
 	//clear
-	mpz_clears(n, q, p, nmod2, nsqrt, nsqrtrem, iterator, temp1, temp2, NULL);
-
+	mpz_clears(n, q, p, nmod, nsqrt, nsqrtrem, temp, NULL);
+	gmp_printf("This is end of program\n");
 	return;
 }
 
@@ -240,6 +275,37 @@ void QuadraticSieve::Factor(string input){
 
 
 
+
+
+bool QuadraticSieve::InputHasFormPowPToM(mpz_t n){
+
+	bool result = false;
+
+	//declare
+	mpz_t root, rem;
+
+	//init
+	mpz_inits(root, rem, NULL);
+
+	//start
+	for(long m = 2; ;m++){
+		mpz_rootrem(root, rem, n, m);
+		if(mpz_cmp_ui(rem, 0) == 0){
+			result = true;
+			break;
+		}else if(mpz_cmp_ui(root, 1) == 0){
+			break;
+		}
+	}
+
+	//clear
+	mpz_clears(root, rem, NULL);
+
+	return result;
+}
+
+
+
 // function to reduce matrix to reduced
 // row echelon form.
 int QuadraticSieve::PerformOperation(float a[][M], int n)
@@ -313,17 +379,6 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
 	mpz_init(t);
 	mpz_init(r);
 
-
-	mpz_t nmod4;
-	mpz_init(nmod4);
-	mpz_mod_ui(nmod4, p, 4);
-	if(mpz_cmp_ui(nmod4, 1) != 0 || mpz_jacobi(n, p) != 1){
-		gmp_printf("init condition failed\n");
-		r1 = -1;
-		r2 = -1;
-		//return;
-	}
-	mpz_clear(nmod4);
 
 
 

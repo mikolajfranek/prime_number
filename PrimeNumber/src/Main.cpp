@@ -5,14 +5,14 @@
 #include "Algorithms/QuadraticSieve.h"
 
 /* run benchmark macro */
-BENCHMARK_MAIN();
+//BENCHMARK_MAIN();
 
 
-/*
+
 int main(int argc, char *argv[]){
 
-	Fermat::Factor("13199");
+	QuadraticSieve::Factor("15347");
 
 	return 0;
 }
-*/
+
