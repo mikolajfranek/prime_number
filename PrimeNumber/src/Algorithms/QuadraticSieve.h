@@ -8,7 +8,7 @@ class QuadraticSieve {
 public:
 	static void Factor(string n);
 
-	static void Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2);
+
 
 
 
@@ -20,6 +20,10 @@ public:
 
 private:
 	static list<int> GetPrimeListBelowN(int b);
+	static void Tonelli_Shanks(mpz_t n, mpz_t p);
+	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
+
+
 
 
 

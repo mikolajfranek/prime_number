@@ -6,14 +6,14 @@ list<int> QuadraticSieve::GetPrimeListBelowN(int n){
 	bool arr[n+1];
 	memset(arr, true, sizeof(arr));
 	int nsqrt = sqrt(n);
-	for(int i = 3; i <= nsqrt; i++){
+	for(int i = 2; i <= nsqrt; i++){
 		if(arr[i]){
 			for(int j = i*i; j <= n; j += i){
 				arr[j] = false;
 			}
 		}
 	}
-	for(int i = 3; i < n; i++){
+	for(int i = 2; i < n; i++){
 		if(arr[i]){
 			primes.push_back(i);
 		}
@@ -50,7 +50,7 @@ void QuadraticSieve::Factor(string input){
 
 
 		//quadratic residue
-		list<int> quadraticResidue = {2};
+		list<int> quadraticResidue = {};
 		for (int prime : GetPrimeListBelowN(b)){
 			mpz_set_ui(temp, prime);
 			if(mpz_legendre(n, temp) == 1){
@@ -74,10 +74,15 @@ void QuadraticSieve::Factor(string input){
 		}
 
 
+		quadraticResidue.pop_front();
+		for (int residue : quadraticResidue){
+			mpz_set_ui(temp, residue);
+			cout << residue << endl;
+			Tonelli_Shanks(n, temp);
+		}
 
 
-
-
+/*
 		for (int residue : quadraticResidue){
 			mpz_set_ui(temp, residue);
 
@@ -88,7 +93,7 @@ void QuadraticSieve::Factor(string input){
 
 
 		}
-
+*/
 
 		//print
 		//for(int i=0;i<m;i++) {
@@ -100,16 +105,6 @@ void QuadraticSieve::Factor(string input){
 		//clear
 		for(int i=0;i<m;i++) mpz_clear(Y[i]);
 		for(int i=0;i<m;i++) mpz_clear(V[i]);
-
-
-
-
-
-
-
-
-
-
 	}
 
 	//clear
@@ -368,7 +363,144 @@ int QuadraticSieve::CheckConsistency(float a[][M], int n, int flag)
     return flag;
 }
 
-void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
+void QuadraticSieve::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
+	mpz_t i;
+	mpz_inits(i);
+	mpz_set_ui(r, 1);
+	for(mpz_set_ui(i, 0); mpz_cmp(i, d) <= 0; mpz_add_ui(i, i, 1)){
+		mpz_mul(r, r, c);
+	}
+	mpz_clears(i);
+}
+
+void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
+
+	mpz_t s, e, f, t, x, g, b, r, m, c, d, temp;
+	mpz_inits(s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
+
+	//p-1 = s*2^(e)
+	mpz_set_ui(e, 0);
+	mpz_sub_ui(s, p, 1);
+	mpz_mod_ui(temp, s, 2);
+	while(mpz_cmp_ui(temp, 0) == 0){
+		mpz_div_ui(s, s, 2);
+		mpz_add_ui(e, e, 1);
+		mpz_mod_ui(temp, s, 2);
+	}
+
+	//(p-1)/2
+	mpz_set(temp, p);
+	mpz_sub_ui(temp, temp, 1);
+	mpz_div_ui(temp, temp, 2);
+
+	//t^((p-1)/2) mod p
+	mpz_set_ui(t, 2);
+	mpz_powm(f, t, temp, p);
+
+	//find non-residue
+	while(mpz_legendre(t, p) == -1){
+		mpz_add_ui(t, t, 1);
+	}
+
+	//initizalize
+	mpz_powm_ui(r, e, 1, p);
+	mpz_powm(g, t, s, p);
+	mpz_powm(b, n, s, p);
+	mpz_set(temp, s);
+	mpz_add_ui(temp, temp, 1);
+	mpz_div_ui(temp, temp, 2);
+	mpz_powm(x, n, temp, p);
+
+
+
+
+	while(true){
+		//search m
+		mpz_set_ui(m, 0);
+		while(true){
+			mpz_set_ui(c, 2);
+			PowCExpD(temp, c, m);
+			mpz_powm(temp, b, temp, p);
+			if(mpz_cmp_ui(temp, 1) == 0) break;
+			mpz_add_ui(m, m, 1);
+		}
+
+		//check
+		if(mpz_cmp_ui(m, 0) == 0){
+			gmp_printf("SOLUTION--- %Zd\n", x);
+			break;
+		}
+
+		gmp_printf("??--- %Zd\n", x);
+
+
+		//update
+		//r-m-1
+		mpz_set(d, r);
+		mpz_sub(d, d, m);
+		mpz_sub_ui(d, d, 1);
+		//2^(r-m-1)
+		mpz_set_ui(c, 2);
+		PowCExpD(temp, c, d);
+		//g^(2^(r-m-1))
+		mpz_set(c, g);
+		mpz_set(d, temp);
+		PowCExpD(temp, c, d);
+		//x * g^(2^(r-m-1))
+		mpz_mul(x, x, temp);
+		mpz_powm_ui(x, x, 1, p);
+
+
+		//r-m
+		mpz_set(d, r);
+		mpz_sub(d, d, m);
+		//2^(r-m)
+		mpz_set_ui(c, 2);
+		PowCExpD(temp, c, d);
+		//g^(2^(r-m))
+		mpz_set(c, g);
+		mpz_set(d, temp);
+		PowCExpD(temp, c, d);
+		//b * g^(2^(r-m))
+		mpz_mul(b, b, temp);
+		mpz_powm_ui(b, b, 1, p);
+
+
+		//r-m
+		mpz_set(d, r);
+		mpz_sub(d, d, m);
+		//2^(r-m)
+		mpz_set_ui(c, 2);
+		PowCExpD(temp, c, d);
+		//g^(2^(r-m))
+		mpz_set(c, g);
+		mpz_set(d, temp);
+		PowCExpD(g, c, d);
+		mpz_powm_ui(g, g, 1, p);
+
+
+		mpz_set(r, m);
+		mpz_powm_ui(r, r, 1, p);
+	}
+
+	mpz_clears(p, s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
 
 	mpz_t m;
 	mpz_t c;
@@ -565,7 +697,7 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p, long& r1, long &r2){
 	mpz_clear(c);
 	mpz_clear(t);
 	mpz_clear(r);
-}
+	*/
 
 
 
