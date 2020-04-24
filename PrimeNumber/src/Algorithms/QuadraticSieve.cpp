@@ -1,8 +1,7 @@
 #include "QuadraticSieve.h"
 
-
-list<int> QuadraticSieve::GetPrimeListBelowN(int n){
-	list<int> primes = {};
+vector<int> QuadraticSieve::GetPrimeListBelowN(int n){
+	vector<int> primes = {};
 	bool arr[n+1];
 	memset(arr, true, sizeof(arr));
 	int nsqrt = sqrt(n);
@@ -21,6 +20,21 @@ list<int> QuadraticSieve::GetPrimeListBelowN(int n){
 	return primes;
 }
 
+void QuadraticSieve::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
+	mpz_t i;
+	mpz_inits(i, NULL);
+	mpz_set_ui(r, 1);
+	for(mpz_set_ui(i, 0); mpz_cmp(i, d) < 0; mpz_add_ui(i, i, 1)){
+		mpz_mul(r, r, c);
+	}
+	mpz_clears(i, NULL);
+}
+
+void QuadraticSieve::DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step){
+	for(int i = from; i < sizeOfSieve; i += step){
+		mpz_div_ui(sieve[i], sieve[i], step);
+	}
+}
 
 void QuadraticSieve::Factor(string input){
 
@@ -44,14 +58,14 @@ void QuadraticSieve::Factor(string input){
 			mpz_add_ui(nsqrt, nsqrt, 1);
 		}
 
-
 		int b = 30;
 		int m = 100;
 
-
 		//quadratic residue
-		list<int> quadraticResidue = {};
-		for (int prime : GetPrimeListBelowN(b)){
+		vector<int> primes = GetPrimeListBelowN(b);
+		vector<int> quadraticResidue = {2};
+		for (int prime : primes){
+			if(prime == 2) continue;
 			mpz_set_ui(temp, prime);
 			if(mpz_legendre(n, temp) == 1){
 				quadraticResidue.push_back(prime);
@@ -59,8 +73,18 @@ void QuadraticSieve::Factor(string input){
 		}
 
 		//define
-		mpz_t Y[m];
-		mpz_t V[m];
+		mpz_t *Y;
+		mpz_t *V;
+		Y = (mpz_t *)malloc(m * sizeof(mpz_t));
+		if(Y == NULL){
+			cout << "ERROR: Out of memory" << endl;
+			return;
+		}
+		V = (mpz_t *)malloc(m * sizeof(mpz_t));
+		if(V == NULL){
+			cout << "ERROR: Out of memory" << endl;
+			return;
+		}
 		for(int i=0;i<m;i++) mpz_init2(Y[i], sizeof(mpz_t));
 		for(int i=0;i<m;i++) mpz_init2(V[i], sizeof(mpz_t));
 
@@ -73,38 +97,85 @@ void QuadraticSieve::Factor(string input){
 			 mpz_set(Y[i], V[i]);
 		}
 
+		//divide sieve for '2' which is quadratic residue
+		DivideSieve(V, m, 1, 2);
 
-		quadraticResidue.pop_front();
+		//divide sieve for other
+		int sqrt = mpz_get_ui(nsqrt), result_1, result_2;
 		for (int residue : quadraticResidue){
+			if(residue == 2) continue;
+
 			mpz_set_ui(temp, residue);
-			cout << residue << endl;
 			Tonelli_Shanks(n, temp);
+
+			result_1 = mpz_get_ui(temp);
+			result_2 = residue - result_1;
+
+			//solve congruent
+			result_1 = (result_1 - sqrt) % residue;
+			result_1 = result_1 < 0 ? result_1 + residue : result_1;
+			DivideSieve(V, m, result_1, residue);
+
+			//solve congruent
+			result_2 = (result_2 - sqrt) % residue;
+			result_2 = result_2 < 0 ? result_2 + residue : result_2;
+			DivideSieve(V, m, result_2, residue);
+		}
+
+		//calculate factor array
+		vector<int> x = {};
+		vector<int> h = {};
+		for(int i = 0; i < m; i++){
+			if((long)mpz_get_ui(V[i]) ==1){
+				x.push_back(i+sqrt);
+				h.push_back(mpz_get_ui(Y[i]));
+			}
+		}
+		vector<vector<bool>> factors = {};
+		for(int i = 0; i < (int)h.size(); i++){
+			vector<bool> fac = {};
+			for(int j = 0; j < (int)quadraticResidue.size(); j++){
+				fac.push_back(h[i] % quadraticResidue[j] == 0);
+			}
+			factors.push_back(fac);
+		}
+
+		//calculate right side of equation
+		long right = 1;
+		for(int i = 0; i < (int)x.size(); i++){
+			right *= x[i]*x[i];
+		}
+		right = right % mpz_get_ui(n);
+
+
+		/*
+		 * TODO
+		 * find resources about algorithm gaussian elimination
+		 * implement and test simple
+		 * refactor to mpz_t
+		 *
+		 */
+
+		cout << "Right ==> " << right << endl;
+
+		//solve matrix
+		for(vector<bool> sub: factors){
+			for(bool x : sub){
+				cout << x;
+			}
+			cout << endl;
 		}
 
 
-/*
-		for (int residue : quadraticResidue){
-			mpz_set_ui(temp, residue);
 
-			long r1, r2;
-			Tonelli_Shanks(n, temp, r1, r2);
-
-			cout << r1 << " -- " << r2 << endl;
-
-
-		}
-*/
-
-		//print
-		//for(int i=0;i<m;i++) {
-			//gmp_printf("--- %Zd\n", V[i]);
-		//}
 
 
 
 		//clear
 		for(int i=0;i<m;i++) mpz_clear(Y[i]);
 		for(int i=0;i<m;i++) mpz_clear(V[i]);
+		free(Y);
+		free(V);
 	}
 
 	//clear
@@ -117,98 +188,8 @@ void QuadraticSieve::Factor(string input){
 
 
 		/*
-		int size = 100;
-
-		mpz_t R[size];
-		mpz_t V[size];
-		for(int i=0;i<size;i++) mpz_init2(R[i], sizeof(mpz_t));
-		for(int i=0;i<size;i++) mpz_init2(V[i], sizeof(mpz_t));
-
-		for(int i=0;i<size;i++){
-			 mpz_set_si(R[i], i);
-			 mpz_add(R[i], R[i], nsqrt);
-			 mpz_pow_ui(R[i], R[i], 2);
-			 mpz_sub(R[i], R[i], n);
-			 mpz_set(V[i], R[i]);
-		}
 
 
-		int countPrime = 4;
-		int ppp[] = {2, 17, 23, 29};
-
-		for(int j = 0; j < countPrime; j++){
-
-			mpz_set_si(temp1, ppp[j]);
-
-			//for p > 2 there is two result
-			long r1, r2;
-			Tonelli_Shanks(n, temp1, r1, r2);
-
-			cout << r1 << " -- " << r2 << endl;
-
-			if(ppp[j] == 2){
-				for(int x = r1; x < size; x+=ppp[j]){
-					mpz_div_ui(R[x], R[x], ppp[j]);
-				}
-			}else{
-				if(r1 != -1){
-					r1 = (r1  - (long)mpz_get_ui(nsqrt)) % (long)ppp[j];
-					r1 = r1 < 0 ? r1 + ppp[j] : r1;
-					for(int x = r1; x < size; x+=ppp[j]){
-						mpz_div_ui(R[x], R[x], ppp[j]);
-					}
-				}
-
-				if(r2 != -1){
-					r2 = (r2  - (long)mpz_get_ui(nsqrt)) % (long)ppp[j];
-					r2 = r2 < 0 ? r2 + ppp[j] : r2;
-
-					for(int x = r2; x < size; x+=ppp[j]){
-						mpz_div_ui(R[x], R[x], ppp[j]);
-					}
-				}
-			}
-
-		}
-		//how many R[i] = 1 must be?
-
-
-
-		//124, 127, 195
-		int x[3] = {0,0,0};
-
-
-		//29, 782, 22678
-		int Q[3] = {0,0,0};
-
-		int j = 0;
-		for(int i=0;i<size;i++){
-			if((long)mpz_get_ui(R[i]) ==1){
-				x[j] = i +  (long)mpz_get_ui(nsqrt);
-				Q[j++] = (long)mpz_get_ui(V[i]);
-
-			}
-		}
-
-
-
-		int s[3] = {0,0,0};
-		float matrix[M][M] = {
-				{0,0,0,0, 0},
-				{0,0,0,0, 0},
-				{0,0,0,0, 0},
-		};
-
-
-
-		for(int i=0;i<3;i++) {
-			for(int j = 0; j < 4; j++){
-				if(Q[i] % (int)ppp[j] == 0){
-					matrix[i][j] = 1.0;
-					//q[i] /= (int)ppp[j];
-				}
-			}
-		}
 
 
 		//show matrix
@@ -363,15 +344,7 @@ int QuadraticSieve::CheckConsistency(float a[][M], int n, int flag)
     return flag;
 }
 
-void QuadraticSieve::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
-	mpz_t i;
-	mpz_inits(i);
-	mpz_set_ui(r, 1);
-	for(mpz_set_ui(i, 0); mpz_cmp(i, d) <= 0; mpz_add_ui(i, i, 1)){
-		mpz_mul(r, r, c);
-	}
-	mpz_clears(i);
-}
+
 
 void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 
@@ -388,18 +361,11 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 		mpz_mod_ui(temp, s, 2);
 	}
 
-	//(p-1)/2
-	mpz_set(temp, p);
-	mpz_sub_ui(temp, temp, 1);
-	mpz_div_ui(temp, temp, 2);
-
-	//t^((p-1)/2) mod p
-	mpz_set_ui(t, 2);
-	mpz_powm(f, t, temp, p);
-
 	//find non-residue
-	while(mpz_legendre(t, p) == -1){
+	mpz_set_ui(t, 3);
+	while(mpz_legendre(t, p) != -1){
 		mpz_add_ui(t, t, 1);
+		mpz_powm(f, t, temp, p);
 	}
 
 	//initizalize
@@ -411,28 +377,23 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 	mpz_div_ui(temp, temp, 2);
 	mpz_powm(x, n, temp, p);
 
-
-
-
 	while(true){
 		//search m
 		mpz_set_ui(m, 0);
 		while(true){
 			mpz_set_ui(c, 2);
 			PowCExpD(temp, c, m);
-			mpz_powm(temp, b, temp, p);
-			if(mpz_cmp_ui(temp, 1) == 0) break;
+			mpz_powm(f, b, temp, p);
+			if(mpz_cmp_ui(f, 1) == 0) break;
 			mpz_add_ui(m, m, 1);
 		}
 
 		//check
 		if(mpz_cmp_ui(m, 0) == 0){
-			gmp_printf("SOLUTION--- %Zd\n", x);
+			//gmp_printf("SOLUTION--- %Zd\n", x);
+			mpz_set(p, x);
 			break;
 		}
-
-		gmp_printf("??--- %Zd\n", x);
-
 
 		//update
 		//r-m-1
@@ -450,7 +411,6 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 		mpz_mul(x, x, temp);
 		mpz_powm_ui(x, x, 1, p);
 
-
 		//r-m
 		mpz_set(d, r);
 		mpz_sub(d, d, m);
@@ -465,7 +425,6 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 		mpz_mul(b, b, temp);
 		mpz_powm_ui(b, b, 1, p);
 
-
 		//r-m
 		mpz_set(d, r);
 		mpz_sub(d, d, m);
@@ -478,13 +437,11 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 		PowCExpD(g, c, d);
 		mpz_powm_ui(g, g, 1, p);
 
-
 		mpz_set(r, m);
 		mpz_powm_ui(r, r, 1, p);
 	}
 
-	mpz_clears(p, s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
-
+	mpz_clears(s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
 }
 
 

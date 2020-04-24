@@ -19,13 +19,13 @@ public:
 
 
 private:
-	static list<int> GetPrimeListBelowN(int b);
+	static vector<int> GetPrimeListBelowN(int b);
 	static void Tonelli_Shanks(mpz_t n, mpz_t p);
 	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
 
 
 
-
+	static void DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step);
 
 
 

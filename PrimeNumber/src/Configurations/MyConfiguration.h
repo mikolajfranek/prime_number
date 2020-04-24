@@ -4,8 +4,10 @@
 /* general */
 #include <string>
 #include <iostream>
-#include <list>
+#include <vector>
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* gmp */
 #include <gmp.h>
