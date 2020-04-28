@@ -12,21 +12,22 @@ public:
 
 
 
-#define M 10
-
-	static int PerformOperation(float a[][M], int n);
-	static int CheckConsistency(float a[][M], int n, int flag);
-
 
 private:
 	static vector<int> GetPrimeListBelowN(int b);
-	static void Tonelli_Shanks(mpz_t n, mpz_t p);
 	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
-
-
-
 	static void DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step);
+	static void Tonelli_Shanks(mpz_t n, mpz_t p);
+	static vector<vector<bool>> GetIdentityMatrix(int n);
 
+
+
+
+
+
+	static void PrintMatrix(vector<vector<float>> A);
+	static void Gaussian_Triangular(vector<vector<float>> &A, vector<int> &pivot, int &det, bool &err);
+	static void Gaussian_Solve();
 
 
 	static bool InputHasFormPowPToM(mpz_t n);

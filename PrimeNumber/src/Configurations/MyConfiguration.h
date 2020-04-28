@@ -3,11 +3,9 @@
 
 /* general */
 #include <string>
-#include <iostream>
 #include <vector>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cmath>
+#include <numeric> /* iota */
 
 /* gmp */
 #include <gmp.h>
