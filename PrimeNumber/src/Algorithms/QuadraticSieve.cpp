@@ -260,9 +260,9 @@ void QuadraticSieve::Factor(string input){
 
 
 		//matrix
-		vector<vector<float>> matrix = {{4,2,3},
-									    {4,5,6},
-									    {7,8,9}};
+		vector<vector<float>> matrix = {{1,2,1},
+									    {2,2,3},
+									    {-1,-3,0}};
 
 		//pivot
 		vector<int> pivot(matrix.size());
@@ -272,21 +272,34 @@ void QuadraticSieve::Factor(string input){
 		int det;
 		bool err;
 
-
+		//calculate triangular
 		Gaussian_Triangular(matrix, pivot, det, err);
+		if(err == true || det == 0){
+			//do something
+		}
+
+		//solve
+		//vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
+		vector<float> b_temp(matrix.size());
+		b_temp[0] = 0;
+		b_temp[1] = 3;
+		b_temp[2] = 2;
+
+		Gaussian_Solve(matrix, pivot, b_temp);
+
 		PrintMatrix(matrix);
-		printf("\nErr %d\n", err);
-		printf("Det %d\n", det);
+		printf("\n");
+		for(int i = 0; i < b_temp.size(); i++){
+			printf("%f\n", b_temp[i]);
+		}
+
+		//PrintMatrix(b_temp);
 
 
 
 
 
 
-
-		//TODO - later
-		//vector<vector<bool>> identity = GetIdentityMatrix(5);
-		//PrintMatrix(identity);
 
 
 		//clear
@@ -303,11 +316,11 @@ void QuadraticSieve::Factor(string input){
 }
 
 
-vector<vector<bool>>QuadraticSieve::GetIdentityMatrix(int n){
-	vector<vector<bool>> result = {};
+vector<vector<float>>QuadraticSieve::GetIdentityMatrix(int n){
+	vector<vector<float>> result = {};
 	int one = 0;
 	for(int i = 0; i < n; i++){
-		result.push_back(vector<bool>(n, false));
+		result.push_back(vector<float>(n, false));
 		result[i][one++] = true;
 	}
 	return result;
@@ -346,7 +359,6 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 			}
 		}
 
-
 		pivot[k] = i0;
 
 		if(ck == 0){
@@ -369,8 +381,7 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 
 
 		for(int i = k + 1; i < A.size(); i++){
-			temp = A[i][k];
-			A[i][k] = temp / A[k][k];
+			A[i][k] = temp = A[i][k] / A[k][k];
 			for(int j = k + 1; j < A.size(); j++){
 				A[i][j] = A[i][j] - (temp * A[k][j]);
 			}
@@ -383,8 +394,29 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 }
 
 
-void QuadraticSieve::Gaussian_Solve(){
+void QuadraticSieve::Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot, vector<float> &b){
+	float temp;
+	for(int k = 0; k < (A.size() - 1); k++){
+		if(pivot[k] != k){
+			temp = b[pivot[k]];
+			b[pivot[k]] = b[k];
+			b[k] = temp;
+		}
 
+		for(int i = k + 1; i < A.size(); i++){
+			b[i] = b[i] - (A[i][k] * b[k]);
+		}
+	}
+
+	b[A.size()-1] = b[A.size()-1] / A[A.size()-1][A.size()-1];
+
+	for(int i = A.size()-2; i >= 0; i--){
+		temp = 0;
+		for(int j = i + 1; j < A.size(); j++){
+			temp = temp + (A[i][j] * b[j]);
+		}
+		b[i] = (1 / A[i][i]) * (b[i] - temp);
+	}
 }
 
 

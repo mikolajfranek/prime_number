@@ -18,7 +18,7 @@ private:
 	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
 	static void DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step);
 	static void Tonelli_Shanks(mpz_t n, mpz_t p);
-	static vector<vector<bool>> GetIdentityMatrix(int n);
+	static vector<vector<float>> GetIdentityMatrix(int n);
 
 
 
@@ -27,7 +27,7 @@ private:
 
 	static void PrintMatrix(vector<vector<float>> A);
 	static void Gaussian_Triangular(vector<vector<float>> &A, vector<int> &pivot, int &det, bool &err);
-	static void Gaussian_Solve();
+	static void Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot, vector<float> &b);
 
 
 	static bool InputHasFormPowPToM(mpz_t n);
