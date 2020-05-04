@@ -55,7 +55,6 @@ void QuadraticSieve::Tonelli_Shanks(mpz_t n, mpz_t p){
 	mpz_set_ui(t, 3);
 	while(mpz_legendre(t, p) != -1){
 		mpz_add_ui(t, t, 1);
-		mpz_powm(f, t, temp, p);
 	}
 
 	//initizalize
@@ -260,9 +259,9 @@ void QuadraticSieve::Factor(string input){
 
 
 		//matrix
-		vector<vector<float>> matrix = {{1,2,1},
-									    {2,2,3},
-									    {-1,-3,0}};
+		vector<vector<float>> matrix = {{0,0,1},
+									    {1,1,0},
+									    {1,1,1}};
 
 		//pivot
 		vector<int> pivot(matrix.size());
@@ -276,28 +275,33 @@ void QuadraticSieve::Factor(string input){
 		Gaussian_Triangular(matrix, pivot, det, err);
 		if(err == true || det == 0){
 			//do something
+			printf("Wyznacznik jest równy zero\n");
 		}
 
-		//solve
-		//vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
-		vector<float> b_temp(matrix.size());
-		b_temp[0] = 0;
-		b_temp[1] = 3;
-		b_temp[2] = 2;
 
-		Gaussian_Solve(matrix, pivot, b_temp);
+		//TODO
+
+		//solve
+		vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
+		//vector<float> b_temp(matrix.size());
+		//b_temp[0] = 0;
+		//b_temp[1] = 0;
+		//b_temp[2] = 0;
+
+		Gaussian_SolveMod2(matrix, pivot, identity);
 
 		PrintMatrix(matrix);
 		printf("\n");
-		for(int i = 0; i < b_temp.size(); i++){
-			printf("%f\n", b_temp[i]);
+		PrintMatrix(identity);
+		printf("\n");
+
+		for(int i = 0; i < pivot.size(); i++){
+			printf("i = %d\tv = %d\n", i, pivot[i]);
 		}
 
-		//PrintMatrix(b_temp);
-
-
-
-
+		//for(int i = 0; i < b_temp.size(); i++){
+			//printf("nr = %d\tv = %f\n", pivot[i], b_temp[i]);
+		//}
 
 
 
@@ -393,7 +397,6 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 	det = det * A[A.size() - 1][A.size() - 1];
 }
 
-
 void QuadraticSieve::Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot, vector<float> &b){
 	float temp;
 	for(int k = 0; k < (A.size() - 1); k++){
@@ -419,6 +422,34 @@ void QuadraticSieve::Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot
 	}
 }
 
+
+
+void QuadraticSieve::Gaussian_SolveMod2(vector<vector<float>> &A, vector<int> &pivot, vector<vector<float>> &b){
+	/*
+	float temp;
+	for(int k = 0; k < (A.size() - 1); k++){
+		if(pivot[k] != k){
+			temp = b[pivot[k]];
+			b[pivot[k]] = b[k];
+			b[k] = temp;
+		}
+
+		for(int i = k + 1; i < A.size(); i++){
+			b[i] = b[i] - (A[i][k] * b[k]);
+		}
+	}
+
+	b[A.size()-1] = b[A.size()-1] / A[A.size()-1][A.size()-1];
+
+	for(int i = A.size()-2; i >= 0; i--){
+		temp = 0;
+		for(int j = i + 1; j < A.size(); j++){
+			temp = temp + (A[i][j] * b[j]);
+		}
+		b[i] = (1 / A[i][i]) * (b[i] - temp);
+	}
+	*/
+}
 
 //may be use?
 bool QuadraticSieve::InputHasFormPowPToM(mpz_t n){
