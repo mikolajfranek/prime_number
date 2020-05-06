@@ -366,9 +366,9 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 		pivot[k] = i0;
 
 		if(ck == 0){
-			err = true;
-			det = 0;
-			return;
+			//err = true;
+			//det = 0;
+			//return;
 		}
 
 		if(i0 != k){
@@ -385,9 +385,11 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 
 
 		for(int i = k + 1; i < A.size(); i++){
+			if(A[k][k] != 0){
 			A[i][k] = temp = A[i][k] / A[k][k];
-			for(int j = k + 1; j < A.size(); j++){
+			for(int j = k; j < A.size(); j++){
 				A[i][j] = A[i][j] - (temp * A[k][j]);
+			}
 			}
 		}
 
@@ -422,33 +424,45 @@ void QuadraticSieve::Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot
 	}
 }
 
-
-
 void QuadraticSieve::Gaussian_SolveMod2(vector<vector<float>> &A, vector<int> &pivot, vector<vector<float>> &b){
-	/*
+
 	float temp;
 	for(int k = 0; k < (A.size() - 1); k++){
 		if(pivot[k] != k){
-			temp = b[pivot[k]];
-			b[pivot[k]] = b[k];
-			b[k] = temp;
+			for(int j = 0; j < A.size(); j++){
+				temp = b[pivot[k]][j];
+				b[pivot[k]][j] = b[k][j];
+				b[k][j] = temp;
+			}
 		}
 
 		for(int i = k + 1; i < A.size(); i++){
-			b[i] = b[i] - (A[i][k] * b[k]);
+			for(int j = 0; j < A.size(); j++){
+				b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+			}
 		}
 	}
 
-	b[A.size()-1] = b[A.size()-1] / A[A.size()-1][A.size()-1];
+	b[A.size()-1][A.size()-1] = b[A.size()-1][A.size()-1] / A[A.size()-1][A.size()-1];
 
+
+	/*
+	 * TODO
+	 * you know what to do
+	 */
+
+	/*
 	for(int i = A.size()-2; i >= 0; i--){
+
 		temp = 0;
 		for(int j = i + 1; j < A.size(); j++){
 			temp = temp + (A[i][j] * b[j]);
 		}
 		b[i] = (1 / A[i][i]) * (b[i] - temp);
+
 	}
 	*/
+
 }
 
 //may be use?
