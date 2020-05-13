@@ -21,18 +21,13 @@ private:
 	static vector<vector<float>> GetIdentityMatrix(int n);
 
 
+
+
 	static void PrintMatrix(vector<vector<float>> A);
 	static void Gaussian_Triangular(vector<vector<float>> &A, vector<int> &pivot, int &det, bool &err);
 	static void Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot, vector<float> &b);
-
-
-
-
-	static void Gaussian_SolveMod2(vector<vector<float>> &A, vector<int> &pivot, vector<vector<float>> &b);
+	static void Gaussian_SolveMod2(vector<vector<float>> &A, vector<vector<float>> &b);
 	static bool InputHasFormPowPToM(mpz_t n);
-
-
-	//static bool EulerCriterion(mpz_t a, mpz_t p, mpz_t exp, mpz_t tem);
 };
 
 #endif

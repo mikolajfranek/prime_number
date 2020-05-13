@@ -222,7 +222,7 @@ void QuadraticSieve::Factor(string input){
 		vector<int> x = {};
 		vector<int> h = {};
 		for(int i = 0; i < m; i++){
-			if((long)mpz_get_ui(V[i]) ==1){
+			if((long)mpz_get_ui(V[i]) == 1){
 				x.push_back(i+sqrt);
 				h.push_back(mpz_get_ui(Y[i]));
 			}
@@ -242,62 +242,104 @@ void QuadraticSieve::Factor(string input){
 			rightSide *= x[i]*x[i];
 		}
 		rightSide = rightSide % mpz_get_ui(n);
+		printf("Right side is %d\n\n", rightSide);
 
 
 
+
+
+
+
+
+
+
+		int w = (int)h.size();
+		int k = (int)quadraticResidue.size();
 
 
 		/*
-		 * TODO
-		 * find resources about algorithm gaussian elimination
-		 * implement and test simple
-		 * refactor to mpz_t
+		 * combination of matrix
+		 * solve matrix
+		 * check if has zero elements and compute
 		 *
 		 */
 
-		printf("Right side is %d\n\n", rightSide);
+
+
+		return;
+
+
+
+
 
 
 		//matrix
 		vector<vector<float>> matrix = {{0,0,1},
 									    {1,1,0},
 									    {1,1,1}};
+		//identity
+		vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
 
-		//pivot
-		vector<int> pivot(matrix.size());
-		iota(pivot.begin(), pivot.end(), 0);
+		Gaussian_SolveMod2(matrix, identity);
 
-		//init variables
-		int det;
-		bool err;
 
-		//calculate triangular
-		Gaussian_Triangular(matrix, pivot, det, err);
-		if(err == true || det == 0){
-			//do something
-			printf("Wyznacznik jest równy zero\n");
+		long leftSide = 1;
+		bool hasRowZero = true;
+
+		for(int w = 0; w < (matrix.size() - 1); w++){
+			leftSide = 1;
+
+			hasRowZero = true;
+			for(int k = 0; k < (matrix.size() - 1); k++){
+				hasRowZero = matrix[w][k] == 0;
+
+				leftSide = 1;
+
+				if(hasRowZero == false) break;
+			}
+
+
+			if(hasRowZero){
+
+			}
 		}
 
 
-		//TODO
-
-		//solve
-		vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
-		//vector<float> b_temp(matrix.size());
-		//b_temp[0] = 0;
-		//b_temp[1] = 0;
-		//b_temp[2] = 0;
-
-		Gaussian_SolveMod2(matrix, pivot, identity);
 
 		PrintMatrix(matrix);
 		printf("\n");
 		PrintMatrix(identity);
 		printf("\n");
 
-		for(int i = 0; i < pivot.size(); i++){
-			printf("i = %d\tv = %d\n", i, pivot[i]);
-		}
+
+
+
+		//pivot
+		//vector<int> pivot(matrix.size());
+		//iota(pivot.begin(), pivot.end(), 0);
+
+		//init variables
+		//int det;
+		//bool err;
+
+		//calculate triangular
+		//Gaussian_Triangular(matrix, pivot, det, err);
+		//if(err == true || det == 0){
+			//do something
+			//printf("Wyznacznik jest równy zero\n");
+		//}
+
+
+		//TODO
+
+		//solve
+
+		//vector<float> b_temp(matrix.size());
+		//b_temp[0] = 0;
+		//b_temp[1] = 0;
+		//b_temp[2] = 0;
+
+		//Gaussian_SolveMod2(matrix, pivot, identity);
 
 		//for(int i = 0; i < b_temp.size(); i++){
 			//printf("nr = %d\tv = %f\n", pivot[i], b_temp[i]);
@@ -371,6 +413,7 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 			//return;
 		}
 
+		//change row
 		if(i0 != k){
 			det = -1 * abs(det);
 			for(int j = k; j < A.size(); j++){
@@ -384,12 +427,13 @@ void QuadraticSieve::Gaussian_Triangular(vector<vector<float>> &A, vector<int> &
 		}
 
 
+		//count...
 		for(int i = k + 1; i < A.size(); i++){
 			if(A[k][k] != 0){
 			A[i][k] = temp = A[i][k] / A[k][k];
-			for(int j = k; j < A.size(); j++){
-				A[i][j] = A[i][j] - (temp * A[k][j]);
-			}
+				for(int j = k; j < A.size(); j++){
+					A[i][j] = A[i][j] - (temp * A[k][j]);
+				}
 			}
 		}
 
@@ -424,45 +468,63 @@ void QuadraticSieve::Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot
 	}
 }
 
-void QuadraticSieve::Gaussian_SolveMod2(vector<vector<float>> &A, vector<int> &pivot, vector<vector<float>> &b){
+void QuadraticSieve::Gaussian_SolveMod2(vector<vector<float>> &A, vector<vector<float>> &b){
 
+	//triangular
 	float temp;
+	int i0;
 	for(int k = 0; k < (A.size() - 1); k++){
-		if(pivot[k] != k){
-			for(int j = 0; j < A.size(); j++){
-				temp = b[pivot[k]][j];
-				b[pivot[k]][j] = b[k][j];
-				b[k][j] = temp;
+
+		//search for non-zero value
+		i0 = k;
+		for(int i = k; i < A.size(); i++){
+			if(A[i][k] != 0){
+				i0 = i;
+				break;
 			}
 		}
 
-		for(int i = k + 1; i < A.size(); i++){
+		//change row
+		if(i0 != k){
 			for(int j = 0; j < A.size(); j++){
-				b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+				temp = A[k][j];
+				A[k][j] = A[i0][j];
+				A[i0][j] = temp;
+
+				temp = b[k][j];
+				b[k][j] = b[i0][j];
+				b[i0][j] = temp;
+			}
+		}
+
+		//calculate
+		if(A[k][k] != 0){
+			for(int i = k + 1; i < A.size(); i++){
+				if(A[i][k] != 0){
+					for(int j = 0; j < A.size(); j++){
+						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
+						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+					}
+				}
 			}
 		}
 	}
 
-	b[A.size()-1][A.size()-1] = b[A.size()-1][A.size()-1] / A[A.size()-1][A.size()-1];
 
 
-	/*
-	 * TODO
-	 * you know what to do
-	 */
-
-	/*
-	for(int i = A.size()-2; i >= 0; i--){
-
-		temp = 0;
-		for(int j = i + 1; j < A.size(); j++){
-			temp = temp + (A[i][j] * b[j]);
+	//solve - reverse
+	for(int k = (A.size() - 1); k > 0; k--){
+		if(A[k][k] != 0){
+			for(int i = k - 1; i >= 0; i--){
+				if(A[i][k] != 0){
+					for(int j = 0; j < A.size(); j++){
+						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
+						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+					}
+				}
+			}
 		}
-		b[i] = (1 / A[i][i]) * (b[i] - temp);
-
 	}
-	*/
-
 }
 
 //may be use?
