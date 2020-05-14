@@ -197,7 +197,7 @@ void QuadraticSieve::Factor(string input){
 		DivideSieve(V, m, 1, 2);
 
 		//divide sieve for other
-		int sqrt = mpz_get_ui(nsqrt), result_1, result_2;
+		int sqrtOfN = mpz_get_ui(nsqrt), result_1, result_2;
 		for (int residue : quadraticResidue){
 			if(residue == 2) continue;
 
@@ -208,12 +208,12 @@ void QuadraticSieve::Factor(string input){
 			result_2 = residue - result_1;
 
 			//solve congruent
-			result_1 = (result_1 - sqrt) % residue;
+			result_1 = (result_1 - sqrtOfN) % residue;
 			result_1 = result_1 < 0 ? result_1 + residue : result_1;
 			DivideSieve(V, m, result_1, residue);
 
 			//solve congruent
-			result_2 = (result_2 - sqrt) % residue;
+			result_2 = (result_2 - sqrtOfN) % residue;
 			result_2 = result_2 < 0 ? result_2 + residue : result_2;
 			DivideSieve(V, m, result_2, residue);
 		}
@@ -223,7 +223,7 @@ void QuadraticSieve::Factor(string input){
 		vector<int> h = {};
 		for(int i = 0; i < m; i++){
 			if((long)mpz_get_ui(V[i]) == 1){
-				x.push_back(i+sqrt);
+				x.push_back(i+sqrtOfN);
 				h.push_back(mpz_get_ui(Y[i]));
 			}
 		}
@@ -237,9 +237,11 @@ void QuadraticSieve::Factor(string input){
 		}
 
 		//calculate right side of equation
+		long right = 1;
 		long rightSide = 1;
 		for(int i = 0; i < (int)x.size(); i++){
 			rightSide *= x[i]*x[i];
+			right *= x[i];
 		}
 		rightSide = rightSide % mpz_get_ui(n);
 		printf("Right side is %d\n\n", rightSide);
@@ -252,25 +254,115 @@ void QuadraticSieve::Factor(string input){
 
 
 
-
+		//29 - 782 - 22678
 		int w = (int)h.size();
+
+		//2 - 17 - 23 - 29
 		int k = (int)quadraticResidue.size();
 
 
-		/*
-		 * combination of matrix
-		 * solve matrix
-		 * check if has zero elements and compute
-		 *
-		 */
+		if(w > k){
+			//row
+			for(vector<int> v : GetCombination(w, k)){
+
+				vector<vector<float>> matrix = {};
+				for(int i = 0; i < k; i++){
+					matrix.push_back(vector<float>(k, 0));
+				}
+
+				vector<int> kk = vector<int>(k, 0);
+				int u = 0;
+				for(int j : v){
+					kk[u] = h[j];
+					for(int t = 0; t < w; t++){
+						matrix[u][t] = factors[j][t];
+					}
+					u++;
+				}
+
+				//solve matrix
+			}
+
+		}else if(w < k){
+			//column
+			for(vector<int> v : GetCombination(k, w)){
+
+				vector<vector<float>> matrix = {};
+				for(int i = 0; i < w; i++){
+					matrix.push_back(vector<float>(w, 0));
+				}
+
+				vector<int> kk = h;
+				int u = 0;
+				for(int j : v){
+					for(int t = 0; t < w; t++){
+						matrix[t][u] = factors[t][j];
+					}
+					u++;
+				}
+
+				vector<vector<float>> identity = GetIdentityMatrix(matrix.size());
+				Gaussian_SolveMod2(matrix, identity);
+				bool found = false;
 
 
+				for(int i = 0; i < matrix.size(); i++){
+					bool rowZero = true;
+					for(int j = 0; j < matrix.size(); j++){
+						if(matrix[i][j] == 1){
+							rowZero = false;
+							break;
+						}
+					}
+
+					if(rowZero){
+						int leftSide = 1;
+						int left = 1;
+						long tem = 0;
+						for(int j = 0; j < identity.size(); j++){
+							tem = ((int)identity[i][j] * kk[j]);
+							leftSide *= (tem ? tem : 1);
+							left *= (tem ? tem : 1);
+						}
+						leftSide = leftSide % mpz_get_ui(n);
+
+
+
+
+						if(leftSide == rightSide){
+							tem = right - sqrt(left);
+							mpz_set_ui(temp, tem);
+
+							mpz_gcd(p, n, temp);
+
+							//if not 1 then q is
+							//RESULT OK
+						}
+					}
+				}
+
+				if(found) break;
+			}
+
+		}else{
+			vector<int> kk = h;
+
+			//solve matrix
+		}
 
 		return;
 
 
 
 
+
+/*
+
+
+		//PrintMatrix(matrix);
+		//printf("\n");
+		//for(int w = 0; w < kk.size(); w++) printf("%d ", kk[w]);
+		//printf("\n");		printf("\n");
 
 
 		//matrix
@@ -311,7 +403,7 @@ void QuadraticSieve::Factor(string input){
 		PrintMatrix(identity);
 		printf("\n");
 
-
+*/
 
 
 		//pivot
@@ -359,6 +451,25 @@ void QuadraticSieve::Factor(string input){
 	mpz_clears(n, q, p, nmod, nsqrt, nsqrtrem, temp, NULL);
 	printf("This is end of program\n");
 	return;
+}
+
+
+vector<vector<int>> QuadraticSieve::GetCombination(int n, int k){
+	vector<vector<int>> result = {};
+	string bitmask(k, 1);
+    bitmask.resize(n, 0);
+
+    do {
+    	vector<int> v = {};
+        for (int i = 0; i < n; ++i)
+        {
+            if (bitmask[i]) {
+            	v.push_back(i);
+            }
+        }
+        result.push_back(v);
+    } while (prev_permutation(bitmask.begin(), bitmask.end()));
+    return result;
 }
 
 

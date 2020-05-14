@@ -23,6 +23,8 @@ private:
 
 
 
+
+	static vector<vector<int>> GetCombination(int n, int k);
 	static void PrintMatrix(vector<vector<float>> A);
 	static void Gaussian_Triangular(vector<vector<float>> &A, vector<int> &pivot, int &det, bool &err);
 	static void Gaussian_Solve(vector<vector<float>> &A, vector<int> &pivot, vector<float> &b);
