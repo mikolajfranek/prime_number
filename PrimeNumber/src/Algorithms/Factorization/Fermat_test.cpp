@@ -3,7 +3,7 @@
 // Define benchmark
 static void BM_Fermat(benchmark::State& state) {
 	for (auto _ : state){
-		Fermat::Factor(MyConfiguration::GetSemiPrime(state.range(0)));
+		Fermat::Factor(SupplementPrime::GetSemiPrime(state.range(0)));
 	}
 }
 /* register the function as benchmark with arguments */

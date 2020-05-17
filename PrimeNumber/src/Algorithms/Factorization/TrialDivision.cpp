@@ -23,10 +23,9 @@ void TrialDivision::Factor(string input){
 			mpz_set_ui(p, 3);
 		}else{
 			mpz_sqrt(nsqrt, n);
-			mpz_set_str(i, "5", 10);
 			bool isPrime = true;
-			int d = 2;
-			while(mpz_cmp(i, nsqrt) <= 0){
+			int d = 4;
+			for(mpz_set_ui(i, 5); mpz_cmp(i, nsqrt) <= 0; mpz_add_ui(i, i, d)){
 				mpz_mod(nmod, n, i);
 				if(mpz_cmp_ui(nmod, 0) == 0){
 					mpz_div(q, n, i);
@@ -34,7 +33,6 @@ void TrialDivision::Factor(string input){
 					isPrime = false;
 					break;
 				}
-				mpz_add_ui(i, i, d);
 				d = 6 - d;
 			}
 			if(isPrime){
@@ -45,7 +43,7 @@ void TrialDivision::Factor(string input){
 	}
 
 	//check
-	Algorithm::CheckResult(n, q, p);
+	SupplementHelper::CheckResult(n, q, p);
 
 	//clear
 	mpz_clears(n, q, p, nmod, nsqrt, i, NULL);

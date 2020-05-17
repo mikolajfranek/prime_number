@@ -36,7 +36,7 @@ void Fermat::Factor(string input){
 	}
 
 	//check
-	Algorithm::CheckResult(n, q, p);
+	SupplementHelper::CheckResult(n, q, p);
 
 	//clear
 	mpz_clears(n, q, p, nmod2, y, yrem, x, xrem, xmul2, z, NULL);

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include <numeric> /* iota */
+#include <numeric>
 
 /* gmp */
 #include <gmp.h>
@@ -17,9 +17,12 @@
 /* using */
 using namespace std;
 
-class MyConfiguration {
-public:
-	static string GetSemiPrime(int numberOfDigits);
-};
+/* supplements */
+#include "../Supplements/SupplementPrime.h"
+#include "../Supplements/SupplementMatrix.h"
+#include "../Supplements/SupplementHelper.h"
+
+/* solver */
+#include "../Algorithms/Solver/TonelliShanks.h"
 
 #endif

@@ -1,6 +1,6 @@
-#include "MyConfiguration.h"
+#include "SupplementPrime.h"
 
-string MyConfiguration::GetSemiPrime(int numberOfDigits){
+string SupplementPrime::GetSemiPrime(int numberOfDigits){
 	switch(numberOfDigits){
 		case 10:
 			return "2651354581";
@@ -107,4 +107,24 @@ string MyConfiguration::GetSemiPrime(int numberOfDigits){
 		default:
 			return "";
 	}
+}
+
+vector<int> SupplementPrime::GetPrimeListBelowN(int n){
+	vector<int> primes = {};
+	bool arr[n+1];
+	memset(arr, true, sizeof(arr));
+	int nsqrt = sqrt(n);
+	for(int i = 2; i <= nsqrt; i++){
+		if(arr[i]){
+			for(int j = i*i; j <= n; j += i){
+				arr[j] = false;
+			}
+		}
+	}
+	for(int i = 2; i < n; i++){
+		if(arr[i]){
+			primes.push_back(i);
+		}
+	}
+	return primes;
 }
