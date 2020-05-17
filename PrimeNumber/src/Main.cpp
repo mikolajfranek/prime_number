@@ -1,9 +1,7 @@
-#include "Configurations/MyConfiguration.h"
-
-/* algorithms */
 #include "Algorithms/Factorization/TrialDivision.h"
 #include "Algorithms/Factorization/Fermat.h"
 #include "Algorithms/Factorization/QuadraticSieve.h"
+#include "Configurations/MyHeader.h"
 
 /* run benchmark macro */
 //BENCHMARK_MAIN();

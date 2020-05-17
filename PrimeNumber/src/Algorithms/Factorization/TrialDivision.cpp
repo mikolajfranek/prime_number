@@ -43,7 +43,7 @@ void TrialDivision::Factor(string input){
 	}
 
 	//check
-	SupplementHelper::CheckResult(n, q, p);
+	MyHelper::CheckResult(n, q, p);
 
 	//clear
 	mpz_clears(n, q, p, nmod, nsqrt, i, NULL);

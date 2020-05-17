@@ -1,5 +1,5 @@
-#ifndef CONFIGURATIONS_MYCONFIGURATION_H_
-#define CONFIGURATIONS_MYCONFIGURATION_H_
+#ifndef CONFIGURATIONS_MYHEADER_H_
+#define CONFIGURATIONS_MYHEADER_H_
 
 /* general */
 #include <string>
@@ -17,10 +17,8 @@
 /* using */
 using namespace std;
 
-/* supplements */
-#include "../Supplements/SupplementPrime.h"
-#include "../Supplements/SupplementMatrix.h"
-#include "../Supplements/SupplementHelper.h"
+/* helper */
+#include "MyHelper.h"
 
 /* solver */
 #include "../Algorithms/Solver/TonelliShanks.h"

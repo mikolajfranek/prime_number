@@ -1,6 +1,154 @@
-#include "SupplementPrime.h"
+#include "MyHelper.h"
 
-string SupplementPrime::GetSemiPrime(int numberOfDigits){
+//other
+void MyHelper::CheckResult(mpz_t n, mpz_t q, mpz_t p){
+	mpz_t q_mul_p;
+	mpz_inits(q_mul_p, NULL);
+	mpz_mul(q_mul_p, q, p);
+	if(mpz_cmp(n, q_mul_p) == 0){
+		gmp_printf("OK: %Zd = %Zd * %Zd\n", n, q, p);
+	}else{
+		gmp_printf("ERROR: %Zd = %Zd * %Zd\n", n, q, p);
+	}
+	mpz_clears(q_mul_p, NULL);
+}
+void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
+	mpz_t i;
+	mpz_inits(i, NULL);
+	mpz_set_ui(r, 1);
+	for(mpz_set_ui(i, 0); mpz_cmp(i, d) < 0; mpz_add_ui(i, i, 1)){
+		mpz_mul(r, r, c);
+	}
+	mpz_clears(i, NULL);
+}
+void MyHelper::DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step){
+	for(int i = from; i < sizeOfSieve; i += step){
+		mpz_div_ui(sieve[i], sieve[i], step);
+	}
+}
+vector<vector<int>> MyHelper::GetCombination(int n, int k){
+	vector<vector<int>> result = {};
+	string bitmask(k, 1);
+    bitmask.resize(n, 0);
+
+    do {
+    	vector<int> v = {};
+        for (int i = 0; i < n; ++i)
+        {
+            if (bitmask[i]) {
+            	v.push_back(i);
+            }
+        }
+        result.push_back(v);
+    } while (prev_permutation(bitmask.begin(), bitmask.end()));
+    return result;
+}
+bool MyHelper::InputHasFormPowPToM(mpz_t n){
+
+	bool result = false;
+
+	//declare
+	mpz_t root, rem;
+
+	//init
+	mpz_inits(root, rem, NULL);
+
+	//start
+	for(long m = 2; ;m++){
+		mpz_rootrem(root, rem, n, m);
+		if(mpz_cmp_ui(rem, 0) == 0){
+			result = true;
+			break;
+		}else if(mpz_cmp_ui(root, 1) == 0){
+			break;
+		}
+	}
+
+	//clear
+	mpz_clears(root, rem, NULL);
+
+	return result;
+}
+
+//matrix
+vector<vector<float>> MyHelper::GetIdentityMatrix(int n){
+	vector<vector<float>> result = {};
+	int one = 0;
+	for(int i = 0; i < n; i++){
+		result.push_back(vector<float>(n, false));
+		result[i][one++] = true;
+	}
+	return result;
+}
+void MyHelper::PrintMatrix(vector<vector<float>> A){
+	for(vector<float> x: A){
+		for(float y : x){
+			printf("%f ", y);
+		}
+		printf("\n");
+	}
+}
+void MyHelper::Gaussian_SolveMod2(vector<vector<float>> &A, vector<vector<float>> &b){
+
+	//triangular
+	float temp;
+	unsigned i0;
+	for(unsigned int k = 0; k <= (A.size() - 2); k++){
+
+		//search for non-zero value
+		i0 = k;
+		for(unsigned i = k; i <= A.size() - 1; i++){
+			if(A[i][k] != 0){
+				i0 = i;
+				break;
+			}
+		}
+
+		//change row
+		if(i0 != k){
+			for(unsigned j = 0; j < A.size(); j++){
+				temp = A[k][j];
+				A[k][j] = A[i0][j];
+				A[i0][j] = temp;
+
+				temp = b[k][j];
+				b[k][j] = b[i0][j];
+				b[i0][j] = temp;
+			}
+		}
+
+		//calculate
+		if(A[k][k] != 0){
+			for(unsigned i = k + 1; i < A.size(); i++){
+				if(A[i][k] != 0){
+					for(unsigned j = 0; j < A.size(); j++){
+						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
+						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	//solve - reverse
+	for(int k = (A.size() - 1); k >= 1; k--){
+		if(A[k][k] != 0){
+			for(int i = k - 1; i >= 0; i--){
+				if(A[i][k] != 0){
+					for(unsigned j = 0; j < A.size(); j++){
+						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
+						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
+					}
+				}
+			}
+		}
+	}
+}
+
+//prime
+string MyHelper::GetSemiPrime(int numberOfDigits){
 	switch(numberOfDigits){
 		case 10:
 			return "2651354581";
@@ -108,8 +256,7 @@ string SupplementPrime::GetSemiPrime(int numberOfDigits){
 			return "";
 	}
 }
-
-vector<int> SupplementPrime::GetPrimeListBelowN(int n){
+vector<int> MyHelper::GetPrimeListBelowN(int n){
 	vector<int> primes = {};
 	bool arr[n+1];
 	memset(arr, true, sizeof(arr));

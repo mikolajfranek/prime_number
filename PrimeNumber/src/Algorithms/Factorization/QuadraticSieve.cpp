@@ -26,7 +26,7 @@ void QuadraticSieve::Factor(string input){
 		int m = 100;
 
 		//quadratic residue
-		vector<int> primes = SupplementPrime::GetPrimeListBelowN(b);
+		vector<int> primes = MyHelper::GetPrimeListBelowN(b);
 		vector<int> quadraticResidue = {2};
 		for (int prime : primes){
 			if(prime == 2) continue;
@@ -62,7 +62,7 @@ void QuadraticSieve::Factor(string input){
 		}
 
 		//divide sieve for '2' which is quadratic residue
-		SupplementHelper::DivideSieve(V, m, 1, 2);
+		MyHelper::DivideSieve(V, m, 1, 2);
 
 		//divide sieve for other
 		int sqrtOfN = mpz_get_ui(nsqrt), result_1, result_2;
@@ -78,12 +78,12 @@ void QuadraticSieve::Factor(string input){
 			//solve congruent
 			result_1 = (result_1 - sqrtOfN) % residue;
 			result_1 = result_1 < 0 ? result_1 + residue : result_1;
-			SupplementHelper::DivideSieve(V, m, result_1, residue);
+			MyHelper::DivideSieve(V, m, result_1, residue);
 
 			//solve congruent
 			result_2 = (result_2 - sqrtOfN) % residue;
 			result_2 = result_2 < 0 ? result_2 + residue : result_2;
-			SupplementHelper::DivideSieve(V, m, result_2, residue);
+			MyHelper::DivideSieve(V, m, result_2, residue);
 		}
 
 		//calculate factor array
@@ -131,7 +131,7 @@ void QuadraticSieve::Factor(string input){
 
 		if(w > k){
 			//row
-			for(vector<int> v : SupplementHelper::GetCombination(w, k)){
+			for(vector<int> v : MyHelper::GetCombination(w, k)){
 
 				vector<vector<float>> matrix = {};
 				for(int i = 0; i < k; i++){
@@ -153,7 +153,7 @@ void QuadraticSieve::Factor(string input){
 
 		}else if(w < k){
 			//column
-			for(vector<int> v : SupplementHelper::GetCombination(k, w)){
+			for(vector<int> v : MyHelper::GetCombination(k, w)){
 
 				vector<vector<float>> matrix = {};
 				for(int i = 0; i < w; i++){
@@ -169,14 +169,14 @@ void QuadraticSieve::Factor(string input){
 					u++;
 				}
 
-				vector<vector<float>> identity = SupplementMatrix::GetIdentityMatrix(matrix.size());
-				SupplementMatrix::Gaussian_SolveMod2(matrix, identity);
+				vector<vector<float>> identity = MyHelper::GetIdentityMatrix(matrix.size());
+				MyHelper::Gaussian_SolveMod2(matrix, identity);
 				bool found = false;
 
 
-				for(int i = 0; i < matrix.size(); i++){
+				for(unsigned int i = 0; i < matrix.size(); i++){
 					bool rowZero = true;
-					for(int j = 0; j < matrix.size(); j++){
+					for(unsigned int j = 0; j < matrix.size(); j++){
 						if(matrix[i][j] == 1){
 							rowZero = false;
 							break;
@@ -187,7 +187,7 @@ void QuadraticSieve::Factor(string input){
 						int leftSide = 1;
 						int left = 1;
 						long tem = 0;
-						for(int j = 0; j < identity.size(); j++){
+						for(unsigned int j = 0; j < identity.size(); j++){
 							tem = ((int)identity[i][j] * kk[j]);
 							leftSide *= (tem ? tem : 1);
 							left *= (tem ? tem : 1);
@@ -203,7 +203,7 @@ void QuadraticSieve::Factor(string input){
 
 							mpz_gcd(p, n, temp);
 
-							printf("Result is %d\n\n", mpz_get_ui(p));
+							printf("Result is %d\n\n", (int)mpz_get_ui(p));
 
 							//if not 1 then q is
 							//RESULT OK

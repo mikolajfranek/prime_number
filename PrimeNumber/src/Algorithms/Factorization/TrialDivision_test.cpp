@@ -3,7 +3,7 @@
 // Define benchmark
 static void BM_TrialDivision(benchmark::State& state) {
 	for (auto _ : state){
-		TrialDivision::Factor(SupplementPrime::GetSemiPrime(state.range(0)));
+		TrialDivision::Factor(MyHelper::GetSemiPrime(state.range(0)));
 	}
 }
 /* register the function as benchmark with arguments */
