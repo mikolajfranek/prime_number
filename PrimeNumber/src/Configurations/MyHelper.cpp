@@ -1,17 +1,66 @@
 #include "MyHelper.h"
 
-//other
 void MyHelper::CheckResult(mpz_t n, mpz_t q, mpz_t p){
-	mpz_t q_mul_p;
-	mpz_inits(q_mul_p, NULL);
-	mpz_mul(q_mul_p, q, p);
-	if(mpz_cmp(n, q_mul_p) == 0){
+	mpz_t r;
+	mpz_inits(r, NULL);
+	mpz_mul(r, q, p);
+	if(mpz_cmp(n, r) == 0){
 		gmp_printf("OK: %Zd = %Zd * %Zd\n", n, q, p);
 	}else{
-		gmp_printf("ERROR: %Zd = %Zd * %Zd\n", n, q, p);
+		printf("ERROR: CheckResult\n");
 	}
-	mpz_clears(q_mul_p, NULL);
+	mpz_clears(r, NULL);
 }
+
+void MyHelper::InitializeVector(mpz_t **v, unsigned long long n){
+	*v = (mpz_t *)malloc(n * sizeof(mpz_t));
+	if(*v == NULL){
+		printf("ERROR: InitializeVector\n");
+		return;
+	}
+}
+
+vector<unsigned long long> MyHelper::GetPrimesBelowN(unsigned long long n){
+	bool v[n+1];
+	memset(v, true, sizeof(v));
+	for(unsigned long long i = 2; i * i <= n; i++){
+		if(v[i]){
+			for(unsigned long long j = i*i; j <= n; j += i){
+				v[j] = false;
+			}
+		}
+	}
+	vector<unsigned long long> primes = {};
+	for(unsigned long long i = 2; i <= n; i++){
+		if(v[i]){
+			primes.push_back(i);
+		}
+	}
+	return primes;
+}
+void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
+	for(unsigned long long i = from; i < sizeOfSieve; i += step){
+		mpz_div_ui(sieve[i], sieve[i], step);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 	mpz_t i;
 	mpz_inits(i, NULL);
@@ -21,11 +70,8 @@ void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 	}
 	mpz_clears(i, NULL);
 }
-void MyHelper::DivideSieve(mpz_t *sieve, int sizeOfSieve, int from, int step){
-	for(int i = from; i < sizeOfSieve; i += step){
-		mpz_div_ui(sieve[i], sieve[i], step);
-	}
-}
+
+
 vector<vector<int>> MyHelper::GetCombination(int n, int k){
 	vector<vector<int>> result = {};
 	string bitmask(k, 1);
@@ -256,22 +302,6 @@ string MyHelper::GetSemiPrime(int numberOfDigits){
 			return "";
 	}
 }
-vector<int> MyHelper::GetPrimeListBelowN(int n){
-	vector<int> primes = {};
-	bool arr[n+1];
-	memset(arr, true, sizeof(arr));
-	int nsqrt = sqrt(n);
-	for(int i = 2; i <= nsqrt; i++){
-		if(arr[i]){
-			for(int j = i*i; j <= n; j += i){
-				arr[j] = false;
-			}
-		}
-	}
-	for(int i = 2; i < n; i++){
-		if(arr[i]){
-			primes.push_back(i);
-		}
-	}
-	return primes;
-}
+
+
+

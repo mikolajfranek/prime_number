@@ -24,7 +24,7 @@ void TrialDivision::Factor(string input){
 		}else{
 			mpz_sqrt(nsqrt, n);
 			bool isPrime = true;
-			int d = 4;
+			short d = 4;
 			for(mpz_set_ui(i, 5); mpz_cmp(i, nsqrt) <= 0; mpz_add_ui(i, i, d)){
 				mpz_mod(nmod, n, i);
 				if(mpz_cmp_ui(nmod, 0) == 0){

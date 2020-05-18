@@ -3,10 +3,10 @@
 void QuadraticSieve::Factor(string input){
 
 	//declare
-	mpz_t n, q, p, nmod, nsqrt, nsqrtrem, temp;
+	mpz_t n, q, p, nmod, x, xrem, temp;
 
 	//init
-	mpz_inits(n, q, p, nmod, nsqrt, nsqrtrem, temp, NULL);
+	mpz_inits(n, q, p, nmod, x, xrem, temp, NULL);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
@@ -17,79 +17,112 @@ void QuadraticSieve::Factor(string input){
 		mpz_div_ui(q, n, 2);
 		mpz_set_ui(p, 2);
 	}else{
-		mpz_sqrtrem(nsqrt, nsqrtrem, n);
-		if(mpz_cmp_ui(nsqrtrem, 0) != 0){
-			mpz_add_ui(nsqrt, nsqrt, 1);
+
+		unsigned long long b = 0;
+		unsigned long long y = 0;
+
+		mpz_sqrtrem(x, xrem, n);
+		if(mpz_cmp_ui(xrem, 0) != 0){
+			mpz_add_ui(x, x, 1);
 		}
 
-		int b = 30;
-		int m = 100;
-
-		//quadratic residue
-		vector<int> primes = MyHelper::GetPrimeListBelowN(b);
-		vector<int> quadraticResidue = {2};
-		for (int prime : primes){
-			if(prime == 2) continue;
-			mpz_set_ui(temp, prime);
-			if(mpz_legendre(n, temp) == 1){
-				quadraticResidue.push_back(prime);
-			}
-		}
-
-		//define
 		mpz_t *Y;
 		mpz_t *V;
-		Y = (mpz_t *)malloc(m * sizeof(mpz_t));
-		if(Y == NULL){
-			printf("ERROR: Out of memory\n");
-			return;
-		}
-		V = (mpz_t *)malloc(m * sizeof(mpz_t));
-		if(V == NULL){
-			printf("ERROR: Out of memory\n");
-			return;
-		}
-		for(int i=0;i<m;i++) mpz_init2(Y[i], sizeof(mpz_t));
-		for(int i=0;i<m;i++) mpz_init2(V[i], sizeof(mpz_t));
+
+		vector<unsigned long long> factorBase = {};
+
+
+//------------------------ WHILE BEGIN ------------------------
+
+		//update
+		b += 30;
+		y += 100;
+
+		//init
+		MyHelper::InitializeVector(&Y, y);
+		for(unsigned long long i = 0; i < y; i++) mpz_init2(Y[i], sizeof(mpz_t));
+		MyHelper::InitializeVector(&V, y);
+		for(unsigned long long i = 0; i < y; i++) mpz_init2(V[i], sizeof(mpz_t));
 
 		//calculate Q(x)
-		for(int i = 0; i < m; i++){
+		for(unsigned long long i = 0; i < y; i++){
 			 mpz_set_ui(V[i], i);
-			 mpz_add(V[i], V[i], nsqrt);
+			 mpz_add(V[i], V[i], x);
 			 mpz_pow_ui(V[i], V[i], 2);
 			 mpz_sub(V[i], V[i], n);
 			 mpz_set(Y[i], V[i]);
 		}
 
-		//divide sieve for '2' which is quadratic residue
-		MyHelper::DivideSieve(V, m, 1, 2);
+		//factor base
+		factorBase = {2};
+		for (unsigned long long prime : MyHelper::GetPrimesBelowN(b)){
+			if(prime != 2){
+				mpz_set_ui(temp, prime);
+				if(mpz_legendre(n, temp) == 1){
+					factorBase.push_back(prime);
+				}
+			}
+		}
+
+		//divide sieve for 2
+		MyHelper::DivideSieve(V, y, 1, 2);
+
+
+//------------------------ WHILE END ------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 		//divide sieve for other
-		int sqrtOfN = mpz_get_ui(nsqrt), result_1, result_2;
-		for (int residue : quadraticResidue){
-			if(residue == 2) continue;
+		int sqrtOfN = mpz_get_ui(x), result_1, result_2;
 
-			mpz_set_ui(temp, residue);
-			TonelliShanks::Solve(n, temp);
+		for (int prime : factorBase){
+			if(prime != 2){
 
-			result_1 = mpz_get_ui(temp);
-			result_2 = residue - result_1;
+				mpz_set_ui(temp, prime);
+				TonelliShanks::Solve(n, temp);
 
-			//solve congruent
-			result_1 = (result_1 - sqrtOfN) % residue;
-			result_1 = result_1 < 0 ? result_1 + residue : result_1;
-			MyHelper::DivideSieve(V, m, result_1, residue);
+				result_1 = mpz_get_ui(temp);
+				result_2 = prime - result_1;
 
-			//solve congruent
-			result_2 = (result_2 - sqrtOfN) % residue;
-			result_2 = result_2 < 0 ? result_2 + residue : result_2;
-			MyHelper::DivideSieve(V, m, result_2, residue);
+				//solve congruent
+				result_1 = (result_1 - sqrtOfN) % prime;
+				result_1 = result_1 < 0 ? result_1 + prime : result_1;
+				MyHelper::DivideSieve(V, y, result_1, prime);
+
+				//solve congruent
+				result_2 = (result_2 - sqrtOfN) % prime;
+				result_2 = result_2 < 0 ? result_2 + prime : result_2;
+				MyHelper::DivideSieve(V, y, result_2, prime);
+
+			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
 
 		//calculate factor array
 		vector<int> x = {};
 		vector<int> h = {};
-		for(int i = 0; i < m; i++){
+		for(int i = 0; i < y; i++){
 			if((long)mpz_get_ui(V[i]) == 1){
 				x.push_back(i+sqrtOfN);
 				h.push_back(mpz_get_ui(Y[i]));
@@ -98,8 +131,8 @@ void QuadraticSieve::Factor(string input){
 		vector<vector<bool>> factors = {};
 		for(int i = 0; i < (int)h.size(); i++){
 			vector<bool> fac = {};
-			for(int j = 0; j < (int)quadraticResidue.size(); j++){
-				fac.push_back(h[i] % quadraticResidue[j] == 0);
+			for(int j = 0; j < (int)factorBase.size(); j++){
+				fac.push_back(h[i] % factorBase[j] == 0);
 			}
 			factors.push_back(fac);
 		}
@@ -126,7 +159,7 @@ void QuadraticSieve::Factor(string input){
 		int w = (int)h.size();
 
 		//2 - 17 - 23 - 29
-		int k = (int)quadraticResidue.size();
+		int k = (int)factorBase.size();
 
 
 		if(w > k){
@@ -225,14 +258,14 @@ void QuadraticSieve::Factor(string input){
 
 
 		//clear
-		for(int i=0;i<m;i++) mpz_clear(Y[i]);
-		for(int i=0;i<m;i++) mpz_clear(V[i]);
+		for(int i=0;i<y;i++) mpz_clear(Y[i]);
+		for(int i=0;i<y;i++) mpz_clear(V[i]);
 		free(Y);
 		free(V);
 	}
 
 	//clear
-	mpz_clears(n, q, p, nmod, nsqrt, nsqrtrem, temp, NULL);
+	mpz_clears(n, q, p, nmod, x, xrem, temp, NULL);
 	printf("This is end of program\n");
 	return;
 }
