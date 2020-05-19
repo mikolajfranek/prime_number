@@ -5,7 +5,7 @@
 
 class TonelliShanks {
 public:
-	static void Solve(mpz_t n, mpz_t p);
+	static void Solve(mpz_t n, mpz_t p, mpz_t alpha, mpz_t beta);
 };
 
 #endif

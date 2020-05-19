@@ -8,12 +8,18 @@ public:
 	//other
 	static void CheckResult(mpz_t n, mpz_t q, mpz_t p);
 	static void InitializeVector(mpz_t **v, unsigned long long n);
+	//prime
 	static vector<unsigned long long> GetPrimesBelowN(unsigned long long b);
+
+
+
+
+
+
+
+
+
 	static void DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step);
-
-
-
-
 
 
 

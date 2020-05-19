@@ -1,6 +1,6 @@
 #include "TonelliShanks.h"
 
-void TonelliShanks::Solve(mpz_t n, mpz_t p){
+void TonelliShanks::Solve(mpz_t n, mpz_t p, mpz_t alpha, mpz_t beta){
 
 	mpz_t s, e, f, t, x, g, b, r, m, c, d, temp;
 	mpz_inits(s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
@@ -43,7 +43,8 @@ void TonelliShanks::Solve(mpz_t n, mpz_t p){
 
 		//check
 		if(mpz_cmp_ui(m, 0) == 0){
-			mpz_set(p, x);
+			mpz_set(alpha, x);
+			mpz_sub(beta, p, alpha);
 			break;
 		}
 
