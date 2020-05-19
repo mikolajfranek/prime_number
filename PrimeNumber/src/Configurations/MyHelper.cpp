@@ -11,13 +11,40 @@ void MyHelper::CheckResult(mpz_t n, mpz_t q, mpz_t p){
 	}
 	mpz_clears(r, NULL);
 }
-
-void MyHelper::InitializeVector(mpz_t **v, unsigned long long n){
+void MyHelper::MallocVector(mpz_t **v, unsigned long long n){
 	*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 	if(*v == NULL){
-		printf("ERROR: InitializeVector\n");
+		printf("ERROR: MallocVector\n");
 		return;
 	}
+}
+void MyHelper::ReallocVector(mpz_t **v, unsigned long long n){
+	*v = (mpz_t *)realloc(*v, n * sizeof(mpz_t));
+	if(*v == NULL){
+		printf("ERROR: ReallocVector\n");
+		return;
+	}
+}
+void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
+	for(unsigned long long i = from; i < sizeOfSieve; i += step){
+		mpz_div_ui(sieve[i], sieve[i], step);
+	}
+}
+vector<vector<unsigned long long>> MyHelper::GetCombination(unsigned long long n, unsigned long long k){
+	vector<vector<unsigned long long>> result = {};
+	string bitmask(k, 1);
+    bitmask.resize(n, 0);
+    do {
+    	vector<unsigned long long> v = {};
+        for (unsigned long long i = 0; i < n; ++i)
+        {
+            if (bitmask[i]) {
+            	v.push_back(i);
+            }
+        }
+        result.push_back(v);
+    } while (prev_permutation(bitmask.begin(), bitmask.end()));
+    return result;
 }
 vector<unsigned long long> MyHelper::GetPrimesBelowN(unsigned long long n){
 	bool v[n+1];
@@ -37,11 +64,32 @@ vector<unsigned long long> MyHelper::GetPrimesBelowN(unsigned long long n){
 	}
 	return primes;
 }
-void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
-	for(unsigned long long i = from; i < sizeOfSieve; i += step){
-		mpz_div_ui(sieve[i], sieve[i], step);
+void MyHelper::PrintMatrix(vector<vector<bool>> A){
+	for(vector<bool> a: A){
+		for(float v : a){
+			printf("%d", (int)v);
+		}
+		printf("\n");
 	}
 }
+vector<vector<bool>> MyHelper::GetIdentityMatrix(unsigned long long n){
+	vector<vector<bool>> result = {};
+	for(unsigned long long i = 0; i < n; i++){
+		result.push_back(vector<bool>(n, false));
+		result[i][i] = true;
+	}
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -79,23 +127,7 @@ void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 }
 
 
-vector<vector<int>> MyHelper::GetCombination(int n, int k){
-	vector<vector<int>> result = {};
-	string bitmask(k, 1);
-    bitmask.resize(n, 0);
 
-    do {
-    	vector<int> v = {};
-        for (int i = 0; i < n; ++i)
-        {
-            if (bitmask[i]) {
-            	v.push_back(i);
-            }
-        }
-        result.push_back(v);
-    } while (prev_permutation(bitmask.begin(), bitmask.end()));
-    return result;
-}
 bool MyHelper::InputHasFormPowPToM(mpz_t n){
 
 	bool result = false;
@@ -123,84 +155,7 @@ bool MyHelper::InputHasFormPowPToM(mpz_t n){
 	return result;
 }
 
-//matrix
-vector<vector<float>> MyHelper::GetIdentityMatrix(int n){
-	vector<vector<float>> result = {};
-	int one = 0;
-	for(int i = 0; i < n; i++){
-		result.push_back(vector<float>(n, false));
-		result[i][one++] = true;
-	}
-	return result;
-}
-void MyHelper::PrintMatrix(vector<vector<float>> A){
-	for(vector<float> x: A){
-		for(float y : x){
-			printf("%f ", y);
-		}
-		printf("\n");
-	}
-}
-void MyHelper::Gaussian_SolveMod2(vector<vector<float>> &A, vector<vector<float>> &b){
 
-	//triangular
-	float temp;
-	unsigned i0;
-	for(unsigned int k = 0; k <= (A.size() - 2); k++){
-
-		//search for non-zero value
-		i0 = k;
-		for(unsigned i = k; i <= A.size() - 1; i++){
-			if(A[i][k] != 0){
-				i0 = i;
-				break;
-			}
-		}
-
-		//change row
-		if(i0 != k){
-			for(unsigned j = 0; j < A.size(); j++){
-				temp = A[k][j];
-				A[k][j] = A[i0][j];
-				A[i0][j] = temp;
-
-				temp = b[k][j];
-				b[k][j] = b[i0][j];
-				b[i0][j] = temp;
-			}
-		}
-
-		//calculate
-		if(A[k][k] != 0){
-			for(unsigned i = k + 1; i < A.size(); i++){
-				if(A[i][k] != 0){
-					for(unsigned j = 0; j < A.size(); j++){
-						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
-						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
-					}
-				}
-			}
-		}
-	}
-
-
-
-	//solve - reverse
-	for(int k = (A.size() - 1); k >= 1; k--){
-		if(A[k][k] != 0){
-			for(int i = k - 1; i >= 0; i--){
-				if(A[i][k] != 0){
-					for(unsigned j = 0; j < A.size(); j++){
-						A[i][j] = (int)(A[i][j] + A[k][j]) % 2;
-						b[i][j] = (int)(b[i][j] + b[k][j]) % 2;
-					}
-				}
-			}
-		}
-	}
-}
-
-//prime
 string MyHelper::GetSemiPrime(int numberOfDigits){
 	switch(numberOfDigits){
 		case 10:

@@ -3,10 +3,10 @@
 void QuadraticSieve::Factor(string input){
 
 	//declare
-	mpz_t n, q, p, nmod, x, xrem, alpha, beta, gamma;
+	mpz_t n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma;
 
 	//init
-	mpz_inits(n, q, p, nmod, x, xrem, alpha, beta, gamma, NULL);
+	mpz_inits(n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
@@ -49,8 +49,8 @@ void QuadraticSieve::Factor(string input){
 		}
 
 		//init
-		MyHelper::InitializeVector(&Y, y);
-		MyHelper::InitializeVector(&V, y);
+		MyHelper::MallocVector(&Y, y);
+		MyHelper::MallocVector(&V, y);
 		for(unsigned long long i = 0; i < y; i++) {
 			mpz_init2(Y[i], sizeof(mpz_t));
 			mpz_init2(V[i], sizeof(mpz_t));
@@ -85,53 +85,39 @@ void QuadraticSieve::Factor(string input){
 
 //------------------------ WHILE END ------------------------
 
+		//calculate right side
+		unsigned long long sizeRow = 0;
+		unsigned long long sizeCol = factorBase.size();
 
+		mpz_t *H;
+		MyHelper::MallocVector(&H, sizeRow);
 
-
-
-
-
-
-
-
-
-
-
-
-		int sqrtOfN = mpz_get_ui(x);
-
-		//calculate factor array
-		vector<int> h = {};
-
-		long right = 1;
-		long rightSide = 1;
-
-
+		mpz_set_ui(right, 1);
 		vector<vector<bool>> factors = {};
 
 		for(unsigned long long i = 0; i < y; i++){
-
-
 			if(mpz_cmp_ui(V[i], 1) == 0){
 
-				int xx = i+sqrtOfN;
+				mpz_set_str(alpha, to_string(i).c_str(), 10);
+				mpz_add(alpha, alpha, x);
 
-				rightSide *= xx*xx;
-				right *= xx;
+				mpz_pow_ui(beta, alpha, 2);
+				mpz_mul(right, right, beta);
 
-				h.push_back(mpz_get_ui(Y[i]));
+				MyHelper::ReallocVector(&H, sizeRow + 1);
+				mpz_init2(H[sizeRow], sizeof(mpz_t));
+				mpz_set(H[sizeRow], Y[i]);
+				sizeRow += 1;
 
-
-				vector<bool> fac = {};
-				for(int j = 0; j < (int)factorBase.size(); j++){
-					fac.push_back(mpz_get_ui(Y[i]) % factorBase[j] == 0);
+				vector<bool> factor = {};
+				for(unsigned long long j = 0; j < factorBase.size(); j++){
+					mpz_mod_ui(gamma, Y[i], factorBase[j]);
+					factor.push_back(mpz_cmp_ui(gamma, 0) == 0);
 				}
-				factors.push_back(fac);
+				factors.push_back(factor);
 			}
 		}
-
-		rightSide = rightSide % mpz_get_ui(n);
-		printf("Right side is %d\n\n", rightSide);
+		mpz_mod(rightMod, right, n);
 
 
 
@@ -139,119 +125,118 @@ void QuadraticSieve::Factor(string input){
 
 
 
+		//TODO and test
 
+		vector<vector<unsigned long long>> combinations = {};
 
+		enum MY { EQUAL, ROW, COLUMN};
+		//calculate left side
 
+		if(sizeRow > sizeCol){
 
-
-
-
-
-
-
-
-		//29 - 782 - 22678
-		int w = (int)h.size();
-
-		//2 - 17 - 23 - 29
-		int k = (int)factorBase.size();
-
-
-		if(w > k){
-			//row
-			for(vector<int> v : MyHelper::GetCombination(w, k)){
-
-				vector<vector<float>> matrix = {};
-				for(int i = 0; i < k; i++){
-					matrix.push_back(vector<float>(k, 0));
-				}
-
-				vector<int> kk = vector<int>(k, 0);
-				int u = 0;
-				for(int j : v){
-					kk[u] = h[j];
-					for(int t = 0; t < w; t++){
-						matrix[u][t] = factors[j][t];
-					}
-					u++;
-				}
-
-				//solve matrix
-			}
-
-		}else if(w < k){
-			//column
-			for(vector<int> v : MyHelper::GetCombination(k, w)){
-
-				vector<vector<float>> matrix = {};
-				for(int i = 0; i < w; i++){
-					matrix.push_back(vector<float>(w, 0));
-				}
-
-				vector<int> kk = h;
-				int u = 0;
-				for(int j : v){
-					for(int t = 0; t < w; t++){
-						matrix[t][u] = factors[t][j];
-					}
-					u++;
-				}
-
-				vector<vector<float>> identity = MyHelper::GetIdentityMatrix(matrix.size());
-				MyHelper::Gaussian_SolveMod2(matrix, identity);
-				bool found = false;
-
-
-				for(unsigned int i = 0; i < matrix.size(); i++){
-					bool rowZero = true;
-					for(unsigned int j = 0; j < matrix.size(); j++){
-						if(matrix[i][j] == 1){
-							rowZero = false;
-							break;
-						}
-					}
-
-					if(rowZero){
-						int leftSide = 1;
-						int left = 1;
-						long tem = 0;
-						for(unsigned int j = 0; j < identity.size(); j++){
-							tem = ((int)identity[i][j] * kk[j]);
-							leftSide *= (tem ? tem : 1);
-							left *= (tem ? tem : 1);
-						}
-						leftSide = leftSide % mpz_get_ui(n);
-
-
-
-
-						if(leftSide == rightSide){
-							tem = right - sqrt(left);
-							mpz_set_ui(gamma, tem);
-
-							mpz_gcd(p, n, gamma);
-
-							printf("Result is %d\n\n", (int)mpz_get_ui(p));
-
-							//if not 1 then q is
-							//RESULT OK
-						}
-					}
-				}
-
-				if(found) break;
-			}
+		}else if(sizeRow < sizeCol){
 
 		}else{
-			vector<int> kk = h;
 
-			//solve matrix
+
+			combinations = MyHelper::GetCombination(sizeCol, sizeRow);
 		}
 
+
+		for(vector<unsigned long long> c : MyHelper::GetCombination(sizeCol, sizeRow)){
+
+			//create matrix
+			vector<vector<bool>> A = {};
+			for(unsigned long long i = 0; i < sizeRow; i++){
+				A.push_back(vector<bool>(sizeRow, 0));
+			}
+
+			//fill matrix
+			unsigned long long u = 0;
+			for(unsigned long long j : c){
+
+				for(unsigned long long t = 0; t < sizeRow; t++){
+					A[t][u] = factors[t][j];
+				}
+				u++;
+			}
+
+			//solve
+			vector<vector<bool>> B = MyHelper::GetIdentityMatrix(sizeRow);
+			GaussianElimination::SolveMod2(A, B);
+
+			//search for row of zeros
+			bool isRowZero = true;
+			bool isFound = false;
+			for(unsigned long long i = 0; i < sizeRow; i++){
+				isRowZero = true;
+				for(unsigned long long j = 0; j < sizeRow; j++){
+					if(A[i][j]){
+						isRowZero = false;
+						break;
+					}
+				}
+
+				if(isRowZero){
+					mpz_set_ui(left, 1);
+					for(unsigned long long j = 0; j < sizeRow; j++){
+						mpz_mul_ui(gamma, H[j], (int)B[i][j]);
+						if(mpz_cmp_ui(gamma, 0) != 0){
+							mpz_mul(left, left, gamma);
+						}
+					}
+					mpz_mod(leftMod, left, n);
+
+					//check if are equal
+					if(mpz_cmp(leftMod, rightMod) == 0){
+						mpz_sqrt(alpha, left);
+						mpz_sqrt(beta, right);
+
+						mpz_sub(gamma, beta, alpha);
+						mpz_gcd(p, n, gamma);
+
+						if(mpz_cmp_ui(p, 1) != 0){
+							isFound = true;
+							mpz_div(q, n, p);
+						}
+					}
+				}
+
+				if(isFound) break;
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//check
+		MyHelper::CheckResult(n, q, p);
 
 
 		//clear
-		for(unsigned long long i=0;i<y;i++){
+		for(unsigned long long i = 0; i < sizeRow; i++){
+			mpz_clear(H[i]);
+		}
+		free(H);
+		for(unsigned long long i = 0; i < y; i++){
 			mpz_clear(Y[i]);
 			mpz_clear(V[i]);
 		}
@@ -260,5 +245,5 @@ void QuadraticSieve::Factor(string input){
 	}
 
 	//clear
-	mpz_clears(n, q, p, nmod, x, xrem, alpha, beta, gamma, NULL);
+	mpz_clears(n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 }

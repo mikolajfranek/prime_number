@@ -22,5 +22,6 @@ using namespace std;
 
 /* solver */
 #include "../Algorithms/Solver/TonelliShanks.h"
+#include "../Algorithms/Solver/GaussianElimination.h"
 
 #endif
