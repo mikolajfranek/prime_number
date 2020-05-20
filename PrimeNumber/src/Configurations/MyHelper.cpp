@@ -26,9 +26,19 @@ void MyHelper::ReallocVector(mpz_t **v, unsigned long long n){
 	}
 }
 void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
+	mpz_t r;
+	mpz_inits(r, NULL);
 	for(unsigned long long i = from; i < sizeOfSieve; i += step){
-		mpz_div_ui(sieve[i], sieve[i], step);
+
+		mpz_mod_ui(r, sieve[i], step);
+
+		while(mpz_cmp_ui(r, 0) == 0){
+			mpz_div_ui(sieve[i], sieve[i], step);
+			mpz_mod_ui(r, sieve[i], step);
+		}
+
 	}
+	mpz_clears(r, NULL);
 }
 vector<vector<unsigned long long>> MyHelper::GetCombination(unsigned long long n, unsigned long long k){
 	vector<vector<unsigned long long>> result = {};

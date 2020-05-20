@@ -6,7 +6,9 @@
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	QuadraticSieve::Factor("15347");
+	//QuadraticSieve::Factor("15345");
+	QuadraticSieve::Factor(MyHelper::GetSemiPrime(10));
+
 	return 0;
 }
 
