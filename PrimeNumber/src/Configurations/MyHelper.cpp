@@ -5,12 +5,36 @@ void MyHelper::CheckResult(mpz_t n, mpz_t q, mpz_t p){
 	mpz_inits(r, NULL);
 	mpz_mul(r, q, p);
 	if(mpz_cmp(n, r) == 0){
-		gmp_printf("OK: %Zd = %Zd * %Zd\n", n, q, p);
+		gmp_printf("%Zd = %Zd * %Zd\n", n, q, p);
 	}else{
-		printf("ERROR: CheckResult\n");
+		printf("Error: MyHelper::CheckResult\n");
 	}
 	mpz_clears(r, NULL);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void MyHelper::MallocVector(mpz_t **v, unsigned long long n){
 	*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 	if(*v == NULL){
@@ -137,33 +161,6 @@ void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 }
 
 
-
-bool MyHelper::InputHasFormPowPToM(mpz_t n){
-
-	bool result = false;
-
-	//declare
-	mpz_t root, rem;
-
-	//init
-	mpz_inits(root, rem, NULL);
-
-	//start
-	for(long m = 2; ;m++){
-		mpz_rootrem(root, rem, n, m);
-		if(mpz_cmp_ui(rem, 0) == 0){
-			result = true;
-			break;
-		}else if(mpz_cmp_ui(root, 1) == 0){
-			break;
-		}
-	}
-
-	//clear
-	mpz_clears(root, rem, NULL);
-
-	return result;
-}
 
 
 string MyHelper::GetSemiPrime(int numberOfDigits){

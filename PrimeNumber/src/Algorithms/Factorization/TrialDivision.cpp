@@ -35,7 +35,7 @@ void TrialDivision::Factor(string input){
 				}
 				d = 6 - d;
 			}
-			if(isPrime){
+			if(isPrime == true){
 				mpz_set(q, n);
 				mpz_set_ui(p, 1);
 			}

@@ -3,10 +3,12 @@
 void QuadraticSieve::Factor(string input){
 
 	//declare
-	mpz_t n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma;
+	mpz_t n, q, p, nmod, x, xrem,
+			i, right, rightMod, left, leftMod, alpha, beta, gamma;
 
 	//init
-	mpz_inits(n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
+	mpz_inits(n, q, p, nmod, x, xrem,
+			i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 
 	//set
 	mpz_set_str(n, input.c_str(), 10);
@@ -17,17 +19,45 @@ void QuadraticSieve::Factor(string input){
 		mpz_div_ui(q, n, 2);
 		mpz_set_ui(p, 2);
 	}else{
+		bool isPowerOfPrime = false;
+		unsigned long int k = 2;
+		do{
+			mpz_rootrem(x, xrem, n, k);
+			if(mpz_cmp_ui(xrem, 0) == 0){
+				mpz_div(q, n, x);
+				mpz_set(p, x);
+				isPowerOfPrime = true;
+				break;
+			}
+			k = k + 1;
+		}while(mpz_cmp_ui(x, 1) > 0);
+
+		if(isPowerOfPrime == false){
+			//TODO
+		}
+
+		//check
+		MyHelper::CheckResult(n, q, p);
+
+		//clear
+		return;
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+		//TO KNOW
 		//wejscie nie może być:
-		//liczbą pierwszą ...
-		//potegą liczby pierwszej...
-
-
+		//liczbą pierwszą ...??
 		//wartości 'optymalne' dla b i y???
 
 
@@ -269,5 +299,6 @@ void QuadraticSieve::Factor(string input){
 	}
 
 	//clear
-	mpz_clears(n, q, p, nmod, x, xrem, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
+	mpz_clears(n, q, p, nmod, x, xrem,
+			i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 }

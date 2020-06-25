@@ -24,7 +24,7 @@ public:
 
 
 	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
-	static bool InputHasFormPowPToM(mpz_t n);
+	static bool IsPrimePower(mpz_t n);
 	static string GetSemiPrime(int numberOfDigits);
 };
 
