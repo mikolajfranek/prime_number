@@ -36,10 +36,6 @@ void QuadraticSieve::Factor(string input){
 			//TODO
 		}
 
-		//check
-		MyHelper::CheckResult(n, q, p);
-
-		//clear
 		return;
 
 
