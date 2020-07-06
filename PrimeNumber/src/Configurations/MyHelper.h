@@ -5,8 +5,20 @@
 
 class MyHelper {
 public:
-	//other
+	static string GetPrime(int numberOfDigits);
+	static string GetSemiPrime(int numberOfDigits);
 	static void CheckResult(mpz_t n, mpz_t q, mpz_t p);
+
+
+
+
+
+
+
+
+
+
+	//TODO
 	static void MallocVector(mpz_t **v, unsigned long long n);
 	static void ReallocVector(mpz_t **v, unsigned long long n);
 	static void DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step);
@@ -18,14 +30,7 @@ public:
 	static vector<vector<bool>> GetIdentityMatrix(unsigned long long n);
 
 
-
-
-
-
-
 	static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
-	static bool IsPrimePower(mpz_t n);
-	static string GetSemiPrime(int numberOfDigits);
 };
 
 #endif

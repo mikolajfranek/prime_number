@@ -1,14 +1,10 @@
-#include "Algorithms/Factorization/TrialDivision.h"
-#include "Algorithms/Factorization/Fermat.h"
-#include "Algorithms/Factorization/QuadraticSieve.h"
+#include "Configurations/MyHeader.h"
 
 /* run benchmark macro */
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	//QuadraticSieve::Factor("15345");
-	QuadraticSieve::Factor(MyHelper::GetSemiPrime(10));
-
+	Factorization::QuadraticSieve::Factor("15345");
 	return 0;
 }
 

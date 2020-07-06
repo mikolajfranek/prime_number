@@ -24,4 +24,12 @@ using namespace std;
 #include "../Algorithms/Solver/TonelliShanks.h"
 #include "../Algorithms/Solver/GaussianElimination.h"
 
+/* primality */
+#include "../Algorithms/Primality/TrialDivision.h"
+
+/* factorization */
+#include "../Algorithms/Factorization/TrialDivision.h"
+#include "../Algorithms/Factorization/Fermat.h"
+#include "../Algorithms/Factorization/QuadraticSieve.h"
+
 #endif
