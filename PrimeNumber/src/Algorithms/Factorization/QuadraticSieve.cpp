@@ -4,11 +4,11 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t n, q, p, nmod, x, xrem,
+		mpz_t n, q, p, nmod, x, xrem, b,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma;
 
 		//init
-		mpz_inits(n, q, p, nmod, x, xrem,
+		mpz_inits(n, q, p, nmod, x, xrem, b,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 
 		//set
@@ -44,6 +44,7 @@ namespace Factorization {
 			}
 
 
+
 			return;
 
 
@@ -51,23 +52,33 @@ namespace Factorization {
 
 
 
-
-
-
-
-
-
-
-
-
-
-			unsigned long long b = 0;
-			unsigned long long y = 0;
-
 			mpz_sqrtrem(x, xrem, n);
 			if(mpz_cmp_ui(xrem, 0) != 0){
 				mpz_add_ui(x, x, 1);
 			}
+
+
+			unsigned long long b = 11;
+
+
+
+
+
+
+
+
+
+			return;
+			//end of program
+
+
+
+
+
+
+			unsigned long long y = 0;
+
+
 
 			mpz_t *Y;
 			mpz_t *V;
@@ -80,23 +91,11 @@ namespace Factorization {
 			while(true){
 
 
-
 				//update
 				b += 100;
 				y += 160;
-
 				printf("Value of b = %d\n", b);
 
-				//factor base
-				factorBase = {2};
-				for (unsigned long long prime : MyHelper::GetPrimesBelowN(b)){
-					if(prime != 2){
-						mpz_set_str(gamma, to_string(prime).c_str(), 10);
-						if(mpz_legendre(n, gamma) == 1){
-							factorBase.push_back(prime);
-						}
-					}
-				}
 
 				//init
 				MyHelper::MallocVector(&Y, y);
@@ -113,6 +112,25 @@ namespace Factorization {
 					mpz_set(Y[i], V[i]);
 				}
 
+
+
+
+
+
+
+
+
+				//factor base
+				factorBase = {2};
+				for (unsigned long long prime : MyHelper::GetPrimesBelowN(b)){
+					if(prime != 2){
+						mpz_set_str(gamma, to_string(prime).c_str(), 10);
+						if(mpz_legendre(n, gamma) == 1){
+							factorBase.push_back(prime);
+						}
+					}
+				}
+
 				//divide sieve for 2
 				MyHelper::DivideSieve(V, y, 1, 2);
 
@@ -121,7 +139,7 @@ namespace Factorization {
 					if(prime != 2){
 						mpz_set_str(gamma, to_string(prime).c_str(), 10);
 
-						TonelliShanks::Solve(n, gamma, alpha, beta);
+						Solver::TonelliShanks::Solve(n, gamma, alpha, beta);
 
 						mpz_sub(alpha, alpha, x);
 						mpz_powm_ui(alpha, alpha, 1, gamma);
@@ -132,6 +150,35 @@ namespace Factorization {
 						MyHelper::DivideSieve(V, y, strtoull(mpz_get_str(NULL, 10, beta), NULL, 10), prime);
 					}
 				}
+
+
+				int k = 0;
+				int piFromK = b/log(k);
+				while(k <= piFromK){
+
+
+
+
+				}
+
+
+
+				for(unsigned long long i = 0; i < y; i++){
+					if(mpz_cmp_ui(V[i], 1) == 0){
+						k++;
+					}
+				}
+
+
+
+
+
+
+
+
+
+
+
 
 				//calculate factors
 				unsigned long long sizeRow = 0;
@@ -224,7 +271,7 @@ namespace Factorization {
 					}
 
 					//solve
-					GaussianElimination::SolveMod2(A, B);
+					Solver::GaussianElimination::SolveMod2(A, B);
 
 					//search for row of zeros
 					bool isRowZero = true;
@@ -297,7 +344,7 @@ namespace Factorization {
 		}
 
 		//clear
-		mpz_clears(n, q, p, nmod, x, xrem,
+		mpz_clears(n, q, p, nmod, x, xrem, b,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 	}
 }
