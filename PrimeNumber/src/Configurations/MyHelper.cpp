@@ -198,6 +198,9 @@ void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigne
 	}
 	mpz_clears(r, NULL);
 }
+
+
+
 vector<vector<unsigned long long>> MyHelper::GetCombination(unsigned long long n, unsigned long long k){
 	vector<vector<unsigned long long>> result = {};
 	string bitmask(k, 1);
@@ -213,24 +216,6 @@ vector<vector<unsigned long long>> MyHelper::GetCombination(unsigned long long n
         result.push_back(v);
     } while (prev_permutation(bitmask.begin(), bitmask.end()));
     return result;
-}
-vector<unsigned long long> MyHelper::GetPrimesBelowN(unsigned long long n){
-	bool v[n+1];
-	memset(v, true, sizeof(v));
-	for(unsigned long long i = 2; i*i <= n; i++){
-		if(v[i]){
-			for(unsigned long long j = i*i; j <= n; j += i){
-				v[j] = false;
-			}
-		}
-	}
-	vector<unsigned long long> primes = {};
-	for(unsigned long long i = 2; i <= n; i++){
-		if(v[i]){
-			primes.push_back(i);
-		}
-	}
-	return primes;
 }
 void MyHelper::PrintMatrix(vector<vector<bool>> A){
 	for(vector<bool> a: A){

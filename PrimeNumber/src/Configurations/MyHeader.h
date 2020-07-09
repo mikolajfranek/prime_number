@@ -3,9 +3,7 @@
 
 /* general */
 #include <string>
-#include <vector>
-#include <cmath>
-#include <numeric>
+#include <unordered_set>
 
 /* gmp */
 #include <gmp.h>
@@ -23,6 +21,9 @@ using namespace std;
 /* solver */
 #include "../Algorithms/Solver/TonelliShanks.h"
 #include "../Algorithms/Solver/GaussianElimination.h"
+
+/* primes below limit */
+#include "../Algorithms/PrimesBelowLimit/SieveOfEratosthenes.h"
 
 /* primality */
 #include "../Algorithms/Primality/TrialDivision.h"

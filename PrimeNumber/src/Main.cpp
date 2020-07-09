@@ -4,7 +4,7 @@
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	Factorization::QuadraticSieve::Factor("15345");
+	Factorization::QuadraticSieve::Factor("15347");
 	return 0;
 }
 

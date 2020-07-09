@@ -4,11 +4,11 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t n, q, p, nmod, x, xrem, b,
+		mpz_t n, q, p, nmod, x, xrem, temporary1,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma;
 
 		//init
-		mpz_inits(n, q, p, nmod, x, xrem, b,
+		mpz_inits(n, q, p, nmod, x, xrem, temporary1,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 
 		//set
@@ -45,7 +45,6 @@ namespace Factorization {
 
 
 
-			return;
 
 
 
@@ -57,24 +56,54 @@ namespace Factorization {
 				mpz_add_ui(x, x, 1);
 			}
 
-
-			unsigned long long b = 11;
-
-
-
-
-
+			//wartość optymalna
+			unsigned long long b = 111;
+			unsigned long long bStep = 10;
+			bool theEnd = false;
+			unsigned long long cp = 0;
 
 
+			//TODO
+			unordered_set<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
+			unordered_set<unsigned long long> factorBase = {2};
+
+			do{
+				for (auto it : primes){
+
+					if(primes.find(it) == primes.end()){
+						mpz_set_str(temporary1, to_string(it).c_str(), 10);
+						if(mpz_legendre(n, temporary1) == 1){
+							factorBase.insert(it);
+						}
+					}
 
 
+				}
+
+
+				break;
+
+
+
+
+				b = b * bStep;
+			}while(theEnd == false);
+
+
+			for(unsigned long long p : factorBase){
+				printf("%lu\n", p);
+			}
+
+
+
+			printf("The end is true");
 			return;
 			//end of program
 
 
 
 
-
+/*
 
 			unsigned long long y = 0;
 
@@ -83,7 +112,6 @@ namespace Factorization {
 			mpz_t *Y;
 			mpz_t *V;
 
-			vector<unsigned long long> factorBase = {};
 
 			bool isFound = false;
 
@@ -120,16 +148,7 @@ namespace Factorization {
 
 
 
-				//factor base
-				factorBase = {2};
-				for (unsigned long long prime : MyHelper::GetPrimesBelowN(b)){
-					if(prime != 2){
-						mpz_set_str(gamma, to_string(prime).c_str(), 10);
-						if(mpz_legendre(n, gamma) == 1){
-							factorBase.push_back(prime);
-						}
-					}
-				}
+
 
 				//divide sieve for 2
 				MyHelper::DivideSieve(V, y, 1, 2);
@@ -337,14 +356,18 @@ namespace Factorization {
 				free(Y);
 				free(V);
 				if(isFound) break;
+
+
 			}
+
+*/
 
 			//check
 			MyHelper::CheckResult(n, q, p);
 		}
 
 		//clear
-		mpz_clears(n, q, p, nmod, x, xrem, b,
+		mpz_clears(n, q, p, nmod, x, xrem, temporary1,
 				i, right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 	}
 }
