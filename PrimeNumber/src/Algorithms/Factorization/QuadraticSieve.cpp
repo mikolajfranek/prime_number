@@ -51,32 +51,50 @@ namespace Factorization {
 
 
 
+
 			mpz_sqrtrem(x, xrem, n);
 			if(mpz_cmp_ui(xrem, 0) != 0){
 				mpz_add_ui(x, x, 1);
 			}
 
 			//wartość optymalna
-			unsigned long long b = 111;
+			unsigned long long b = 23;
 			unsigned long long bStep = 10;
 			bool theEnd = false;
 			unsigned long long cp = 0;
 
 
 			//TODO
-			unordered_set<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
-			unordered_set<unsigned long long> factorBase = {2};
+
+
+			vector<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
+
+
+			unordered_set<Elements::QuadraticResidue*> factorBase = {};
+
 
 			do{
-				for (auto it : primes){
+				primes.push_back(17);
 
-					if(primes.find(it) == primes.end()){
-						mpz_set_str(temporary1, to_string(it).c_str(), 10);
-						if(mpz_legendre(n, temporary1) == 1){
-							factorBase.insert(it);
-						}
+				//create factor base
+				for (unsigned long long prime : primes){
+					Elements::QuadraticResidue *residue = new Elements::QuadraticResidue();
+					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
+
+
+					if(factorBase.find(residue) == factorBase.end()){
+						printf("not found %ul\n", prime);
+					}else{
+						printf("found\n");
 					}
 
+
+					if(mpz_legendre(n, residue->Prime) == 1){
+						Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
+						factorBase.insert(residue);
+					}else{
+						free(residue);
+					}
 
 				}
 
@@ -84,14 +102,13 @@ namespace Factorization {
 				break;
 
 
-
-
 				b = b * bStep;
 			}while(theEnd == false);
 
 
-			for(unsigned long long p : factorBase){
-				printf("%lu\n", p);
+			for(auto p : factorBase){
+				gmp_printf("--- %Zd\n", p->Prime);
+
 			}
 
 
@@ -363,7 +380,7 @@ namespace Factorization {
 */
 
 			//check
-			MyHelper::CheckResult(n, q, p);
+			Other::MyHelper::CheckResult(n, q, p);
 		}
 
 		//clear

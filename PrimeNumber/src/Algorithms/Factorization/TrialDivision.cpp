@@ -44,7 +44,7 @@ namespace Factorization {
 		}
 
 		//check
-		MyHelper::CheckResult(n, q, p);
+		Other::MyHelper::CheckResult(n, q, p);
 
 		//clear
 		mpz_clears(n, q, p, nmod, x, i, NULL);

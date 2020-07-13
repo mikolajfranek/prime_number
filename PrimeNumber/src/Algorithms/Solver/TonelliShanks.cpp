@@ -1,7 +1,7 @@
 #include "TonelliShanks.h"
 
 namespace Solver {
-	void TonelliShanks::Solve(mpz_t n, mpz_t p, mpz_t alpha, mpz_t beta){
+	void TonelliShanks::Solve(mpz_t n, mpz_t p, mpz_t solution1, mpz_t solution2){
 
 		mpz_t s, e, f, t, x, g, b, r, m, c, d, temp;
 		mpz_inits(s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
@@ -36,7 +36,7 @@ namespace Solver {
 			mpz_set_ui(m, 0);
 			while(true){
 				mpz_set_ui(c, 2);
-				MyHelper::PowCExpD(temp, c, m);
+				Other::MyHelper::PowCExpD(temp, c, m);
 				mpz_powm(f, b, temp, p);
 				if(mpz_cmp_ui(f, 1) == 0) break;
 				mpz_add_ui(m, m, 1);
@@ -44,8 +44,8 @@ namespace Solver {
 
 			//check
 			if(mpz_cmp_ui(m, 0) == 0){
-				mpz_set(alpha, x);
-				mpz_sub(beta, p, alpha);
+				mpz_set(solution1, x);
+				mpz_sub(solution2, p, solution1);
 				break;
 			}
 
@@ -56,11 +56,11 @@ namespace Solver {
 			mpz_sub_ui(d, d, 1);
 			//2^(r-m-1)
 			mpz_set_ui(c, 2);
-			MyHelper::PowCExpD(temp, c, d);
+			Other::MyHelper::PowCExpD(temp, c, d);
 			//g^(2^(r-m-1))
 			mpz_set(c, g);
 			mpz_set(d, temp);
-			MyHelper::PowCExpD(temp, c, d);
+			Other::MyHelper::PowCExpD(temp, c, d);
 			//x * g^(2^(r-m-1))
 			mpz_mul(x, x, temp);
 			mpz_powm_ui(x, x, 1, p);
@@ -70,11 +70,11 @@ namespace Solver {
 			mpz_sub(d, d, m);
 			//2^(r-m)
 			mpz_set_ui(c, 2);
-			MyHelper::PowCExpD(temp, c, d);
+			Other::MyHelper::PowCExpD(temp, c, d);
 			//g^(2^(r-m))
 			mpz_set(c, g);
 			mpz_set(d, temp);
-			MyHelper::PowCExpD(temp, c, d);
+			Other::MyHelper::PowCExpD(temp, c, d);
 			//b * g^(2^(r-m))
 			mpz_mul(b, b, temp);
 			mpz_powm_ui(b, b, 1, p);
@@ -84,11 +84,11 @@ namespace Solver {
 			mpz_sub(d, d, m);
 			//2^(r-m)
 			mpz_set_ui(c, 2);
-			MyHelper::PowCExpD(temp, c, d);
+			Other::MyHelper::PowCExpD(temp, c, d);
 			//g^(2^(r-m))
 			mpz_set(c, g);
 			mpz_set(d, temp);
-			MyHelper::PowCExpD(g, c, d);
+			Other::MyHelper::PowCExpD(g, c, d);
 			mpz_powm_ui(g, g, 1, p);
 
 			mpz_set(r, m);

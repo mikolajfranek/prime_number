@@ -1,4 +1,4 @@
-#include "../../Configurations/MyHeader.h"
+#include "../../MyHeader.h"
 
 #ifndef ALGORITHMS_FERMAT_H_
 #define ALGORITHMS_FERMAT_H_

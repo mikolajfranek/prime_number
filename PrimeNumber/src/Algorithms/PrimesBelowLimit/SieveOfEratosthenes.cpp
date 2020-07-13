@@ -1,7 +1,7 @@
 #include "SieveOfEratosthenes.h"
 
 namespace PrimesBelowLimit {
-	unordered_set<unsigned long long> SieveOfEratosthenes::GetPrimes(unsigned long long limit){
+vector<unsigned long long> SieveOfEratosthenes::GetPrimes(unsigned long long limit){
 		bool v[limit+1];
 		memset(v, true, sizeof(v));
 		for(unsigned long long i = 2; i*i <= limit; i++){
@@ -11,10 +11,10 @@ namespace PrimesBelowLimit {
 				}
 			}
 		}
-		unordered_set<unsigned long long>  primes = {};
+		vector<unsigned long long>  primes = {};
 		for(unsigned long long i = 2; i <= limit; i++){
 			if(v[i] == true){
-				primes.insert(i);
+				primes.push_back(i);
 			}
 		}
 		return primes;

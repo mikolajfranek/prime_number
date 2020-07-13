@@ -1,4 +1,4 @@
-#include "../../Configurations/MyHeader.h"
+#include "../../MyHeader.h"
 
 #ifndef ALGORITHMS_SOLVER_TONELLISHANKS_H_
 #define ALGORITHMS_SOLVER_TONELLISHANKS_H_

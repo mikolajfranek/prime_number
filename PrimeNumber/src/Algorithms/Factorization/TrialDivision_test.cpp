@@ -4,7 +4,7 @@ namespace Factorization {
 	// Define benchmark
 	static void BM_FactorizationTrialDivision(benchmark::State& state) {
 		for (auto _ : state){
-			TrialDivision::Factor(MyHelper::GetSemiPrime(state.range(0)));
+			TrialDivision::Factor(Other::MyHelper::GetSemiPrime(state.range(0)));
 		}
 	}
 	/* register the function as benchmark with arguments */

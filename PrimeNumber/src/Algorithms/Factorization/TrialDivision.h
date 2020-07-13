@@ -1,4 +1,4 @@
-#include "../../Configurations/MyHeader.h"
+#include "../../MyHeader.h"
 
 #ifndef ALGORITHMS_SIEVEOFERATOSTHENES_H_
 #define ALGORITHMS_SIEVEOFERATOSTHENES_H_

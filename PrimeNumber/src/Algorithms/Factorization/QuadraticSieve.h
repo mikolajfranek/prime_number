@@ -1,4 +1,4 @@
-#include "../../Configurations/MyHeader.h"
+#include "../../MyHeader.h"
 
 #ifndef ALGORITHMS_QUADRATICSIEVE_H_
 #define ALGORITHMS_QUADRATICSIEVE_H_

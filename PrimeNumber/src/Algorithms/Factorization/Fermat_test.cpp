@@ -4,7 +4,7 @@ namespace Factorization {
 	// Define benchmark
 	static void BM_FactorizationFermat(benchmark::State& state) {
 		for (auto _ : state){
-			Fermat::Factor(MyHelper::GetSemiPrime(state.range(0)));
+			Fermat::Factor(Other::MyHelper::GetSemiPrime(state.range(0)));
 		}
 	}
 	/* register the function as benchmark with arguments */
