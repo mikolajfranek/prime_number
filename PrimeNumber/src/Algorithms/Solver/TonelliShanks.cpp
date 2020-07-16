@@ -1,7 +1,7 @@
 #include "TonelliShanks.h"
 
 namespace Solver {
-	void TonelliShanks::Solve(mpz_t n, mpz_t p, mpz_t solution1, mpz_t solution2){
+	void TonelliShanks::Solve(mpz_t n, mpz_t nsqrt, mpz_t p, mpz_t solution1, mpz_t solution2){
 
 		mpz_t s, e, f, t, x, g, b, r, m, c, d, temp;
 		mpz_inits(s, e, f, t, x, g, b, r, m, c, d, temp, NULL);
@@ -46,6 +46,10 @@ namespace Solver {
 			if(mpz_cmp_ui(m, 0) == 0){
 				mpz_set(solution1, x);
 				mpz_sub(solution2, p, solution1);
+				mpz_sub(solution1, solution1, nsqrt);
+				mpz_powm_ui(solution1, solution1, 1, p);
+				mpz_sub(solution2, solution2, nsqrt);
+				mpz_powm_ui(solution2, solution2, 1, p);
 				break;
 			}
 

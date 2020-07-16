@@ -2,7 +2,7 @@
 
 namespace Other {
 
-	string MyHelper::GetPrime(int numberOfDigits){
+	string MyHelper::GetPrime(unsigned short numberOfDigits){
 		switch(numberOfDigits){
 			case 10:
 				return "9576890767";
@@ -69,7 +69,7 @@ namespace Other {
 		}
 	}
 
-	string MyHelper::GetSemiPrime(int numberOfDigits){
+	string MyHelper::GetSemiPrime(unsigned short numberOfDigits){
 		switch(numberOfDigits){
 			case 10:
 				return "2651354581";
@@ -143,40 +143,37 @@ namespace Other {
 		if(mpz_cmp(n, r) == 0){
 			gmp_printf("%Zd = %Zd * %Zd\n", n, q, p);
 		}else{
-			printf("Error: MyHelper::CheckResult\n");
+			printf("Error: Other::MyHelper::CheckResult\n");
 		}
 		mpz_clears(r, NULL);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	void MyHelper::Malloc(mpz_t **v, unsigned long long n){
 		*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 		if(*v == NULL){
-			printf("ERROR: MallocVector\n");
-			return;
+			printf("Error: Other::MyHelper::Malloc\n");
 		}
 	}
+
 	void MyHelper::Realloc(mpz_t **v, unsigned long long n){
 		*v = (mpz_t *)realloc(*v, n * sizeof(mpz_t));
 		if(*v == NULL){
-			printf("ERROR: ReallocVector\n");
-			return;
+			printf("Error: Other::MyHelper::Realloc\n");
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

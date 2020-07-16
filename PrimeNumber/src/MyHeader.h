@@ -2,8 +2,6 @@
 #define CONFIGURATIONS_MYHEADER_H_
 
 /* general */
-#include <string>
-#include <vector>
 #include <unordered_set>
 
 /* gmp */
