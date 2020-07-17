@@ -3,10 +3,10 @@
 
 /* general */
 #include <unordered_set>
+#include <cstring>
 
 /* gmp */
 #include <gmp.h>
-#include <gmpxx.h>
 
 /* benchmark */
 #include <benchmark/benchmark.h>

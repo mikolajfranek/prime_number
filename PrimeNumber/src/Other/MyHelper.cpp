@@ -148,6 +148,39 @@ namespace Other {
 		mpz_clears(r, NULL);
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	void MyHelper::Malloc(mpz_t **v, unsigned long long n){
 		*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 		if(*v == NULL){
@@ -161,24 +194,6 @@ namespace Other {
 			printf("Error: Other::MyHelper::Realloc\n");
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
 		mpz_t r;

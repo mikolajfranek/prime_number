@@ -50,6 +50,11 @@ namespace Factorization {
 
 
 			//TODO
+			/*
+			 *
+			 *hmmmm....
+			 *
+			 */
 
 
 
@@ -70,10 +75,6 @@ namespace Factorization {
 
 
 
-			vector<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(30);
-
-			unsigned long long cp = primes.size();
-			unsigned long long cc = 0;
 
 
 
@@ -84,17 +85,33 @@ namespace Factorization {
 			Other::MyHelper::Malloc(&V, 0);
 
 
+			vector<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(30);
+
+
+
+
+			unsigned long long cp = primes.size();
+			unsigned long long cc = 0;
+
+
+
+
 
 
 
 			unordered_set<Elements::QuadraticResidue*, Elements::HashQuadraticResidue, Elements::EqualToQuadraticResidue> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
 			do{
+
 				for (unsigned long long prime : primes){
 					Elements::QuadraticResidue* residue = new Elements::QuadraticResidue();
 					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
 					if(factorBase.find(residue) == factorBase.end()){
 						if(mpz_legendre(n, residue->Prime) == 1){
-							Solver::TonelliShanks::Solve(n, x, residue->Prime, residue->Solution1, residue->Solution2);
+							Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
+							mpz_sub(residue->Solution1, residue->Solution1, x);
+							mpz_powm_ui(residue->Solution1, residue->Solution1, 1, residue->Prime);
+							mpz_sub(residue->Solution2, residue->Solution2, x);
+							mpz_powm_ui(residue->Solution2, residue->Solution2, 1, residue->Prime);
 							factorBase.insert(residue);
 						}
 					}else{
@@ -122,6 +139,8 @@ namespace Factorization {
 					}
 
 					//...
+
+
 				//}
 
 
@@ -131,6 +150,7 @@ namespace Factorization {
 				for (Elements::QuadraticResidue* residue : factorBase){
 
 					gmp_printf("### ->  %Zd, s1=%Zd, s2=%Zd\n", residue->Prime, residue->Solution1, residue->Solution2);
+
 					//Other::MyHelper::DivideSieve(V, ss, 0, 2);
 
 				}
@@ -149,6 +169,8 @@ namespace Factorization {
 				break;
 
 				mpz_mul_ui(b, b, 2);
+
+
 			}while(theEnd == false);
 
 

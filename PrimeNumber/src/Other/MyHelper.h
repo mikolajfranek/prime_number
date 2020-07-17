@@ -9,8 +9,14 @@ namespace Other {
 		static string GetPrime(unsigned short numberOfDigits);
 		static string GetSemiPrime(unsigned short numberOfDigits);
 		static void CheckResult(mpz_t n, mpz_t q, mpz_t p);
-		static void Malloc(mpz_t **v, unsigned long long n);
-		static void Realloc(mpz_t **v, unsigned long long n);
+
+
+
+
+
+
+
+
 
 
 
@@ -18,6 +24,12 @@ namespace Other {
 
 
 		//TODO
+
+
+		static void Malloc(mpz_t **v, unsigned long long n);
+		static void Realloc(mpz_t **v, unsigned long long n);
+
+
 
 		static void DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step);
 		static vector<vector<unsigned long long>> GetCombination(unsigned long long n, unsigned long long k);

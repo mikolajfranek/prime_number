@@ -6,7 +6,7 @@
 namespace Solver {
 	class TonelliShanks {
 	public:
-		static void Solve(mpz_t n, mpz_t nsqrt, mpz_t p, mpz_t alpha, mpz_t beta);
+		static void Solve(mpz_t n, mpz_t p, mpz_t alpha, mpz_t beta);
 	};
 }
 
