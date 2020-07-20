@@ -6,7 +6,7 @@
 namespace PrimesBelowLimit {
 	class SieveOfEratosthenes {
 	public:
-		static vector<unsigned long long> GetPrimes(unsigned long long limit);
+		static vector<unsigned long long>* GetPrimes(unsigned long long limit);
 	};
 }
 

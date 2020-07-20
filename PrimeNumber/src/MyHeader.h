@@ -2,8 +2,9 @@
 #define CONFIGURATIONS_MYHEADER_H_
 
 /* general */
-#include <unordered_set>
-#include <cstring>
+#include <vector>
+#include <string.h>
+#include <numeric>
 
 /* gmp */
 #include <gmp.h>

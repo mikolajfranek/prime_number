@@ -148,39 +148,6 @@ namespace Other {
 		mpz_clears(r, NULL);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	void MyHelper::Malloc(mpz_t **v, unsigned long long n){
 		*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 		if(*v == NULL){
@@ -195,56 +162,81 @@ namespace Other {
 		}
 	}
 
-	void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long from, unsigned long long step){
+	void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
 		mpz_t r;
 		mpz_inits(r, NULL);
-		for(unsigned long long i = from; i < sizeOfSieve; i += step){
-
-			mpz_mod_ui(r, sieve[i], step);
-
+		for(unsigned long long *i = from; *i < sizeOfSieve; *i += step){
+			mpz_mod_ui(r, sieve[*i], step);
 			while(mpz_cmp_ui(r, 0) == 0){
-				mpz_div_ui(sieve[i], sieve[i], step);
-				mpz_mod_ui(r, sieve[i], step);
+				mpz_div_ui(sieve[*i], sieve[*i], step);
+				mpz_mod_ui(r, sieve[*i], step);
 			}
-
 		}
 		mpz_clears(r, NULL);
 	}
 
-
-
-	vector<vector<unsigned long long>> MyHelper::GetCombination(unsigned long long n, unsigned long long k){
-		vector<vector<unsigned long long>> result = {};
-		string bitmask(k, 1);
-		bitmask.resize(n, 0);
-		do {
-			vector<unsigned long long> v = {};
-			for (unsigned long long i = 0; i < n; ++i)
-			{
-				if (bitmask[i]) {
-					v.push_back(i);
-				}
-			}
-			result.push_back(v);
-		} while (prev_permutation(bitmask.begin(), bitmask.end()));
-		return result;
-	}
-	void MyHelper::PrintMatrix(vector<vector<bool>> A){
-		for(vector<bool> a: A){
-			for(float v : a){
-				printf("%d", (int)v);
+	void MyHelper::PrintMatrix(vector<vector<bool>> matrix){
+		for(vector<bool> row : matrix){
+			for(bool e : row){
+				printf("%d", e);
 			}
 			printf("\n");
 		}
 	}
+
 	vector<vector<bool>> MyHelper::GetIdentityMatrix(unsigned long long n){
-		vector<vector<bool>> result = {};
+		vector<vector<bool>> r = {};
 		for(unsigned long long i = 0; i < n; i++){
-			result.push_back(vector<bool>(n, false));
-			result[i][i] = true;
+			r.push_back(vector<bool>(n, false));
+			r[i][i] = true;
 		}
-		return result;
+		return r;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 		mpz_t i;

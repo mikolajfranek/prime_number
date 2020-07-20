@@ -4,11 +4,11 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t n, q, p, nmod, x, xrem, b,
+		mpz_t n, q, p, nmod, x, xrem,
 				right, rightMod, left, leftMod, alpha, beta, gamma;
 
 		//init
-		mpz_inits(n, q, p, nmod, x, xrem, b,
+		mpz_inits(n, q, p, nmod, x, xrem,
 				right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 
 		//set
@@ -45,16 +45,16 @@ namespace Factorization {
 
 
 
+			unsigned long long b;
+
+
+			//wartość optymalna
+			b = 30;
 
 
 
 
-			//TODO
-			/*
-			 *
-			 *hmmmm....
-			 *
-			 */
+
 
 
 
@@ -64,8 +64,7 @@ namespace Factorization {
 				mpz_add_ui(x, x, 1);
 			}
 
-			//wartość optymalna
-			mpz_set_ui(b, 30);
+
 
 
 			bool theEnd = false;
@@ -78,85 +77,163 @@ namespace Factorization {
 
 
 
-			unsigned long long  ss = 100;
-			mpz_t *W;
-			mpz_t *V;
-			Other::MyHelper::Malloc(&W, 0);
-			Other::MyHelper::Malloc(&V, 0);
-
-
-			vector<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(30);
 
 
 
-
-			unsigned long long cp = primes.size();
-			unsigned long long cc = 0;
-
-
-
-
-
-
-
-			unordered_set<Elements::QuadraticResidue*, Elements::HashQuadraticResidue, Elements::EqualToQuadraticResidue> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
+			unsigned long long cs = 0, cp = 0, cf, cb;
+			mpz_t* W;
+			mpz_t* V;
+			Other::MyHelper::Malloc(&W, cs);
+			Other::MyHelper::Malloc(&V, cs);
+			vector<Elements::QuadraticResidue*> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
+			mpz_t *L;
+			mpz_t *R;
+			Other::MyHelper::Malloc(&L, cp);
+			Other::MyHelper::Malloc(&R, cp);
 			do{
-
-				for (unsigned long long prime : primes){
+				vector<vector<bool>> matrix = {};
+				vector<unsigned long long>* primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
+				for (unsigned long long prime : *primes){
 					Elements::QuadraticResidue* residue = new Elements::QuadraticResidue();
 					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
-					if(factorBase.find(residue) == factorBase.end()){
-						if(mpz_legendre(n, residue->Prime) == 1){
-							Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
-							mpz_sub(residue->Solution1, residue->Solution1, x);
-							mpz_powm_ui(residue->Solution1, residue->Solution1, 1, residue->Prime);
-							mpz_sub(residue->Solution2, residue->Solution2, x);
-							mpz_powm_ui(residue->Solution2, residue->Solution2, 1, residue->Prime);
-							factorBase.insert(residue);
-						}
-					}else{
-						delete residue;
+					if(mpz_legendre(n, residue->Prime) == 1){
+						Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
+						mpz_sub(residue->Solution1, residue->Solution1, x);
+						mpz_powm_ui(residue->Solution1, residue->Solution1, 1, residue->Prime);
+						mpz_sub(residue->Solution2, residue->Solution2, x);
+						mpz_powm_ui(residue->Solution2, residue->Solution2, 1, residue->Prime);
+						residue->ULLPrime = strtoull(mpz_get_str(NULL, 10, residue->Prime), NULL, 10);
+						residue->ULLIndexOfSolution1 = strtoull(mpz_get_str(NULL, 10, residue->Solution1), NULL, 10);
+						residue->ULLIndexOfSolution2 = strtoull(mpz_get_str(NULL, 10, residue->Solution2), NULL, 10);
+						factorBase.push_back(residue);
 					}
 				}
-
-
-
-
-
-				//calculate Q(x)
-				//while(cc <= cp){
-					Other::MyHelper::Realloc(&W, ss);
-					Other::MyHelper::Realloc(&V, ss);
-					for(unsigned long long i = 0; i < ss; i++) {
+				cp = primes->size();
+				delete primes;
+				cf = 0;
+				cb = 0;
+				while(cf <= cp){
+					cb = cs;
+					cs = cs + 100;
+					Other::MyHelper::Realloc(&W, cs);
+					Other::MyHelper::Realloc(&V, cs);
+					for(unsigned long long i = cb; i < cs; i++) {
 						mpz_init2(W[i], sizeof(mpz_t));
 						mpz_init2(V[i], sizeof(mpz_t));
-
 						mpz_set_str(V[i], to_string(i).c_str(), 10);
 						mpz_add(V[i], V[i], x);
 						mpz_pow_ui(V[i], V[i], 2);
 						mpz_sub(V[i], V[i], n);
 						mpz_set(W[i], V[i]);
 					}
+					for(Elements::QuadraticResidue* residue : factorBase){
+						Other::MyHelper::DivideSieve(W, cs, &residue->ULLIndexOfSolution1, residue->ULLPrime);
+						Other::MyHelper::DivideSieve(W, cs, &residue->ULLIndexOfSolution2, residue->ULLPrime);
+					}
+					for(unsigned long long i = cb; i < cs; i++) {
+						if(mpz_cmp_ui(W[i], 1) == 0){
+							cf++;
+							Other::MyHelper::Realloc(&L, cf);
+							mpz_init2(L[cf-1], sizeof(mpz_t));
+							mpz_set_str(L[cf-1], to_string(i).c_str(), 10);
+							mpz_add(L[cf-1], L[cf-1], x);
+							mpz_pow_ui(L[cf-1], L[cf-1], 2);
+							Other::MyHelper::Realloc(&R, cf);
+							mpz_init2(R[cf-1], sizeof(mpz_t));
+							mpz_set(R[cf-1], V[i]);
+							vector<bool> row = {};
+							for(Elements::QuadraticResidue* residue : factorBase){
+								mpz_mod(residue->ModPrime, R[cf-1], residue->Prime);
+								row.push_back(mpz_cmp_ui(residue->ModPrime, 0) == 0);
+							}
+							matrix.push_back(row);
+						}
+					}
 
-					//...
+					printf("fb = %u, cf = %u, cp = %u, cs = %u\n", factorBase.size(), cf, cp, cs);
+					break;
+				}
+				vector<vector<bool>> identityMatrix = Other::MyHelper::GetIdentityMatrix(cf);
+				Solver::GaussianElimination::SolveMod2(matrix, identityMatrix);
+				for(vector<bool> row : matrix){
+					if(accumulate(row.begin(), row.end(), 0) == 0){
 
 
-				//}
+
+						for(unsigned long long j = 0; j < row.size(); j++){
 
 
+						}
 
-
-
-				for (Elements::QuadraticResidue* residue : factorBase){
-
-					gmp_printf("### ->  %Zd, s1=%Zd, s2=%Zd\n", residue->Prime, residue->Solution1, residue->Solution2);
-
-					//Other::MyHelper::DivideSieve(V, ss, 0, 2);
-
+					}
 				}
 
 
-					//MyHelper::DivideSieve(V, y, strtoull(mpz_get_str(NULL, 10, alpha), NULL, 10), prime);
+
+
+				Other::MyHelper::PrintMatrix(matrix);
+
+				printf("\n");
+
+				Other::MyHelper::PrintMatrix(identityMatrix);
+
+
+
+
+
+
+/*
+				mpz_set_ui(left, 1);
+				mpz_set_ui(right, 1);
+				for(unsigned long long j = 0; j < ck; j++){
+					//left
+					mpz_mul_ui(gamma, L[index[j]], B[i][j]);
+					if(mpz_cmp_ui(gamma, 0) != 0){
+						mpz_mul(left, left, gamma);
+					}
+
+					//right
+					mpz_mul_ui(gamma, R[index[j]], B[i][j]);
+					if(mpz_cmp_ui(gamma, 0) != 0){
+						mpz_mul(right, right, gamma);
+					}
+				}
+				mpz_mod(leftMod, left, n);
+				mpz_mod(rightMod, right, n);
+
+
+
+
+
+
+				//check if are equal
+				if(mpz_cmp(leftMod, rightMod) == 0){
+					mpz_sqrt(alpha, left);
+					mpz_sqrt(beta, right);
+
+					mpz_sub(gamma, beta, alpha);
+					mpz_gcd(p, n, gamma);
+
+					if(mpz_cmp_ui(p, 1) != 0){
+						isFound = true;
+						mpz_div(q, n, p);
+					}
+				}
+*/
+
+
+				printf("The end is true");
+return;
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -168,28 +245,29 @@ namespace Factorization {
 
 				break;
 
-				mpz_mul_ui(b, b, 2);
+				b = b * 2;
 
 
 			}while(theEnd == false);
 
 
-			for(unsigned long long i = 0; i < ss; i++){
-				//gmp_printf("### ->  %Zd\n", V[i]);
-			}
 
 
-			for(unsigned long long i = 0; i < ss; i++){
+
+
+			//clear...
+			for(unsigned long long i = 0; i < cs; i++){
 				mpz_clear(W[i]);
 				mpz_clear(V[i]);
 			}
-
+			for(unsigned long long i = 0; i < cf; i++){
+				mpz_clear(L[i]);
+				mpz_clear(R[i]);
+			}
 			free(W);
 			free(V);
-
-
-
-
+			free(L);
+			free(R);
 
 			printf("The end is true");
 			return;
@@ -201,29 +279,6 @@ namespace Factorization {
 /*
 
 
-			for(auto p : factorBase){
-				gmp_printf("### ->  %Zd\n", p->Prime);
-
-			}
-
-			unsigned long long y = 0;
-
-
-
-			mpz_t *Y;
-			mpz_t *V;
-
-
-			bool isFound = false;
-
-
-			while(true){
-
-
-				//update
-				b += 100;
-				y += 160;
-				printf("Value of b = %d\n", b);
 
 
 
@@ -231,97 +286,6 @@ namespace Factorization {
 
 
 
-
-
-
-
-
-
-				//divide sieve for 2
-				MyHelper::DivideSieve(V, y, 1, 2);
-
-				//divide sieve for other
-				for (unsigned long long prime : factorBase){
-					if(prime != 2){
-						mpz_set_str(gamma, to_string(prime).c_str(), 10);
-
-						Solver::TonelliShanks::Solve(n, gamma, alpha, beta);
-
-						mpz_sub(alpha, alpha, x);
-						mpz_powm_ui(alpha, alpha, 1, gamma);
-						MyHelper::DivideSieve(V, y, strtoull(mpz_get_str(NULL, 10, alpha), NULL, 10), prime);
-
-						mpz_sub(beta, beta, x);
-						mpz_powm_ui(beta, beta, 1, gamma);
-						MyHelper::DivideSieve(V, y, strtoull(mpz_get_str(NULL, 10, beta), NULL, 10), prime);
-					}
-				}
-
-
-				int k = 0;
-				int piFromK = b/log(k);
-				while(k <= piFromK){
-
-
-
-
-				}
-
-
-
-				for(unsigned long long i = 0; i < y; i++){
-					if(mpz_cmp_ui(V[i], 1) == 0){
-						k++;
-					}
-				}
-
-
-
-
-
-
-
-
-
-
-
-
-				//calculate factors
-				unsigned long long sizeRow = 0;
-				unsigned long long sizeCol = factorBase.size();
-
-				mpz_t *L;
-				mpz_t *R;
-				MyHelper::MallocVector(&L, sizeRow);
-				MyHelper::MallocVector(&R, sizeRow);
-
-				vector<vector<bool>> factors = {};
-				for(unsigned long long i = 0; i < y; i++){
-					if(mpz_cmp_ui(V[i], 1) == 0){
-
-						//R
-						mpz_set_str(alpha, to_string(i).c_str(), 10);
-						mpz_add(alpha, alpha, x);
-						mpz_pow_ui(beta, alpha, 2);
-						MyHelper::ReallocVector(&R, sizeRow + 1);
-						mpz_init2(R[sizeRow], sizeof(mpz_t));
-						mpz_set(R[sizeRow], beta);
-
-						//L
-						MyHelper::ReallocVector(&L, sizeRow + 1);
-						mpz_init2(L[sizeRow], sizeof(mpz_t));
-						mpz_set(L[sizeRow], Y[i]);
-
-						sizeRow += 1;
-
-						vector<bool> factor = {};
-						for(unsigned long long j = 0; j < factorBase.size(); j++){
-							mpz_mod_ui(gamma, Y[i], factorBase[j]);
-							factor.push_back(mpz_cmp_ui(gamma, 0) == 0);
-						}
-						factors.push_back(factor);
-					}
-				}
 
 
 				printf("Value of size row = %d\n", sizeRow);
@@ -454,7 +418,7 @@ namespace Factorization {
 		}
 
 		//clear
-		mpz_clears(n, q, p, nmod, x, xrem, b,
+		mpz_clears(n, q, p, nmod, x, xrem,
 				right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
 	}
 }
