@@ -3,7 +3,8 @@
 
 /* general */
 #include <vector>
-#include <string.h>
+#include <string>
+#include <cstring>
 #include <numeric>
 
 /* gmp */

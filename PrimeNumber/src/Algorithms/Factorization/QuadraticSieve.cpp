@@ -4,12 +4,10 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t n, q, p, nmod, x, xrem,
-				right, rightMod, left, leftMod, alpha, beta, gamma;
+		mpz_t n, q, p, nmod, x, xrem, lh, rh, ls, rs;
 
 		//init
-		mpz_inits(n, q, p, nmod, x, xrem,
-				right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
+		mpz_inits(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
 
 		//set
 		mpz_set_str(n, input.c_str(), 10);
@@ -45,53 +43,39 @@ namespace Factorization {
 
 
 
-			unsigned long long b;
+
+
+			//TODO
+			/*
+			 * zarzadzanie pamiecia
+			 * testowanie
+			 * odmierzenie czasu, ktora czesc najdluzej?
+			 */
 
 
 			//wartość optymalna
-			b = 30;
-
-
-
-
-
-
-
+			unsigned long long b = 59;
+			unsigned long long csAdd = 10000;
 
 
 			mpz_sqrtrem(x, xrem, n);
 			if(mpz_cmp_ui(xrem, 0) != 0){
 				mpz_add_ui(x, x, 1);
 			}
-
-
-
-
-			bool theEnd = false;
-
-
-
-
-
-
-
-
-
-
-
-
+			bool foundSolution = false;
 			unsigned long long cs = 0, cp = 0, cf, cb;
 			mpz_t* W;
 			mpz_t* V;
 			Other::MyHelper::Malloc(&W, cs);
 			Other::MyHelper::Malloc(&V, cs);
-			vector<Elements::QuadraticResidue*> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
+			vector<Elements::QuadraticResidue*> factorBase;
 			mpz_t *L;
 			mpz_t *R;
 			Other::MyHelper::Malloc(&L, cp);
 			Other::MyHelper::Malloc(&R, cp);
 			do{
-				vector<vector<bool>> matrix = {};
+				factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
+				vector<vector<bool>> A = {}; //TUTAJ JEST ERROR
 				vector<unsigned long long>* primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
 				for (unsigned long long prime : *primes){
 					Elements::QuadraticResidue* residue = new Elements::QuadraticResidue();
@@ -109,12 +93,14 @@ namespace Factorization {
 					}
 				}
 				cp = primes->size();
+				printf("b = %u, cp = %u\n", b, cp);
+
 				delete primes;
 				cf = 0;
 				cb = 0;
 				while(cf <= cp){
 					cb = cs;
-					cs = cs + 100;
+					cs = cs + csAdd;
 					Other::MyHelper::Realloc(&W, cs);
 					Other::MyHelper::Realloc(&V, cs);
 					for(unsigned long long i = cb; i < cs; i++) {
@@ -126,10 +112,16 @@ namespace Factorization {
 						mpz_sub(V[i], V[i], n);
 						mpz_set(W[i], V[i]);
 					}
+
+					//ERROR
+					printf("b = %u, fb = %u, cf = %u, cp = %u, cs = %u\n", b, factorBase.size(), cf, cp, cs);
 					for(Elements::QuadraticResidue* residue : factorBase){
 						Other::MyHelper::DivideSieve(W, cs, &residue->ULLIndexOfSolution1, residue->ULLPrime);
 						Other::MyHelper::DivideSieve(W, cs, &residue->ULLIndexOfSolution2, residue->ULLPrime);
+						gmp_printf("--- %Zd ---\n", residue->Prime);
 					}
+					printf("---\n");
+
 					for(unsigned long long i = cb; i < cs; i++) {
 						if(mpz_cmp_ui(W[i], 1) == 0){
 							cf++;
@@ -144,281 +136,67 @@ namespace Factorization {
 							vector<bool> row = {};
 							for(Elements::QuadraticResidue* residue : factorBase){
 								mpz_mod(residue->ModPrime, R[cf-1], residue->Prime);
-								row.push_back(mpz_cmp_ui(residue->ModPrime, 0) == 0);
+								row.push_back(mpz_cmp_ui(residue->ModPrime, 0) == 0); //ERROR
 							}
-							matrix.push_back(row);
+							A.push_back(row);
 						}
 					}
-
-					printf("fb = %u, cf = %u, cp = %u, cs = %u\n", factorBase.size(), cf, cp, cs);
-					break;
 				}
-				vector<vector<bool>> identityMatrix = Other::MyHelper::GetIdentityMatrix(cf);
-				Solver::GaussianElimination::SolveMod2(matrix, identityMatrix);
-				for(vector<bool> row : matrix){
-					if(accumulate(row.begin(), row.end(), 0) == 0){
-
-
-
-						for(unsigned long long j = 0; j < row.size(); j++){
-
-
+				printf("### b = %u, fb = %u, cf = %u, cp = %u, cs = %u\n", b, factorBase.size(), cf, cp, cs);
+				vector<vector<bool>> B = Other::MyHelper::GetIdentityMatrix(cf);
+				Solver::GaussianElimination::SolveMod2(A, B);
+				for(unsigned long long i = 0; i < cf; i++){
+					if(accumulate(A[i].begin(), A[i].end(), 0) == 0){
+						mpz_set_ui(ls, 1);
+						mpz_set_ui(rs, 1);
+						for(unsigned long long j = 0; j < cf; j++){
+							mpz_mul_ui(lh, L[j], B[i][j]);
+							if(mpz_cmp_ui(lh, 0) != 0){
+								mpz_mul(ls, ls, lh);
+							}
+							mpz_mul_ui(rh, R[j], B[i][j]);
+							if(mpz_cmp_ui(rh, 0) != 0){
+								mpz_mul(rs, rs, rh);
+							}
 						}
-
+						if(mpz_congruent_p(ls, rs, n) != 0){
+							mpz_sqrt(ls, ls);
+							mpz_sqrt(rs, rs);
+							mpz_sub(lh, ls, rs);
+							mpz_add(rh, ls, rs);
+							mpz_abs(lh, lh);
+							mpz_abs(rh, rh);
+							mpz_gcd(p, lh, n);
+							mpz_gcd(q, rh, n);
+							if(mpz_cmp_ui(p, 1) != 0 && mpz_cmp_ui(q, 1) != 0){
+								foundSolution = true;
+								break;
+							}
+						}
 					}
 				}
-
-
-
-
-				Other::MyHelper::PrintMatrix(matrix);
-
-				printf("\n");
-
-				Other::MyHelper::PrintMatrix(identityMatrix);
-
-
-
-
-
-
-/*
-				mpz_set_ui(left, 1);
-				mpz_set_ui(right, 1);
-				for(unsigned long long j = 0; j < ck; j++){
-					//left
-					mpz_mul_ui(gamma, L[index[j]], B[i][j]);
-					if(mpz_cmp_ui(gamma, 0) != 0){
-						mpz_mul(left, left, gamma);
-					}
-
-					//right
-					mpz_mul_ui(gamma, R[index[j]], B[i][j]);
-					if(mpz_cmp_ui(gamma, 0) != 0){
-						mpz_mul(right, right, gamma);
-					}
-				}
-				mpz_mod(leftMod, left, n);
-				mpz_mod(rightMod, right, n);
-
-
-
-
-
-
-				//check if are equal
-				if(mpz_cmp(leftMod, rightMod) == 0){
-					mpz_sqrt(alpha, left);
-					mpz_sqrt(beta, right);
-
-					mpz_sub(gamma, beta, alpha);
-					mpz_gcd(p, n, gamma);
-
-					if(mpz_cmp_ui(p, 1) != 0){
-						isFound = true;
-						mpz_div(q, n, p);
-					}
-				}
-*/
-
-
-				printf("The end is true");
-return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				break;
-
 				b = b * 2;
+				for(unsigned long long i = 0; i < cs; i++){
+					mpz_clear(W[i]);
+					mpz_clear(V[i]);
+				}
+				for(unsigned long long i = 0; i < cf; i++){
+					mpz_clear(L[i]);
+					mpz_clear(R[i]);
+				}
+			}while(foundSolution == false);
 
-
-			}while(theEnd == false);
-
-
-
-
-
-
-			//clear...
-			for(unsigned long long i = 0; i < cs; i++){
-				mpz_clear(W[i]);
-				mpz_clear(V[i]);
-			}
-			for(unsigned long long i = 0; i < cf; i++){
-				mpz_clear(L[i]);
-				mpz_clear(R[i]);
-			}
 			free(W);
 			free(V);
 			free(L);
 			free(R);
-
-			printf("The end is true");
-			return;
-
-
-
-
-
-/*
-
-
-
-
-
-
-
-
-
-
-
-				printf("Value of size row = %d\n", sizeRow);
-				printf("Value of size col = %d\n", sizeCol);
-
-				//calculate matrix
-				unsigned long long cn = 0;
-				unsigned long long ck = 0;
-
-				enum DIMENSION { EQUAL, ROW, COLUMN};
-				DIMENSION dimension;
-
-				if(sizeRow > sizeCol){
-					cn = sizeRow;
-					ck = sizeCol;
-					dimension = ROW;
-				}else if(sizeRow < sizeCol){
-					cn = sizeCol;
-					ck = sizeRow;
-					dimension = COLUMN;
-				}else{
-					cn = ck = sizeCol = sizeRow;
-					dimension = EQUAL;
-				}
-
-				for(vector<unsigned long long> c : MyHelper::GetCombination(cn, ck)){
-					//create matrix
-					vector<vector<bool>> A = {};
-					vector<vector<bool>> B = MyHelper::GetIdentityMatrix(ck);
-					vector<unsigned long long> index = {};
-					if(dimension == EQUAL){
-						A = factors;
-					}else{
-						for(unsigned long long i = 0; i < ck; i++){
-							A.push_back(vector<bool>(ck, false));
-						}
-						//fill matrix
-						unsigned long long u = 0;
-						for(unsigned long long j : c){
-							if(dimension == COLUMN){
-								index.push_back(u);
-								for(unsigned long long t = 0; t < ck; t++){
-									A[t][u] = factors[t][j];
-								}
-							}else if (dimension == ROW){
-								index.push_back(j);
-								for(unsigned long long t = 0; t < ck; t++){
-									A[u][t] = factors[j][t];
-								}
-							}
-							u++;
-						}
-					}
-
-					//solve
-					Solver::GaussianElimination::SolveMod2(A, B);
-
-					//search for row of zeros
-					bool isRowZero = true;
-					for(unsigned long long i = 0; i < ck; i++){
-						isRowZero = true;
-						for(unsigned long long j = 0; j < ck; j++){
-							if(A[i][j]){
-								isRowZero = false;
-								break;
-							}
-						}
-						//found zero row
-						if(isRowZero){
-
-							//calculate left and right side
-							mpz_set_ui(left, 1);
-							mpz_set_ui(right, 1);
-							for(unsigned long long j = 0; j < ck; j++){
-								//left
-								mpz_mul_ui(gamma, L[index[j]], B[i][j]);
-								if(mpz_cmp_ui(gamma, 0) != 0){
-									mpz_mul(left, left, gamma);
-								}
-
-								//right
-								mpz_mul_ui(gamma, R[index[j]], B[i][j]);
-								if(mpz_cmp_ui(gamma, 0) != 0){
-									mpz_mul(right, right, gamma);
-								}
-							}
-							mpz_mod(leftMod, left, n);
-							mpz_mod(rightMod, right, n);
-
-
-							//check if are equal
-							if(mpz_cmp(leftMod, rightMod) == 0){
-								mpz_sqrt(alpha, left);
-								mpz_sqrt(beta, right);
-
-								mpz_sub(gamma, beta, alpha);
-								mpz_gcd(p, n, gamma);
-
-								if(mpz_cmp_ui(p, 1) != 0){
-									isFound = true;
-									mpz_div(q, n, p);
-								}
-							}
-						}
-						if(isFound) break;
-					}
-					if(isFound) break;
-				}
-
-				//clear
-				for(unsigned long long i = 0; i < sizeRow; i++){
-					mpz_clear(L[i]);
-				}
-				free(L);
-				for(unsigned long long i = 0; i < y; i++){
-					mpz_clear(Y[i]);
-					mpz_clear(V[i]);
-				}
-				free(Y);
-				free(V);
-				if(isFound) break;
-
-
-			}
-
-*/
-
-			//check
-			Other::MyHelper::CheckResult(n, q, p);
 		}
 
+
+		//check
+		Other::MyHelper::CheckResult(n, q, p);
+
 		//clear
-		mpz_clears(n, q, p, nmod, x, xrem,
-				right, rightMod, left, leftMod, alpha, beta, gamma, NULL);
+		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
 	}
 }

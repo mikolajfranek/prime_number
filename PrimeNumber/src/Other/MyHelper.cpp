@@ -193,51 +193,6 @@ namespace Other {
 		return r;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 		mpz_t i;
 		mpz_inits(i, NULL);
