@@ -45,6 +45,11 @@ namespace Factorization {
 
 
 
+
+
+
+
+
 			//TODO
 			/*
 			 * zarzadzanie pamiecia
@@ -54,7 +59,11 @@ namespace Factorization {
 
 
 			//wartość optymalna
-			unsigned long long b = 59;
+			unsigned long long b = Other::MyHelper::GetUpperBoundOfPrimes(n);
+
+			printf("b = %u\n", b);
+			return;
+
 			unsigned long long csAdd = 10000;
 
 

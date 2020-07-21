@@ -15,6 +15,7 @@ namespace Other {
 		static void PrintMatrix(vector<vector<bool>> matrix);
 		static vector<vector<bool>> GetIdentityMatrix(unsigned long long n);
 		static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
+		static unsigned long long GetUpperBoundOfPrimes(mpz_t n);
 	};
 }
 

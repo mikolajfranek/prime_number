@@ -6,6 +6,7 @@
 #include <string>
 #include <cstring>
 #include <numeric>
+#include <math.h>
 
 /* gmp */
 #include <gmp.h>
