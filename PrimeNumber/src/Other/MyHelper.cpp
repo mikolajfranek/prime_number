@@ -208,9 +208,30 @@ namespace Other {
 
 		string e = "2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274";
 
+		string a = "0.7071067811865500000000";
+
+
+
+
+
+
 		mpf_t r;
 		mpf_init2 (r, 100);
 		mpf_set_str(r, e.c_str(), 10);
+
+
+		mpfr_t x;
+		mpfr_init (x);
+
+		mpfr_set_str(x, e.c_str(), 10, MPFR_RNDD);
+
+
+
+		mpfr_printf ("%.128Rf\n", x);
+
+		mpfr_clear (x);
+
+		mpfr_free_cache ();
 
 
 

@@ -11,6 +11,9 @@
 /* gmp */
 #include <gmp.h>
 
+/* mpfr */
+#include <mpfr.h>
+
 /* benchmark */
 #include <benchmark/benchmark.h>
 
@@ -18,7 +21,6 @@
 using namespace std;
 
 /* elements */
-#include "Elements/Prime.h"
 #include "Elements/QuadraticResidue.h"
 
 /* other */
