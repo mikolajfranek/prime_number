@@ -12,10 +12,10 @@ namespace Other {
 		static void Malloc(mpz_t **v, unsigned long long n);
 		static void Realloc(mpz_t **v, unsigned long long n);
 		static void DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step);
-		static void PrintMatrix(vector<vector<bool>> matrix);
-		static vector<vector<bool>> GetIdentityMatrix(unsigned long long n);
+		static void PrintMatrix(vector<vector<bool>*> matrix);
+		static vector<vector<bool>*> GetIdentityMatrix(unsigned long long n);
 		static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
-		static unsigned long long GetUpperBoundOfPrimes(mpz_t n);
+		static unsigned long GetUpperBoundOfPrimes(string n);
 	};
 }
 
