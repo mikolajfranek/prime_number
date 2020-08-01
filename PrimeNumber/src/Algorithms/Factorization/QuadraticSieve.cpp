@@ -36,25 +36,75 @@ namespace Factorization {
 				}while(mpz_cmp_ui(x, 1) > 0);
 				if(isPowerOfPrime == false){
 					//TODO
-
-
 				}
 			}
 
-
-
-
-
-
-
-
 			//TODO
-			/*
-			 * zarzadzanie pamiecia
-			 * testowanie
-			 * odmierzenie czasu, ktora czesc najdluzej?
-			 */
+			unsigned long b = Other::MyHelper::GetUpperBoundOfPrimes(input);
+			bool foundSolution = false;
+			do{
+				vector<Elements::QuadraticResidue> factorBase =  {};
+				factorBase.push_back(Elements::QuadraticResidue(2, 1, 1));
+				vector<unsigned long long> primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
 
+
+
+
+
+				for(unsigned long long prime : primes){
+					Elements::QuadraticResidue residue = Elements::QuadraticResidue();
+
+
+					//mpz_set_str(residue.Prime, to_string(prime).c_str(), 10);
+
+					factorBase.push_back(residue);
+
+					//if(mpz_legendre(n, residue.Prime) == 1){
+						/*
+						Solver::TonelliShanks::Solve(n, residue.Prime, residue.Solution1, residue.Solution2);
+						mpz_sub(residue.Solution1, residue.Solution1, x);
+						mpz_powm_ui(residue.Solution1, residue.Solution1, 1, residue.Prime);
+						mpz_sub(residue.Solution2, residue.Solution2, x);
+						mpz_powm_ui(residue.Solution2, residue.Solution2, 1, residue.Prime);
+						residue.ULLPrime = strtoull(mpz_get_str(NULL, 10, residue.Prime), NULL, 10);
+						residue.ULLIndexOfSolution1 = strtoull(mpz_get_str(NULL, 10, residue.Solution1), NULL, 10);
+						residue.ULLIndexOfSolution2 = strtoull(mpz_get_str(NULL, 10, residue.Solution2), NULL, 10);
+						*/
+
+					//}
+				}
+
+
+
+				for(Elements::QuadraticResidue quadraticResidue : factorBase){
+					printf("--> %ul\n", quadraticResidue.ULLPrime);
+				}
+
+
+
+
+
+				printf("--> end\n");
+				break;
+
+
+			}while(foundSolution == false);
+		}
+
+		//check
+		Other::MyHelper::CheckResult(n, q, p);
+
+		//clear
+		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
+
+
+
+
+
+
+
+
+			/*
 
 			mpz_t *W, *V, *L, *R;
 			Other::MyHelper::Malloc(&W, 0);
@@ -65,29 +115,15 @@ namespace Factorization {
 			if(mpz_cmp_ui(xrem, 0) != 0){
 				mpz_add_ui(x, x, 1);
 			}
-			unsigned long b = Other::MyHelper::GetUpperBoundOfPrimes(input);
 			unsigned long long cp, cf, cs;
-			bool foundSolution = false;
-			do{
-				vector<Elements::QuadraticResidue> factorBase;
-				factorBase.push_back(Elements::QuadraticResidue(2, 1, 1));
-//				vector<Elements::QuadraticResidue*> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
-				vector<unsigned long long> *primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
+
+
+
 //				vector<Elements::QuadraticResidue> residueDTO;
 				for (unsigned long long prime : *primes){
-					Elements::QuadraticResidue residue = Elements::QuadraticResidue();
-					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
-					if(mpz_legendre(n, residue->Prime) == 1){
-						Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
-						mpz_sub(residue->Solution1, residue->Solution1, x);
-						mpz_powm_ui(residue->Solution1, residue->Solution1, 1, residue->Prime);
-						mpz_sub(residue->Solution2, residue->Solution2, x);
-						mpz_powm_ui(residue->Solution2, residue->Solution2, 1, residue->Prime);
-						residue->ULLPrime = strtoull(mpz_get_str(NULL, 10, residue->Prime), NULL, 10);
-						residue->ULLIndexOfSolution1 = strtoull(mpz_get_str(NULL, 10, residue->Solution1), NULL, 10);
-						residue->ULLIndexOfSolution2 = strtoull(mpz_get_str(NULL, 10, residue->Solution2), NULL, 10);
-						factorBase.push_back(residue);
-					}
+
+
+
 
 //					Elements::QuadraticResidue *residue = new Elements::QuadraticResidue();
 //					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
@@ -151,7 +187,7 @@ namespace Factorization {
 				Solver::GaussianElimination::SolveMod2(A, B);
 
 				//TODO
-				/*
+
 				for(unsigned long long i = 0; i < cf; i++){
 					if(accumulate((*A[i]).begin(), (*A[i]).end(), 0) == 0){
 						mpz_set_ui(ls, 1);
@@ -183,7 +219,7 @@ namespace Factorization {
 						}
 					}
 				}
-				*/
+
 
 
 				for(unsigned long long i = 0; i < cs; i++){
@@ -201,18 +237,13 @@ namespace Factorization {
 				b = b * 2;
 
 				break;
-			}while(foundSolution == false);
 
 			free(W);
 			free(V);
 			free(L);
 			free(R);
 		}
+		*/
 
-		//check
-		Other::MyHelper::CheckResult(n, q, p);
-
-		//clear
-		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
 	}
 }
