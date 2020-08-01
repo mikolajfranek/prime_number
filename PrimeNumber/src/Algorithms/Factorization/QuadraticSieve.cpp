@@ -69,10 +69,13 @@ namespace Factorization {
 			unsigned long long cp, cf, cs;
 			bool foundSolution = false;
 			do{
-				vector<Elements::QuadraticResidue*> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
+				vector<Elements::QuadraticResidue> factorBase;
+				factorBase.push_back(Elements::QuadraticResidue(2, 1, 1));
+//				vector<Elements::QuadraticResidue*> factorBase = {new Elements::QuadraticResidue(2, 1, 1)};
 				vector<unsigned long long> *primes = PrimesBelowLimit::SieveOfEratosthenes::GetPrimes(b);
+//				vector<Elements::QuadraticResidue> residueDTO;
 				for (unsigned long long prime : *primes){
-					Elements::QuadraticResidue *residue = new Elements::QuadraticResidue();
+					Elements::QuadraticResidue residue = Elements::QuadraticResidue();
 					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
 					if(mpz_legendre(n, residue->Prime) == 1){
 						Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
@@ -84,9 +87,23 @@ namespace Factorization {
 						residue->ULLIndexOfSolution1 = strtoull(mpz_get_str(NULL, 10, residue->Solution1), NULL, 10);
 						residue->ULLIndexOfSolution2 = strtoull(mpz_get_str(NULL, 10, residue->Solution2), NULL, 10);
 						factorBase.push_back(residue);
-					}else{
-						delete residue;
 					}
+
+//					Elements::QuadraticResidue *residue = new Elements::QuadraticResidue();
+//					mpz_set_str(residue->Prime, to_string(prime).c_str(), 10);
+//					if(mpz_legendre(n, residue->Prime) == 1){
+//						Solver::TonelliShanks::Solve(n, residue->Prime, residue->Solution1, residue->Solution2);
+//						mpz_sub(residue->Solution1, residue->Solution1, x);
+//						mpz_powm_ui(residue->Solution1, residue->Solution1, 1, residue->Prime);
+//						mpz_sub(residue->Solution2, residue->Solution2, x);
+//						mpz_powm_ui(residue->Solution2, residue->Solution2, 1, residue->Prime);
+//						residue->ULLPrime = strtoull(mpz_get_str(NULL, 10, residue->Prime), NULL, 10);
+//						residue->ULLIndexOfSolution1 = strtoull(mpz_get_str(NULL, 10, residue->Solution1), NULL, 10);
+//						residue->ULLIndexOfSolution2 = strtoull(mpz_get_str(NULL, 10, residue->Solution2), NULL, 10);
+//						factorBase.push_back(residue);
+//					}else{
+//						delete residue;
+//					}
 				}
 				cp = primes->size();
 				delete primes;
