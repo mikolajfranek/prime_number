@@ -2,11 +2,8 @@
 #define CONFIGURATIONS_MYHEADER_H_
 
 /* general */
-#include <vector>
-#include <string>
 #include <cstring>
 #include <numeric>
-#include <math.h>
 
 /* gmp */
 #include <gmp.h>
@@ -22,6 +19,7 @@ using namespace std;
 
 /* elements */
 #include "Elements/QuadraticResidue.h"
+#include "Elements/ElementOfSieve.h"
 
 /* other */
 #include "Other/MyHelper.h"

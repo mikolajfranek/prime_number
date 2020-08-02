@@ -15,7 +15,7 @@ namespace Elements {
 		unsigned long long ULLIndexOfSolution2;
 		QuadraticResidue();
 		QuadraticResidue(short n, short solution1, short solution2);
-		~QuadraticResidue();
+		virtual ~QuadraticResidue();
 	};
 }
 

@@ -162,34 +162,34 @@ namespace Other {
 		}
 	}
 
-	void MyHelper::DivideSieve(mpz_t *sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
+	void MyHelper::DivideSieve(vector<Elements::ElementOfSieve> sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
 		mpz_t r;
 		mpz_inits(r, NULL);
 		for(unsigned long long *i = from; *i < sizeOfSieve; *i += step){
-			mpz_mod_ui(r, sieve[*i], step);
+			mpz_mod_ui(r, sieve[*i].Number, step);
 			while(mpz_cmp_ui(r, 0) == 0){
-				mpz_div_ui(sieve[*i], sieve[*i], step);
-				mpz_mod_ui(r, sieve[*i], step);
+				mpz_div_ui(sieve[*i].Number, sieve[*i].Number, step);
+				mpz_mod_ui(r, sieve[*i].Number, step);
 			}
 		}
 		mpz_clears(r, NULL);
 	}
 
-	void MyHelper::PrintMatrix(vector<vector<bool>*> matrix){
-		for(vector<bool> *row : matrix){
-			for(bool e : *row){
+	void MyHelper::PrintMatrix(vector<vector<bool>> matrix){
+		for(vector<bool> row : matrix){
+			for(bool e : row){
 				printf("%d", e);
 			}
 			printf("\n");
 		}
 	}
 
-	vector<vector<bool>*> MyHelper::GetIdentityMatrix(unsigned long long n){
-		vector<vector<bool>*> r = {};
+	vector<vector<bool>> MyHelper::GetIdentityMatrix(unsigned long long n){
+		vector<vector<bool>> r = {};
 		for(unsigned long long i = 0; i < n; i++){
-			vector<bool> *row = new vector<bool>(n, false);
+			vector<bool> row = vector<bool>(n, false);
 			r.push_back(row);
-			(*r[i])[i] = true;
+			r[i][i] = true;
 		}
 		return r;
 	}
@@ -215,7 +215,7 @@ namespace Other {
 		mpfr_sqrt(r, r, MPFR_RNDU);
 		mpfr_mul_d(r, r, 1.5, MPFR_RNDU);
 		mpfr_exp(r, r, MPFR_RNDU);
-		unsigned long result = mpfr_get_uj(r, MPFR_RNDU);
+		unsigned long result = mpfr_get_ui(r, MPFR_RNDU);
 		mpfr_clears(n, r, NULL);
 		mpfr_free_cache();
 		return result;

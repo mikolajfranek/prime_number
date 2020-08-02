@@ -6,7 +6,7 @@
 namespace Solver {
 	class GaussianElimination {
 	public:
-		static void SolveMod2(vector<vector<bool>*> &A, vector<vector<bool>*> &B);
+		static void SolveMod2(vector<vector<bool>> &A, vector<vector<bool>> &B);
 	};
 }
 
