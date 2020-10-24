@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
 environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/PATH/delimiter=\:
 environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/PATH/operation=replace
-environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/PATH/value=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/usr/local/games\:/snap/bin\:${gmp_build}/include;${gmp_build}/lib;${benchmark_build}/include;${benchmark_build}/lib
+environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/PATH/value=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/usr/local/games\:/snap/bin\:/include;/lib
 environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/append=true
 environment/project/cdt.managedbuild.config.gnu.exe.debug.1126634098/appendContributed=true
 environment/project/cdt.managedbuild.config.gnu.exe.release.278275347/PATH/delimiter=\:
