@@ -13,6 +13,6 @@ namespace Primality {
 		}
 	}
 	/* register the function as benchmark with arguments */
-	BENCHMARK(BM_PrimalityTrialDivisionPrime)->Arg(10)->Arg(20)->Arg(30);
-	BENCHMARK(BM_PrimalityTrialDivisionSemiPrime)->Arg(10)->Arg(20)->Arg(30);
+	//BENCHMARK(BM_PrimalityTrialDivisionPrime)->Arg(10)->Arg(20)->Arg(30);
+	//BENCHMARK(BM_PrimalityTrialDivisionSemiPrime)->Arg(10)->Arg(20)->Arg(30);
 }
