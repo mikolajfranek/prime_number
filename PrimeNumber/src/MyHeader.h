@@ -35,6 +35,7 @@ using namespace std;
 #include "Algorithms/Primality/TrialDivision.h"
 
 /* factorization */
+#include "Abstracts/Factorization.h"
 #include "Algorithms/Factorization/TrialDivision.h"
 #include "Algorithms/Factorization/Fermat.h"
 #include "Algorithms/Factorization/QuadraticSieve.h"

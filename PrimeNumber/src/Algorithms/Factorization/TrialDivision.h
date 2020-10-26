@@ -4,9 +4,9 @@
 #define ALGORITHMS_SIEVEOFERATOSTHENES_H_
 
 namespace Factorization {
-	class TrialDivision {
+	class TrialDivision : Abstracts::Factorization {
 	public:
-		static void Factor(string n);
+		void Factor(string input);
 	};
 }
 
