@@ -136,18 +136,6 @@ namespace Other {
 		}
 	}
 
-	void MyHelper::CheckResult(mpz_t prediction, mpz_t p, mpz_t q){
-		mpz_t result;
-		mpz_inits(result, NULL);
-		mpz_mul(result, p, q);
-		if(mpz_cmp(prediction, result) == 0){
-			gmp_printf("%Zd = %Zd * %Zd\n", prediction, p, q);
-		}else{
-			printf("Error: Other::MyHelper::CheckResult\n");
-		}
-		mpz_clears(result, NULL);
-	}
-
 	void MyHelper::Malloc(mpz_t **v, unsigned long long n){
 		*v = (mpz_t *)malloc(n * sizeof(mpz_t));
 		if(*v == NULL){

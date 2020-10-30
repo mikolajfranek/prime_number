@@ -6,7 +6,9 @@
 namespace Factorization {
 	class QuadraticSieve {
 	public:
-		static void Factor(string n);
+		QuadraticSieve();
+		virtual ~QuadraticSieve();
+		void Factor(string n);
 	};
 }
 

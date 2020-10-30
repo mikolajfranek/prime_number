@@ -1,16 +1,19 @@
 #include "TrialDivision.h"
 
 namespace Factorization {
-	void TrialDivision::Factor(string input){
+
+	TrialDivision::TrialDivision() {}
+
+	TrialDivision::~TrialDivision() {}
+
+	void TrialDivision::Factor(string input) {
 
 		//declare
-		mpz_t n0, n1, n2, n3, n4, i;
+		mpz_t n3, n4, i;
 
 		//init
-		mpz_inits(n0, n1, n2, n3, n4, i, NULL);
-
-		//set
 		mpz_set_str(n0, input.c_str(), 10);
+		mpz_inits(n3, n4, i, NULL);
 
 		//algorithm
 		mpz_mod_ui(n4, n0, 2);
@@ -43,10 +46,7 @@ namespace Factorization {
 			}
 		}
 
-		//check
-		Other::MyHelper::CheckResult(n0, n1, n2);
-
 		//clear
-		mpz_clears(n0, n1, n2, n3, n4, i, NULL);
+		mpz_clears(n3, n4, i, NULL);
 	}
 }

@@ -6,7 +6,9 @@
 namespace Factorization {
 	class Fermat {
 	public:
-		static void Factor(string n);
+		Fermat();
+		virtual ~Fermat();
+		void Factor(string n);
 	};
 }
 

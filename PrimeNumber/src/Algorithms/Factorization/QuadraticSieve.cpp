@@ -167,7 +167,7 @@ printf("mf\n");
 		}
 
 		//check
-		Other::MyHelper::CheckResult(n, q, p);
+		//CheckResult(n, q, p);
 
 		//clear
 		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);

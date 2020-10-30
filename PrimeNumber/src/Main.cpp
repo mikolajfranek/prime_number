@@ -4,9 +4,9 @@
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	//Factorization::QuadraticSieve::Factor("15347");
-	//Factorization::QuadraticSieve::Factor(Other::MyHelper::GetSemiPrime(10));
-
-	Factorization::TrialDivision trialDivision;
-	trialDivision.Factor(Other::MyHelper::GetSemiPrime(10));
+	Abstracts::Factorization *factorization = new Factorization::TrialDivision();
+	factorization->Factor(Other::MyHelper::GetSemiPrime(10));
+	factorization->CheckResult();
+	delete factorization;
+	return 0;
 }
