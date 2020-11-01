@@ -4,11 +4,11 @@
 #define ALGORITHMS_FERMAT_H_
 
 namespace Factorization {
-	class Fermat {
+	class Fermat : public Abstracts::Factorization  {
 	public:
 		Fermat();
 		virtual ~Fermat();
-		void Factor(string n);
+		void Factor(string input);
 	};
 }
 
