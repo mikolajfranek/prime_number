@@ -27,9 +27,9 @@ namespace Factorization {
 				mpz_div_ui(n2, n0, 3);
 			}else{
 				mpz_sqrt(n3, n0);
-				short k = 4;
+				short h = 4;
 				bool isPrime = true;
-				for(mpz_set_ui(i, 5); mpz_cmp(i, n3) <= 0; mpz_add_ui(i, i, k)){
+				for(mpz_set_ui(i, 5); mpz_cmp(i, n3) <= 0; mpz_add_ui(i, i, h)){
 					mpz_mod(n4, n0, i);
 					if(mpz_cmp_ui(n4, 0) == 0){
 						mpz_set(n1, i);
@@ -37,7 +37,7 @@ namespace Factorization {
 						isPrime = false;
 						break;
 					}
-					k = 6 - k;
+					h = 6 - h;
 				}
 				if(isPrime == true){
 					mpz_set_ui(n1, 1);
