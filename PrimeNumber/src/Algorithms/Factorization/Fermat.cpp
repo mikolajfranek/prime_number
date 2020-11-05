@@ -21,18 +21,18 @@ namespace Factorization {
 			mpz_set_ui(n1, 2);
 			mpz_div_ui(n2, n0, 2);
 		}else{
-			mpz_sqrt(n3, n0);
-			if(mpz_perfect_square_p(n0) != 1){
+			mpz_sqrtrem(n3, n5, n0);
+			if(mpz_cmp_ui(n5, 0) != 0){
 				mpz_add_ui(n3, n3, 1);
 			}
 			mpz_pow_ui(n4, n3, 2);
 			mpz_sub(n4, n4, n0);
-			mpz_sqrt(r0, n4);
-			while(mpz_perfect_square_p(n4) != 1){
+			mpz_sqrtrem(r0, n5, n4);
+			while(mpz_cmp_ui(n5, 0) != 0){
 				mpz_mul_ui(n5, n3, 2);
 				mpz_add_ui(n5, n5, 1);
 				mpz_add(n4, n4, n5);
-				mpz_sqrt(r0, n4);
+				mpz_sqrtrem(r0, n5, n4);
 				mpz_add_ui(n3, n3, 1);
 			}
 			mpz_sub(n1, n3, r0);
