@@ -9,11 +9,11 @@ namespace Factorization {
 	void TrialDivision::Factor(string input) {
 
 		//declare
-		mpz_t n3, n4, i;
+		mpz_t n3, n4, b;
 
 		//init
 		mpz_set_str(n0, input.c_str(), 10);
-		mpz_inits(n3, n4, i, NULL);
+		mpz_inits(n3, n4, b, NULL);
 
 		//algorithm
 		mpz_mod_ui(n4, n0, 2);
@@ -27,17 +27,17 @@ namespace Factorization {
 				mpz_div_ui(n2, n0, 3);
 			}else{
 				mpz_sqrt(n3, n0);
-				short h = 4;
+				short a = 4;
 				bool isPrime = true;
-				for(mpz_set_ui(i, 5); mpz_cmp(i, n3) <= 0; mpz_add_ui(i, i, h)){
-					mpz_mod(n4, n0, i);
+				for(mpz_set_ui(b, 5); mpz_cmp(b, n3) <= 0; mpz_add_ui(b, b, a)){
+					mpz_mod(n4, n0, b);
 					if(mpz_cmp_ui(n4, 0) == 0){
-						mpz_set(n1, i);
-						mpz_div(n2, n0, i);
+						mpz_set(n1, b);
+						mpz_div(n2, n0, b);
 						isPrime = false;
 						break;
 					}
-					h = 6 - h;
+					a = 6 - a;
 				}
 				if(isPrime == true){
 					mpz_set_ui(n1, 1);
@@ -47,6 +47,6 @@ namespace Factorization {
 		}
 
 		//clear
-		mpz_clears(n3, n4, i, NULL);
+		mpz_clears(n3, n4, b, NULL);
 	}
 }
