@@ -4,11 +4,11 @@
 #define ALGORITHMS_QUADRATICSIEVE_H_
 
 namespace Factorization {
-	class QuadraticSieve {
+	class QuadraticSieve : public Abstracts::Factorization  {
 	public:
 		QuadraticSieve();
 		virtual ~QuadraticSieve();
-		void Factor(string n);
+		void Factor(string input);
 	};
 }
 

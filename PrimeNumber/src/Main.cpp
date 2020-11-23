@@ -4,7 +4,7 @@
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	Abstracts::Factorization *factorization = new Factorization::Fermat();
+	Abstracts::Factorization *factorization = new Factorization::QuadraticSieve();
 	factorization->Factor(Other::MyHelper::GetSemiPrime(10));
 	factorization->CheckResult();
 	delete factorization;

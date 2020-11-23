@@ -1,7 +1,31 @@
 #include "QuadraticSieve.h"
 
 namespace Factorization {
+
+	QuadraticSieve::QuadraticSieve() {}
+
+	QuadraticSieve::~QuadraticSieve() {}
+
 	void QuadraticSieve::Factor(string input){
+
+		//declare
+		//...
+
+		//init
+		mpz_set_str(n0, input.c_str(), 10);
+		//...
+
+		//algorithm
+		//...
+
+
+		//clear
+		//...
+
+
+
+
+
 
 		//declare
 		mpz_t n, q, p, nmod, x, xrem, lh, rh, ls, rs;
@@ -18,6 +42,22 @@ namespace Factorization {
 			mpz_div_ui(q, n, 2);
 			mpz_set_ui(p, 2);
 		}else{
+
+
+
+		}
+
+
+		printf("end\n");
+		//clear
+		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
+		return;
+	}
+}
+
+
+		/*
+
 			if(Primality::TrialDivision::IsPrime(n) == true){
 				mpz_set(q, n);
 				mpz_set_ui(p, 1);
@@ -38,7 +78,6 @@ namespace Factorization {
 					//TODO
 				}
 			}
-
 
 
 
@@ -123,9 +162,6 @@ namespace Factorization {
 				Solver::GaussianElimination::SolveMod2(A, B);
 
 
-printf("mf\n");
-
-				/*
 				for(unsigned long long i = 0; i < cf; i++){
 					if(accumulate(A[i].begin(), A[i].end(), 0) == 0){
 						mpz_set_ui(ls, 1);
@@ -157,19 +193,19 @@ printf("mf\n");
 						}
 					}
 				}
-				*/
+
 
 				b = b * 2;
 
 				break;
 
 			}while(foundSolution == false);
-		}
+
 
 		//check
 		//CheckResult(n, q, p);
 
 		//clear
 		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
-	}
-}
+		*/
+
