@@ -40,45 +40,25 @@ namespace Factorization {
 						mpz_set(m1, r0);
 						mpz_div(m2, m0, r0);
 					}else{
-
-						//TODO
 						a = 5;
 						short b = 2;
-						bool isPowerOfPrime = false;
-
-
-
-
-						//
+						bool isPowerOfNumber = false;
 						do{
 							mpz_rootrem(r0, m3, m0, a);
-
 							if(mpz_cmp_ui(m3, 0) == 0){
-								isPowerOfPrime = true;
 								mpz_set(m1, r0);
 								mpz_div(m2, m0, r0);
+								isPowerOfNumber = true;
 								break;
 							}
-
-
 							a = a + b;
 							b = 6 - b;
-						}while(mpz_cmp_ui(r0, 1) >= 0);
+						}while(mpz_cmp_ui(r0, 1) > 0);
+						if(isPowerOfNumber == false){
 
-
-
-
-
-
-
-
-						//...
-
-
-
-
-
-
+							//TODO
+							//...
+						}
 					}
 				}
 			}
@@ -95,40 +75,6 @@ namespace Factorization {
 
 
 /*
-
-
-
-
-			if(Primality::TrialDivision::IsPrime(n) == true){
-				mpz_set(q, n);
-				mpz_set_ui(p, 1);
-			}else{
-				bool isPowerOfPrime = false;
-
-
-				unsigned long int k = 2;
-				do{
-					mpz_rootrem(x, xrem, n, k);
-					if(mpz_cmp_ui(xrem, 0) == 0){
-						mpz_div(q, n, x);
-						mpz_set(p, x);
-						isPowerOfPrime = true;
-						break;
-					}
-					k = k + 1;
-				}while(mpz_cmp_ui(x, 1) > 0);
-				if(isPowerOfPrime == false){
-					//TODO
-				}
-
-
-			}
-
-
-
-
-
-
 			//TODO
 			mpz_sqrtrem(x, xrem, n);
 			if(mpz_cmp_ui(xrem, 0) != 0){
