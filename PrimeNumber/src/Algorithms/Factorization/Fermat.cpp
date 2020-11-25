@@ -9,37 +9,37 @@ namespace Factorization {
 	void Fermat::Factor(string input){
 
 		//declare
-		mpz_t n3, n4, n5, r0;
+		mpz_t m3, m4, m5, r0;
 
 		//init
-		mpz_set_str(n0, input.c_str(), 10);
-		mpz_inits(n3, n4, n5, r0, NULL);
+		mpz_set_str(m0, input.c_str(), 10);
+		mpz_inits(m3, m4, m5, r0, NULL);
 
 		//algorithm
-		mpz_mod_ui(n5, n0, 2);
-		if(mpz_cmp_ui(n5, 0) == 0){
-			mpz_set_ui(n1, 2);
-			mpz_div_ui(n2, n0, 2);
+		mpz_mod_ui(m5, m0, 2);
+		if(mpz_cmp_ui(m5, 0) == 0){
+			mpz_set_ui(m1, 2);
+			mpz_div_ui(m2, m0, 2);
 		}else{
-			mpz_sqrtrem(n3, n5, n0);
-			if(mpz_cmp_ui(n5, 0) != 0){
-				mpz_add_ui(n3, n3, 1);
+			mpz_sqrtrem(m3, m5, m0);
+			if(mpz_cmp_ui(m5, 0) != 0){
+				mpz_add_ui(m3, m3, 1);
 			}
-			mpz_pow_ui(n4, n3, 2);
-			mpz_sub(n4, n4, n0);
-			mpz_sqrtrem(r0, n5, n4);
-			while(mpz_cmp_ui(n5, 0) != 0){
-				mpz_mul_ui(n5, n3, 2);
-				mpz_add_ui(n5, n5, 1);
-				mpz_add(n4, n4, n5);
-				mpz_sqrtrem(r0, n5, n4);
-				mpz_add_ui(n3, n3, 1);
+			mpz_pow_ui(m4, m3, 2);
+			mpz_sub(m4, m4, m0);
+			mpz_sqrtrem(r0, m5, m4);
+			while(mpz_cmp_ui(m5, 0) != 0){
+				mpz_mul_ui(m5, m3, 2);
+				mpz_add_ui(m5, m5, 1);
+				mpz_add(m4, m4, m5);
+				mpz_sqrtrem(r0, m5, m4);
+				mpz_add_ui(m3, m3, 1);
 			}
-			mpz_sub(n1, n3, r0);
-			mpz_add(n2, n3, r0);
+			mpz_sub(m1, m3, r0);
+			mpz_add(m2, m3, r0);
 		}
 
 		//clear
-		mpz_clears(n3, n4, n5, r0, NULL);
+		mpz_clears(m3, m4, m5, r0, NULL);
 	}
 }

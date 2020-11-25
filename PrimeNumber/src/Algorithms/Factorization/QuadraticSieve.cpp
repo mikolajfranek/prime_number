@@ -9,60 +9,103 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		//...
+		mpz_t m3, n0, r0;
 
 		//init
-		mpz_set_str(n0, input.c_str(), 10);
-		//...
+		mpz_set_str(m0, input.c_str(), 10);
+		mpz_inits(m3, n0, r0, NULL);
 
 		//algorithm
-		//...
-
-
-		//clear
-		//...
-
-
-
-
-
-
-		//declare
-		mpz_t n, q, p, nmod, x, xrem, lh, rh, ls, rs;
-
-		//init
-		mpz_inits(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
-
-		//set
-		mpz_set_str(n, input.c_str(), 10);
-
-		//start algorithm
-		mpz_mod_ui(nmod, n, 2);
-		if(mpz_cmp_ui(nmod, 0) == 0){
-			mpz_div_ui(q, n, 2);
-			mpz_set_ui(p, 2);
+		mpz_mod_ui(m3, m0, 2);
+		if(mpz_cmp_ui(m3, 0) == 0){
+			mpz_set_ui(m1, 2);
+			mpz_div_ui(m2, m0, 2);
 		}else{
+			Abstracts::Primality *primality = new Primality::TrialDivision();
+			bool isPrime = primality->IsPrime(input.c_str());
+			delete primality;
+			if(isPrime == true){
+				mpz_set_ui(m1, 1);
+				mpz_set(m2, m0);
+			}else{
+				unsigned long int a = 2;
+				mpz_rootrem(r0, m3, m0, a);
+				if(mpz_cmp_ui(m3, 0) == 0){
+					mpz_set(m1, r0);
+					mpz_div(m2, m0, r0);
+				}else{
+					a = 3;
+					mpz_rootrem(r0, m3, m0, a);
+					if(mpz_cmp_ui(m3, 0) == 0){
+						mpz_set(m1, r0);
+						mpz_div(m2, m0, r0);
+					}else{
+
+						//TODO
+						a = 5;
+						short b = 2;
+						bool isPowerOfPrime = false;
 
 
 
+
+						//
+						do{
+							mpz_rootrem(r0, m3, m0, a);
+
+							if(mpz_cmp_ui(m3, 0) == 0){
+								isPowerOfPrime = true;
+								mpz_set(m1, r0);
+								mpz_div(m2, m0, r0);
+								break;
+							}
+
+
+							a = a + b;
+							b = 6 - b;
+						}while(mpz_cmp_ui(r0, 1) >= 0);
+
+
+
+
+
+
+
+
+						//...
+
+
+
+
+
+
+					}
+				}
+			}
 		}
 
-
-		printf("end\n");
 		//clear
-		mpz_clears(n, q, p, nmod, x, xrem, lh, rh, ls, rs, NULL);
-		return;
+		mpz_clears(m3, n0, r0, NULL);
 	}
 }
 
 
-		/*
+
+
+
+
+/*
+
+
+
 
 			if(Primality::TrialDivision::IsPrime(n) == true){
 				mpz_set(q, n);
 				mpz_set_ui(p, 1);
 			}else{
 				bool isPowerOfPrime = false;
+
+
 				unsigned long int k = 2;
 				do{
 					mpz_rootrem(x, xrem, n, k);
@@ -77,6 +120,8 @@ namespace Factorization {
 				if(isPowerOfPrime == false){
 					//TODO
 				}
+
+
 			}
 
 

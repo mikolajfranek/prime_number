@@ -32,6 +32,7 @@ using namespace std;
 #include "Algorithms/PrimesBelowLimit/SieveOfEratosthenes.h"
 
 /* primality */
+#include "Abstracts/Primality.h"
 #include "Algorithms/Primality/TrialDivision.h"
 
 /* factorization */

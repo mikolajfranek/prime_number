@@ -4,10 +4,11 @@
 #define ALGORITHMS_PRIMALITY_TRIALDIVISION_H_
 
 namespace Primality {
-	class TrialDivision {
+	class TrialDivision : public Abstracts::Primality {
 	public:
-		static void IsPrime(string n, bool prediction);
-		static bool IsPrime(mpz_t n);
+		TrialDivision();
+		virtual ~TrialDivision();
+		bool IsPrime(string input);
 	};
 }
 

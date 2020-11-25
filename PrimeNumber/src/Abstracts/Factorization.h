@@ -11,7 +11,7 @@ namespace Abstracts {
 		virtual void Factor(string input) = 0;
 		void CheckResult();
 	protected:
-		mpz_t n0, n1, n2;
+		mpz_t m0, m1, m2;
 	};
 }
 

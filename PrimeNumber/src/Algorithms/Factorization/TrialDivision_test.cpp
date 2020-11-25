@@ -11,5 +11,7 @@ namespace Factorization {
 		}
 	}
 	/* register the function as benchmark with arguments */
-	BENCHMARK(BM_FactorizationTrialDivision)->Arg(10)->Arg(20);
+	BENCHMARK(BM_FactorizationTrialDivision)
+		->Arg(10)
+		->Arg(20);
 }
