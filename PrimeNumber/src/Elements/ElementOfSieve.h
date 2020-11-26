@@ -1,4 +1,4 @@
-#include "../MyHeader.h"
+#include "../Main.h"
 
 #ifndef ELEMENTS_ELEMENTOFSIEVE_H_
 #define ELEMENTS_ELEMENTOFSIEVE_H_

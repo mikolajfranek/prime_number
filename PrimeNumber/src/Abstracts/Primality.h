@@ -1,4 +1,4 @@
-#include "../MyHeader.h"
+#include "../Main.h"
 
 #ifndef ABSTRACTS_PRIMALITY_H_
 #define ABSTRACTS_PRIMALITY_H_

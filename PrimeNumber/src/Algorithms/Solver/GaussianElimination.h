@@ -1,4 +1,4 @@
-#include "../../MyHeader.h"
+#include "../../Main.h"
 
 #ifndef ALGORITHMS_SOLVER_GAUSSIANELIMINATION_H_
 #define ALGORITHMS_SOLVER_GAUSSIANELIMINATION_H_

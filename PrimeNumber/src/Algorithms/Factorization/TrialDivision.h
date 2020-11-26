@@ -1,4 +1,4 @@
-#include "../../MyHeader.h"
+#include "../../Main.h"
 
 #ifndef ALGORITHMS_FACTORIZATION_TRIALDIVISTION_H
 #define ALGORITHMS_FACTORIZATION_TRIALDIVISTION_H

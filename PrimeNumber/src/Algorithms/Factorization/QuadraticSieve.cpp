@@ -90,6 +90,7 @@ namespace Factorization {
 				for(unsigned long long prime : primes){
 					Elements::QuadraticResidue residue = Elements::QuadraticResidue();
 					mpz_set_str(residue.Prime, to_string(prime).c_str(), 10);
+
 					if(mpz_legendre(n, residue.Prime) == 1){
 						Solver::TonelliShanks::Solve(n, residue.Prime, residue.Solution1, residue.Solution2);
 						mpz_sub(residue.Solution1, residue.Solution1, x);

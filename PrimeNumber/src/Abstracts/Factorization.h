@@ -1,4 +1,4 @@
-#include "../MyHeader.h"
+#include "../Main.h"
 
 #ifndef ABSTRACTS_FACTORIZATION_H_
 #define ABSTRACTS_FACTORIZATION_H_

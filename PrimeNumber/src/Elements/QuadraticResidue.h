@@ -1,4 +1,4 @@
-#include "../MyHeader.h"
+#include "../Main.h"
 
 #ifndef ELEMENTS_QUADRATICRESIDUE_H_
 #define ELEMENTS_QUADRATICRESIDUE_H_

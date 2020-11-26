@@ -1,4 +1,4 @@
-#include "../../MyHeader.h"
+#include "../../Main.h"
 
 #ifndef ALGORITHMS_PRIMALITY_TRIALDIVISION_H_
 #define ALGORITHMS_PRIMALITY_TRIALDIVISION_H_

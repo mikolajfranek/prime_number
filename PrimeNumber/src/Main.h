@@ -1,5 +1,5 @@
-#ifndef CONFIGURATIONS_MYHEADER_H_
-#define CONFIGURATIONS_MYHEADER_H_
+#ifndef MAIN_H_
+#define MAIN_H_
 
 /* general */
 #include <cstring>

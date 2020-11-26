@@ -1,4 +1,4 @@
-#include "MyHeader.h"
+#include "Main.h"
 
 /* run benchmark macro */
 //BENCHMARK_MAIN();

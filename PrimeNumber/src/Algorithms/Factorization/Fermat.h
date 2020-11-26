@@ -1,4 +1,4 @@
-#include "../../MyHeader.h"
+#include "../../Main.h"
 
 #ifndef ALGORITHMS_FACTORIZATION_FERMAT_H_
 #define ALGORITHMS_FACTORIZATION_FERMAT_H_

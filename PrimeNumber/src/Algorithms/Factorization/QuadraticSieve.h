@@ -1,4 +1,4 @@
-#include "../../MyHeader.h"
+#include "../../Main.h"
 
 #ifndef ALGORITHMS_FACTORIZATION_QUADRATICSIEVE_H_
 #define ALGORITHMS_FACTORIZATION_QUADRATICSIEVE_H_

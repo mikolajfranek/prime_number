@@ -1,4 +1,4 @@
-#include "../MyHeader.h"
+#include "../Main.h"
 
 #ifndef CONFIGURATIONS_MYHELPER_H_
 #define CONFIGURATIONS_MYHELPER_H_
