@@ -1,9 +1,9 @@
 #include "../Main.h"
 
-#ifndef CONFIGURATIONS_MYHELPER_H_
-#define CONFIGURATIONS_MYHELPER_H_
+#ifndef ELEMENTS_MYHELPER_H_
+#define ELEMENTS_MYHELPER_H_
 
-namespace Other {
+namespace Elements {
 	class MyHelper {
 	public:
 		static string GetPrime(unsigned short numberOfDigits);

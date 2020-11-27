@@ -5,7 +5,7 @@ namespace Factorization {
 	static void BM_FactorizationQuadraticSieve(benchmark::State& state) {
 		for (auto _ : state){
 			Abstracts::Factorization *factorization = new Factorization::QuadraticSieve();
-			factorization->Factor(Other::MyHelper::GetSemiPrime(state.range(0)));
+			factorization->Factor(Elements::MyHelper::GetSemiPrime(state.range(0)));
 			factorization->CheckResult();
 			delete factorization;
 		}

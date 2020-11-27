@@ -22,14 +22,15 @@ using namespace std;
 #include "Elements/ElementOfSieve.h"
 
 /* other */
-#include "Other/MyHelper.h"
+#include "Elements/MyHelper.h"
 
 /* solver */
 #include "Algorithms/Solver/TonelliShanks.h"
 #include "Algorithms/Solver/GaussianElimination.h"
 
 /* primes below limit */
-#include "Algorithms/PrimesBelowLimit/SieveOfEratosthenes.h"
+#include "Abstracts/PrimesBelowUpperBound.h"
+#include "Algorithms/PrimesBelowUpperBound/SieveOfEratosthenes.h"
 
 /* primality */
 #include "Abstracts/Primality.h"

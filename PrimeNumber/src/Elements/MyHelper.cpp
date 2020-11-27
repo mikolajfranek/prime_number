@@ -1,6 +1,6 @@
-#include "../Other/MyHelper.h"
+#include "../Elements/MyHelper.h"
 
-namespace Other {
+namespace Elements {
 
 	string MyHelper::GetPrime(unsigned short numberOfDigits){
 		switch(numberOfDigits){
@@ -193,19 +193,17 @@ namespace Other {
 	}
 
 	unsigned long MyHelper::GetUpperBoundOfPrimes(string input){
-		mpfr_t n, r;
-		mpfr_inits(n, r, NULL);
+		mpfr_t n, upperBound;
+		mpfr_inits(n, upperBound, NULL);
 		mpfr_set_str(n, input.c_str(), 10, MPFR_RNDU);
-		mpfr_log(r, n, MPFR_RNDU);
-		mpfr_log(r, r, MPFR_RNDU);
-		mpfr_mul(r, n, r, MPFR_RNDU);
-		mpfr_log(r, r, MPFR_RNDU);
-		mpfr_sqrt(r, r, MPFR_RNDU);
-		mpfr_mul_d(r, r, 1.5, MPFR_RNDU);
-		mpfr_exp(r, r, MPFR_RNDU);
-		unsigned long result = mpfr_get_ui(r, MPFR_RNDU);
-		mpfr_clears(n, r, NULL);
-		mpfr_free_cache();
+		mpfr_log(upperBound, n, MPFR_RNDU);
+		mpfr_log(upperBound, upperBound, MPFR_RNDU);
+		mpfr_mul(upperBound, n, upperBound, MPFR_RNDU);
+		mpfr_log(upperBound, upperBound, MPFR_RNDU);
+		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
+		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
+		unsigned long result = mpfr_get_ui(upperBound, MPFR_RNDU);
+		mpfr_clears(n, upperBound, NULL);
 		return result;
 	}
 }

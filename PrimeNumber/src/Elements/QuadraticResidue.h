@@ -6,16 +6,15 @@
 namespace Elements {
 	class QuadraticResidue {
 	public:
-		mpz_t Prime;
-		mpz_t ModPrime;
-		mpz_t Solution1;
-		mpz_t Solution2;
-		unsigned long long ULLPrime;
-		unsigned long long ULLIndexOfSolution1;
-		unsigned long long ULLIndexOfSolution2;
 		QuadraticResidue();
-		QuadraticResidue(short n, short solution1, short solution2);
+		QuadraticResidue(short p0, short solution0, short solution1);
 		virtual ~QuadraticResidue();
+		mpz_t prime;
+		mpz_t solution0;
+		mpz_t solution1;
+		unsigned long long p0;
+		unsigned long long m0;
+		unsigned long long m1;
 	};
 }
 
