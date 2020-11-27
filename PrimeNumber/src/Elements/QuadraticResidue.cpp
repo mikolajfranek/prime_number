@@ -8,8 +8,8 @@ namespace Elements {
 		mpz_set_ui(this->solution0, 0);
 		mpz_set_ui(this->solution1, 0);
 		this->p0 = 0;
-		this->m0 = 0;
-		this->m1 = 0;
+		this->s0 = 0;
+		this->s1 = 0;
 	}
 
 	QuadraticResidue::QuadraticResidue(short p0, short solution0, short solution1){
@@ -18,8 +18,8 @@ namespace Elements {
 		mpz_set_ui(this->solution0, solution0);
 		mpz_set_ui(this->solution1, solution1);
 		this->p0 = p0;
-		this->m0 = solution0;
-		this->m1 = solution1;
+		this->s0 = solution0;
+		this->s1 = solution1;
 	}
 
 	QuadraticResidue::~QuadraticResidue(){

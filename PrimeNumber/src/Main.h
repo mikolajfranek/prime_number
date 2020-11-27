@@ -19,7 +19,7 @@ using namespace std;
 
 /* elements */
 #include "Elements/QuadraticResidue.h"
-#include "Elements/ElementOfSieve.h"
+#include "Elements/ElementOfQuadraticSieve.h"
 
 /* other */
 #include "Elements/MyHelper.h"

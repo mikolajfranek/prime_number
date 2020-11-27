@@ -13,8 +13,8 @@ namespace Elements {
 		mpz_t solution0;
 		mpz_t solution1;
 		unsigned long long p0;
-		unsigned long long m0;
-		unsigned long long m1;
+		unsigned long long s0;
+		unsigned long long s1;
 	};
 }
 

@@ -150,14 +150,14 @@ namespace Elements {
 		}
 	}
 
-	void MyHelper::DivideSieve(vector<Elements::ElementOfSieve> sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
+	void MyHelper::DivideSieve(vector<Elements::ElementOfQuadraticSieve> sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
 		mpz_t r;
 		mpz_inits(r, NULL);
 		for(unsigned long long *i = from; *i < sizeOfSieve; *i += step){
-			mpz_mod_ui(r, sieve[*i].Number, step);
+			mpz_mod_ui(r, sieve[*i].divisible, step);
 			while(mpz_cmp_ui(r, 0) == 0){
-				mpz_div_ui(sieve[*i].Number, sieve[*i].Number, step);
-				mpz_mod_ui(r, sieve[*i].Number, step);
+				mpz_div_ui(sieve[*i].divisible, sieve[*i].divisible, step);
+				mpz_mod_ui(r, sieve[*i].divisible, step);
 			}
 		}
 		mpz_clears(r, NULL);

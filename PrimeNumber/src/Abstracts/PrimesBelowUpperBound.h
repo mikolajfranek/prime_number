@@ -8,8 +8,9 @@ namespace Abstracts {
 	public:
 		PrimesBelowUpperBound();
 		virtual ~PrimesBelowUpperBound();
-		virtual vector<unsigned long long> GetPrimes(unsigned long long upperBound) = 0;
-		vector<Elements::QuadraticResidue*>* GetQuadraticResidues(unsigned long long upperBound, mpz_t m0);
+		virtual void SearchPrimes(unsigned long long upperBound) = 0;
+		vector<Elements::QuadraticResidue*> *GetQuadraticResidues(unsigned long long upperBound, mpz_t m0);
+		vector<unsigned long long> primes;
 	};
 }
 
