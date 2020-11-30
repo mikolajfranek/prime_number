@@ -55,18 +55,21 @@ namespace Factorization {
 							b = 6 - b;
 						}while(mpz_cmp_ui(r0, 1) > 0);
 						if(isPowerOfNumber == false){
-							//TODO
 							mpz_sqrtrem(m3, m4, m0);
 							if(mpz_cmp_ui(m4, 0) != 0){
 								mpz_add_ui(m3, m3, 1);
 							}
-							unsigned long upperBound = Elements::MyHelper::GetUpperBoundOfPrimes(input);
+
+
+
+							//TODO
+							long long upperBound = Elements::MyHelper::GetUpperBoundOfPrimes(input);
 							printf("UpperBound: %u\n", upperBound);
 
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
 							primesBelowUpperBound->SearchPrimes(upperBound);
-							unsigned long foundSmooth = 0;
-							unsigned long minimumSmooth = primesBelowUpperBound->primes.size();
+							long long foundSmooth = 0;
+							long long minimumSmooth = primesBelowUpperBound->primes.size();
 							printf("Need to get more than %u smooth number\n", minimumSmooth);
 							vector<Elements::QuadraticResidue*> *quadraticResidues = primesBelowUpperBound->GetQuadraticResidues(upperBound, this->m0);
 							quadraticResidues = this->GetQuadraticResidues(quadraticResidues, m3);
@@ -81,39 +84,102 @@ namespace Factorization {
 
 
 
-							/*
-							If you want to speed up access time and don't care about the elements being ordered, you could use a std::unordered_map instead
-							*/
-							map<long long, Elements::ElementOfQuadraticSieve*> elementsOfQuadraticSieve;
-							long long d = 0;
+
+							//gdzie ostatnia to '-1'
+							//bool v[quadraticResidues->size()+2];
+							//memset(v, false, quadraticResidues->size()+2);
+
+
+
+							vector<Elements::ElementOfQuadraticSieve*> elementsOfQuadraticSieve;
+							long long d = 1;
+							long long h = 0;
 							while(foundSmooth <= minimumSmooth){
-
-								Elements::ElementOfQuadraticSieve *elementOfQuadraticSieve0 = new Elements::ElementOfQuadraticSieve(d, m0, m3);
-								elementsOfQuadraticSieve.insert(make_pair(d, elementOfQuadraticSieve0));
-
-
-								/*
-								if(elementOfQuadraticSieve0->IsSmooth(quadraticResidues)){
-									T.push_back(elementOfQuadraticSieve0);
-								}else{
-									delete elementOfQuadraticSieve0;
+								map<long long, Elements::ElementOfQuadraticSieve*> sieve;
+								for(long long i = h; i < h + upperBound; i++){
+									sieve.insert(pair<long long, Elements::ElementOfQuadraticSieve*>(i, new Elements::ElementOfQuadraticSieve(i, m0, m3)));
+									sieve.insert(pair<long long, Elements::ElementOfQuadraticSieve*>(-i, new Elements::ElementOfQuadraticSieve(-i, m0, m3)));
 								}
-								if(d != 0){
-									Elements::ElementOfQuadraticSieve *elementOfQuadraticSieve1 = new Elements::ElementOfQuadraticSieve(-d, m0, m3);
-									if(elementOfQuadraticSieve1->IsSmooth(quadraticResidues)){
-										T.push_back(elementOfQuadraticSieve1);
-									}else{
-										delete elementOfQuadraticSieve1;
+								h += upperBound;
+
+
+								//wykonaj dzielenie
+								for(Elements::QuadraticResidue* quadraticResidue : *quadraticResidues){
+
+									//printf("++> %ld -- %ld\n", quadraticResidue->s0Plus, quadraticResidue->s1Plus);
+									//printf("--> %ld -- %ld\n", quadraticResidue->s0Minus, quadraticResidue->s1Minus);
+
+									//+
+									while(quadraticResidue->s0Plus < h){
+										mpz_mod(m4, sieve[quadraticResidue->s0Plus]->divisible, quadraticResidue->prime);
+										while(mpz_cmp_ui(m4, 0) == 0){
+											mpz_div(sieve[quadraticResidue->s0Plus]->divisible, sieve[quadraticResidue->s0Plus]->divisible, quadraticResidue->prime);
+											mpz_mod(m4, sieve[quadraticResidue->s0Plus]->divisible, quadraticResidue->prime);
+										}
+										quadraticResidue->s0Plus += quadraticResidue->p0;
 									}
+									while(quadraticResidue->s1Plus < h){
+										mpz_mod(m4, sieve[quadraticResidue->s1Plus]->divisible, quadraticResidue->prime);
+										while(mpz_cmp_ui(m4, 0) == 0){
+											mpz_div(sieve[quadraticResidue->s1Plus]->divisible, sieve[quadraticResidue->s1Plus]->divisible, quadraticResidue->prime);
+											mpz_mod(m4, sieve[quadraticResidue->s1Plus]->divisible, quadraticResidue->prime);
+										}
+										quadraticResidue->s1Plus += quadraticResidue->p0;
+									}
+
+									//-
+									while(quadraticResidue->s0Minus > -h){
+										mpz_mod(m4, sieve[quadraticResidue->s0Minus]->divisible, quadraticResidue->prime);
+										while(mpz_cmp_ui(m4, 0) == 0){
+											mpz_div(sieve[quadraticResidue->s0Minus]->divisible, sieve[quadraticResidue->s0Minus]->divisible, quadraticResidue->prime);
+											mpz_mod(m4, sieve[quadraticResidue->s0Minus]->divisible, quadraticResidue->prime);
+										}
+										quadraticResidue->s0Minus -= quadraticResidue->p0;
+									}
+									while(quadraticResidue->s1Minus > -h){
+										mpz_mod(m4, sieve[quadraticResidue->s1Minus]->divisible, quadraticResidue->prime);
+										while(mpz_cmp_ui(m4, 0) == 0){
+											mpz_div(sieve[quadraticResidue->s1Minus]->divisible, sieve[quadraticResidue->s1Minus]->divisible, quadraticResidue->prime);
+											mpz_mod(m4, sieve[quadraticResidue->s1Minus]->divisible, quadraticResidue->prime);
+										}
+										quadraticResidue->s1Minus -= quadraticResidue->p0;
+									}
+
+									//printf("++> %ld -- %ld\n", quadraticResidue->s0Plus, quadraticResidue->s1Plus);
+									//printf("--> %ld -- %ld\n", quadraticResidue->s0Minus, quadraticResidue->s1Minus);
 								}
-								*/
+
+
+
+
+								for(pair<long long, Elements::ElementOfQuadraticSieve*> element : sieve){
+
+									if(mpz_cmp_ui(element.second->divisible, 1) == 0){
+										foundSmooth++;
+										printf("Found %ld --- %ld smooth number\n", foundSmooth, minimumSmooth);
+									}
+
+
+									delete element.second;
+								}
+
+
+
+								//sieving
+
+
+								//Elements::ElementOfQuadraticSieve *elementOfQuadraticSieve0 = new Elements::ElementOfQuadraticSieve(d, m0, m3);
+								//if(elementOfQuadraticSieve0->IsSmooth(quadraticResidues)){
+									//elementsOfQuadraticSieve.push_back(elementOfQuadraticSieve0);
+								//}else{
+									//delete elementOfQuadraticSieve0;
+								//}
+
+
 								d = d + 1;
-
-
-								if(d % 1000 == 0){
-									printf("Found %u/%u smooth number\n", foundSmooth, minimumSmooth);
+								if(d % 10000 == 0){
+									printf("Steps %u...\n", d);
 								}
-								if(d == 2) break;
 							}
 
 
@@ -124,9 +190,9 @@ namespace Factorization {
 
 
 							//clean pointers
-							for(pair<long long, Elements::ElementOfQuadraticSieve*> pair: T){
-								gmp_printf("%Zd %Zd\n", pair.second->oryginal, pair.second->divisible);
-								delete pair.second;
+							for(Elements::ElementOfQuadraticSieve *elementOfQuadraticSieve : elementsOfQuadraticSieve){
+								gmp_printf("%Zd %Zd\n", elementOfQuadraticSieve->oryginal, elementOfQuadraticSieve->divisible);
+								delete elementOfQuadraticSieve;
 							}
 							for(Elements::QuadraticResidue* quadraticResidue : *quadraticResidues){
 								delete quadraticResidue;
@@ -150,7 +216,11 @@ namespace Factorization {
 			mpz_powm_ui(quadraticResidue->solution1, quadraticResidue->solution1, 1, quadraticResidue->prime);
 			quadraticResidue->p0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->prime), NULL, 10);
 			quadraticResidue->s0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution0), NULL, 10);
+			quadraticResidue->s0Plus = quadraticResidue->s0;
+			quadraticResidue->s0Minus = quadraticResidue->s0;
 			quadraticResidue->s1 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution1), NULL, 10);
+			quadraticResidue->s1Plus = quadraticResidue->s1;
+			quadraticResidue->s1Minus = quadraticResidue->s1;
 		}
 		return quadraticResidues;
 	}

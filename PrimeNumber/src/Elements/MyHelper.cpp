@@ -192,7 +192,7 @@ namespace Elements {
 		mpz_clears(i, NULL);
 	}
 
-	unsigned long MyHelper::GetUpperBoundOfPrimes(string input){
+	long long MyHelper::GetUpperBoundOfPrimes(string input){
 		mpfr_t n, upperBound;
 		mpfr_inits(n, upperBound, NULL);
 		mpfr_set_str(n, input.c_str(), 10, MPFR_RNDU);
@@ -201,8 +201,10 @@ namespace Elements {
 		mpfr_mul(upperBound, n, upperBound, MPFR_RNDU);
 		mpfr_log(upperBound, upperBound, MPFR_RNDU);
 		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
+		//TODO
+		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
 		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
-		unsigned long result = mpfr_get_ui(upperBound, MPFR_RNDU);
+		long long result = mpfr_get_ui(upperBound, MPFR_RNDU);
 		mpfr_clears(n, upperBound, NULL);
 		return result;
 	}

@@ -6,7 +6,7 @@ namespace PrimesBelowUpperBound {
 
 	SieveOfEratosthenes::~SieveOfEratosthenes() {}
 
-	void SieveOfEratosthenes::SearchPrimes(unsigned long long upperBound){
+	void SieveOfEratosthenes::SearchPrimes(long long upperBound){
 		bool v[upperBound+1];
 		memset(v, true, upperBound+1);
 		for(unsigned long long i = 2; i*i <= upperBound; i++){
