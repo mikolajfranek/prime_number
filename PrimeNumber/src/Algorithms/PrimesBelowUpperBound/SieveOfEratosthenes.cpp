@@ -6,7 +6,7 @@ namespace PrimesBelowUpperBound {
 
 	SieveOfEratosthenes::~SieveOfEratosthenes() {}
 
-	void SieveOfEratosthenes::SearchPrimes(long long upperBound){
+	vector<unsigned long long> SieveOfEratosthenes::SearchPrimes(long long upperBound){
 		bool v[upperBound+1];
 		memset(v, true, upperBound+1);
 		for(unsigned long long i = 2; i*i <= upperBound; i++){
@@ -16,11 +16,12 @@ namespace PrimesBelowUpperBound {
 				}
 			}
 		}
-		this->primes = {};
+		vector<unsigned long long> primes = {};
 		for(unsigned long long i = 2; i <= upperBound; i++){
 			if(v[i] == true){
-				this->primes.push_back(i);
+				primes.push_back(i);
 			}
 		}
+		return primes;
 	}
 }

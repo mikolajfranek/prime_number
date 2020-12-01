@@ -59,23 +59,24 @@ namespace Factorization {
 							if(mpz_cmp_ui(m4, 0) != 0){
 								mpz_add_ui(m3, m3, 1);
 							}
-
-
-
 							//TODO
+
+
+
+
+
+
 							long long upperBound = Elements::MyHelper::GetUpperBoundOfPrimes(input);
 							printf("UpperBound: %u\n", upperBound);
 
-							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
-							primesBelowUpperBound->SearchPrimes(upperBound);
-							long long foundSmooth = 0;
-							long long minimumSmooth = primesBelowUpperBound->primes.size();
-							printf("Need to get more than %u smooth number\n", minimumSmooth);
-							vector<Elements::QuadraticResidue*> *quadraticResidues = primesBelowUpperBound->GetQuadraticResidues(upperBound, this->m0);
-							quadraticResidues = this->GetQuadraticResidues(quadraticResidues, m3);
-							delete primesBelowUpperBound;
-							printf("There is %u quadratic residue\n", quadraticResidues->size());
 
+							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
+							vector<Elements::QuadraticResidue*> *quadraticResidues = primesBelowUpperBound->GetQuadraticResidues(upperBound, this->m0);
+							delete primesBelowUpperBound;
+							quadraticResidues = this->GetQuadraticResidues(quadraticResidues, m3);
+							long long foundSmooth = 0;
+							long long minimumSmooth = quadraticResidues->size();
+							printf("Need to get more than %u smooth number\n", minimumSmooth);
 
 
 
@@ -105,11 +106,9 @@ namespace Factorization {
 
 								//wykonaj dzielenie
 								for(Elements::QuadraticResidue* quadraticResidue : *quadraticResidues){
+									//printf("<%ld ; %ld>  <%ld ; %ld>\n", quadraticResidue->s0Plus, quadraticResidue->s1Plus, quadraticResidue->s0Minus, quadraticResidue->s1Minus);
 
-									//printf("++> %ld -- %ld\n", quadraticResidue->s0Plus, quadraticResidue->s1Plus);
-									//printf("--> %ld -- %ld\n", quadraticResidue->s0Minus, quadraticResidue->s1Minus);
 
-									//+
 									while(quadraticResidue->s0Plus < h){
 										mpz_mod(m4, sieve[quadraticResidue->s0Plus]->divisible, quadraticResidue->prime);
 										while(mpz_cmp_ui(m4, 0) == 0){
@@ -144,9 +143,6 @@ namespace Factorization {
 										}
 										quadraticResidue->s1Minus -= quadraticResidue->p0;
 									}
-
-									//printf("++> %ld -- %ld\n", quadraticResidue->s0Plus, quadraticResidue->s1Plus);
-									//printf("--> %ld -- %ld\n", quadraticResidue->s0Minus, quadraticResidue->s1Minus);
 								}
 
 
@@ -156,13 +152,14 @@ namespace Factorization {
 
 									if(mpz_cmp_ui(element.second->divisible, 1) == 0){
 										foundSmooth++;
-										printf("Found %ld --- %ld smooth number\n", foundSmooth, minimumSmooth);
+										printf("Found %ld/%ld smooth number\n", foundSmooth, minimumSmooth);
 									}
+									//gmp_printf("%Zd ", element.second->divisible);
 
 
 									delete element.second;
 								}
-
+								//gmp_printf("\n");
 
 
 								//sieving
@@ -180,6 +177,8 @@ namespace Factorization {
 								if(d % 10000 == 0){
 									printf("Steps %u...\n", d);
 								}
+
+								//if(d == 5) break;
 							}
 
 
