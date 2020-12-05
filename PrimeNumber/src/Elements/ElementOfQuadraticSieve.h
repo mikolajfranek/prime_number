@@ -6,11 +6,11 @@
 namespace Elements {
 	class ElementOfQuadraticSieve {
 	public:
-		ElementOfQuadraticSieve(long long d, mpz_t m0, mpz_t m3);
+		ElementOfQuadraticSieve(long long d, mpz_t m0, mpz_t m3, long long sizeOfFactorBase);
 		virtual ~ElementOfQuadraticSieve();
-		bool IsSmooth(vector<Elements::QuadraticResidue*> *quadraticResidues);
 		mpz_t oryginal;
 		mpz_t divisible;
+		bool hasOverMinusSqrt;
 		vector<bool> divisors;
 	};
 }

@@ -6,10 +6,10 @@ namespace Abstracts {
 
 	PrimesBelowUpperBound::~PrimesBelowUpperBound() {}
 
-	vector<Elements::QuadraticResidue*> *PrimesBelowUpperBound::GetQuadraticResidues(unsigned long long upperBound, mpz_t m0){
+	vector<Elements::QuadraticResidue*> *PrimesBelowUpperBound::GetQuadraticResidues(long long upperBound, mpz_t m0){
 		vector<Elements::QuadraticResidue*> *quadraticResidues = new vector<Elements::QuadraticResidue*>();
 		quadraticResidues->push_back(new Elements::QuadraticResidue(2, 1, 1));
-		for(unsigned long long prime : this->SearchPrimes(upperBound)){
+		for(long long prime : this->SearchPrimes(upperBound)){
 			Elements::QuadraticResidue *quadraticResidue = new Elements::QuadraticResidue();
 			mpz_set_str(quadraticResidue->prime, to_string(prime).c_str(), 10);
 			if(mpz_legendre(m0, quadraticResidue->prime) == 1){

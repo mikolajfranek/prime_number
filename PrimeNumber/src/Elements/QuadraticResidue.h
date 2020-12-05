@@ -12,7 +12,7 @@ namespace Elements {
 		mpz_t prime;
 		mpz_t solution0;
 		mpz_t solution1;
-		unsigned long long p0;
+		long long p0;
 		long long s0;
 		long long s0Plus;
 		long long s0Minus;

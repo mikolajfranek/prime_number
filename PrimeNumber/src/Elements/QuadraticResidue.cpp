@@ -24,10 +24,10 @@ namespace Elements {
 		this->p0 = p0;
 		this->s0 = solution0;
 		this->s0Plus = solution0;
-		this->s0Minus = solution0;
+		this->s0Minus = solution0 - p0;
 		this->s1 = solution1;
 		this->s1Plus = solution1;
-		this->s1Minus = solution1;
+		this->s1Minus = solution1 - p0;
 	}
 
 	QuadraticResidue::~QuadraticResidue(){

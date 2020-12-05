@@ -172,9 +172,9 @@ namespace Elements {
 		}
 	}
 
-	vector<vector<bool>> MyHelper::GetIdentityMatrix(unsigned long long n){
+	vector<vector<bool>> MyHelper::GetIdentityMatrix(long long n){
 		vector<vector<bool>> r = {};
-		for(unsigned long long i = 0; i < n; i++){
+		for(long long i = 0; i < n; i++){
 			vector<bool> row = vector<bool>(n, false);
 			r.push_back(row);
 			r[i][i] = true;
@@ -200,10 +200,9 @@ namespace Elements {
 		mpfr_log(upperBound, upperBound, MPFR_RNDU);
 		mpfr_mul(upperBound, n, upperBound, MPFR_RNDU);
 		mpfr_log(upperBound, upperBound, MPFR_RNDU);
-		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
-		//TODO
 		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
 		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
+		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
 		long long result = mpfr_get_ui(upperBound, MPFR_RNDU);
 		mpfr_clears(n, upperBound, NULL);
 		return result;

@@ -13,7 +13,7 @@ namespace Elements {
 		static void Realloc(mpz_t **v, unsigned long long n);
 		static void DivideSieve(vector<Elements::ElementOfQuadraticSieve> sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step);
 		static void PrintMatrix(vector<vector<bool>> matrix);
-		static vector<vector<bool>> GetIdentityMatrix(unsigned long long n);
+		static vector<vector<bool>> GetIdentityMatrix(long long n);
 		static void PowCExpD(mpz_t r, mpz_t c, mpz_t d);
 		static long long GetUpperBoundOfPrimes(string n);
 	};

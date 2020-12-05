@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]){
 	Abstracts::Factorization *factorization = new Factorization::QuadraticSieve();
-	factorization->Factor(Elements::MyHelper::GetSemiPrime(20));
+	factorization->Factor("15347");//Elements::MyHelper::GetSemiPrime(10));
 	factorization->CheckResult();
 	delete factorization;
 	return 0;
