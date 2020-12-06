@@ -39,7 +39,7 @@ namespace Solver {
 		}
 
 
-		return;
+
 		for(int k = (A.size() - 1); k >= 1; k--){
 			//calculate
 			if(A[k][k]){

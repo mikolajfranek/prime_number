@@ -10,6 +10,7 @@ namespace Elements {
 		virtual ~ElementOfQuadraticSieve();
 		mpz_t oryginal;
 		mpz_t divisible;
+		mpz_t ident;
 		bool hasOverMinusSqrt;
 		vector<bool> divisors;
 	};
