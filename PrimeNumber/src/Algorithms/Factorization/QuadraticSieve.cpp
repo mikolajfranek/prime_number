@@ -71,7 +71,7 @@ namespace Factorization {
 
 
 							long long upperBound = Elements::MyHelper::GetUpperBoundOfPrimes(input);
-							long long sizeOfSieve = 10;
+							long long sizeOfSieve = 10000;
 							printf("UpperBound: %u\n", upperBound);
 							//upperBound = 60;
 
@@ -151,7 +151,7 @@ namespace Factorization {
 
 											foundSmooth++;
 											//if(foundSmooth % 100 == 0){
-												//printf("Found %ld/%ld smooth number\n", foundSmooth, minimumSmooth);
+												printf("Found %ld/%ld smooth number\n", foundSmooth, minimumSmooth);
 											//}
 											matrix.push_back(element.second->divisors);
 											smoothNumbers.push_back(element.second);
