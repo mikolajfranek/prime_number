@@ -10,6 +10,7 @@ namespace Factorization {
 		virtual ~QuadraticSieve();
 		void Factor(string input);
 		vector<Elements::QuadraticResidue*> *GetQuadraticResidues(vector<Elements::QuadraticResidue*> *quadraticResidues, mpz_t m3);
+		long long GetUpperBoundOfPrimes(string input);
 	};
 }
 

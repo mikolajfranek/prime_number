@@ -70,10 +70,10 @@ namespace Factorization {
 
 
 
-							long long upperBound = Elements::MyHelper::GetUpperBoundOfPrimes(input);
+							long long upperBound = this->GetUpperBoundOfPrimes(input);
 							long long sizeOfSieve = 10000;
 							printf("UpperBound: %u\n", upperBound);
-							//upperBound = 60;
+							upperBound = 150;
 
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
 							vector<Elements::QuadraticResidue*> *quadraticResidues = primesBelowUpperBound->GetQuadraticResidues(upperBound, this->m0);
@@ -188,6 +188,7 @@ namespace Factorization {
 										}
 									}
 
+
 									mpz_sqrt(m4, m4);
 									mpz_sqrt(m5, m5);
 
@@ -203,25 +204,11 @@ namespace Factorization {
 											mpz_gcd(m1, m6, m0);
 
 											mpz_add(m6, m4, m5);
-											mpz_abs(m6, m6);
 											mpz_gcd(m2, m6, m0);
 										}
 									}
 								}
 							}
-
-
-
-
-							/*
-							for(Elements::ElementOfQuadraticSieve* element : smoothNumbers){
-								gmp_printf("%Zd \t", element->oryginal);
-								for(bool b : element->divisors){
-									gmp_printf("%ld ", b);
-								}
-								gmp_printf("\n");
-							}
-							*/
 
 
 
@@ -260,5 +247,20 @@ namespace Factorization {
 			quadraticResidue->s1Minus = quadraticResidue->s1 - quadraticResidue->p0;
 		}
 		return quadraticResidues;
+	}
+
+	long long QuadraticSieve::GetUpperBoundOfPrimes(string input){
+		mpfr_t n, lnOfN, upperBound;
+		mpfr_inits(n, lnOfN, upperBound, NULL);
+		mpfr_set_str(n, input.c_str(), 10, MPFR_RNDU);
+		mpfr_log(lnOfN, n, MPFR_RNDU);
+		mpfr_log(upperBound, lnOfN, MPFR_RNDU);
+		mpfr_mul(upperBound, lnOfN, upperBound, MPFR_RNDU);
+		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
+		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
+		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
+		long long result = mpfr_get_ui(upperBound, MPFR_RNDU);
+		mpfr_clears(n, lnOfN, upperBound, NULL);
+		return result;
 	}
 }

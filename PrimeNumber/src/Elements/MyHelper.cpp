@@ -136,33 +136,6 @@ namespace Elements {
 		}
 	}
 
-	void MyHelper::Malloc(mpz_t **v, unsigned long long n){
-		*v = (mpz_t *)malloc(n * sizeof(mpz_t));
-		if(*v == NULL){
-			printf("Error: Other::MyHelper::Malloc\n");
-		}
-	}
-
-	void MyHelper::Realloc(mpz_t **v, unsigned long long n){
-		*v = (mpz_t *)realloc(*v, n * sizeof(mpz_t));
-		if(*v == NULL){
-			printf("Error: Other::MyHelper::Realloc\n");
-		}
-	}
-
-	void MyHelper::DivideSieve(vector<Elements::ElementOfQuadraticSieve> sieve, unsigned long long sizeOfSieve, unsigned long long *from, unsigned long long step){
-		mpz_t r;
-		mpz_inits(r, NULL);
-		for(unsigned long long *i = from; *i < sizeOfSieve; *i += step){
-			mpz_mod_ui(r, sieve[*i].divisible, step);
-			while(mpz_cmp_ui(r, 0) == 0){
-				mpz_div_ui(sieve[*i].divisible, sieve[*i].divisible, step);
-				mpz_mod_ui(r, sieve[*i].divisible, step);
-			}
-		}
-		mpz_clears(r, NULL);
-	}
-
 	void MyHelper::PrintMatrix(vector<vector<bool>> matrix){
 		for(vector<bool> row : matrix){
 			for(bool e : row){
@@ -190,28 +163,5 @@ namespace Elements {
 			mpz_mul(r, r, c);
 		}
 		mpz_clears(i, NULL);
-	}
-
-	long long MyHelper::GetUpperBoundOfPrimes(string input){
-		mpfr_t n, lnOfN, upperBound;
-		mpfr_inits(n, lnOfN, upperBound, NULL);
-		mpfr_set_str(n, input.c_str(), 10, MPFR_RNDU);
-
-
-		mpfr_log(lnOfN, n, MPFR_RNDU);
-		mpfr_log(upperBound, lnOfN, MPFR_RNDU);
-		mpfr_mul(upperBound, lnOfN, upperBound, MPFR_RNDU);
-		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
-
-
-		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
-		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
-
-		long long result = mpfr_get_ui(upperBound, MPFR_RNDU);
-		mpfr_clears(n, lnOfN, upperBound, NULL);
-		return result;
-
-		//106691
-		//5035
 	}
 }
