@@ -75,13 +75,6 @@ namespace Factorization {
 
 
 
-
-
-
-
-
-
-
 							long long beginOfInterval = 0;
 							long long sizeOfInterval = 10000;
 
@@ -147,10 +140,11 @@ namespace Factorization {
 
 										if(element.second->hasOverMinusSqrt == false){
 
-											foundSmooth++;
-											//if(foundSmooth % 100 == 0){
+
+											if(foundSmooth % 1000 == 0){
 												printf("Found %ld/%ld smooth number\n", foundSmooth, minimumSmooth);
-											//}
+											}
+											foundSmooth++;
 											matrix.push_back(element.second->divisors);
 											smoothNumbers.push_back(element.second);
 										}else{

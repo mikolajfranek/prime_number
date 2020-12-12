@@ -12,7 +12,3 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 */
-
-/*
- * for 3 iteration on 9754399201265819 get less than 2s?
- */
