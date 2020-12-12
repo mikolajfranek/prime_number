@@ -18,7 +18,7 @@
 using namespace std;
 
 /* elements */
-#include "Elements/QuadraticResidue.h"
+#include "Elements/PrimeOfQuadraticResidue.h"
 #include "Elements/ElementOfQuadraticSieve.h"
 
 /* other */

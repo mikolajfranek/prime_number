@@ -60,28 +60,16 @@ namespace Factorization {
 								mpz_add_ui(m3, m3, 1);
 							}
 							//TODO
-
-
-
-
-
-
-
-
-
-
-							long long upperBound = this->GetUpperBoundOfPrimes(input);
+							unsigned long upperBound = this->GetUpperBound(input);
 							long long sizeOfSieve = 10000;
-							printf("UpperBound: %u\n", upperBound);
-							upperBound = 150;
-
+							printf("UpperBound: %ld\n", upperBound);
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
-							vector<Elements::QuadraticResidue*> *quadraticResidues = primesBelowUpperBound->GetQuadraticResidues(upperBound, this->m0);
+							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(upperBound, this->m0);
 							delete primesBelowUpperBound;
-							quadraticResidues = this->GetQuadraticResidues(quadraticResidues, m3);
-							long long foundSmooth = 0;
-							long long minimumSmooth = quadraticResidues->size();
-							printf("Need to get more than %u smooth number\n", minimumSmooth);
+							primesOfQuadraticResidue = this->AdaptSolutionsToFunction(primesOfQuadraticResidue, m3);
+							unsigned long foundSmooth = 0;
+							unsigned long minimumSmooth = primesOfQuadraticResidue->size();
+							printf("Need to get more than %ld smooth number\n", minimumSmooth);
 
 
 
@@ -90,7 +78,7 @@ namespace Factorization {
 
 
 
-							long long sizeOfFactorBase = quadraticResidues->size()+1;
+							long long sizeOfFactorBase = primesOfQuadraticResidue->size()+1;
 							vector<vector<bool>> matrix;
 							vector<Elements::ElementOfQuadraticSieve*> smoothNumbers;
 							long long h = 0;
@@ -105,7 +93,7 @@ namespace Factorization {
 
 								//wykonaj dzielenie
 								long long ident = 1;
-								for(Elements::QuadraticResidue* quadraticResidue : *quadraticResidues){
+								for(Elements::PrimeOfQuadraticResidue* quadraticResidue : *primesOfQuadraticResidue){
 
 									//gmp_printf("%ld \t %ld %ld \n", quadraticResidue->p0, quadraticResidue->s0Minus, quadraticResidue->s0Plus);
 									//gmp_printf("%ld \t %ld %ld \n", quadraticResidue->p0, quadraticResidue->s1Minus, quadraticResidue->s1Plus);
@@ -211,17 +199,24 @@ namespace Factorization {
 							}
 
 
-
-
-
-							//clean pointers
 							for(Elements::ElementOfQuadraticSieve* element : smoothNumbers){
 								delete element;
 							}
-							for(Elements::QuadraticResidue* quadraticResidue : *quadraticResidues){
-								delete quadraticResidue;
+
+
+
+
+
+
+
+
+
+
+
+							for(Elements::PrimeOfQuadraticResidue* primeOfQuadraticResidue : *primesOfQuadraticResidue){
+								delete primeOfQuadraticResidue;
 							}
-							delete quadraticResidues;
+							delete primesOfQuadraticResidue;
 						}
 					}
 				}
@@ -232,35 +227,34 @@ namespace Factorization {
 		mpz_clears(m3, m4, m5, m6, n0, r0, NULL);
 	}
 
-	vector<Elements::QuadraticResidue*> *QuadraticSieve::GetQuadraticResidues(vector<Elements::QuadraticResidue*> *quadraticResidues, mpz_t m3){
-		for(Elements::QuadraticResidue *quadraticResidue : *quadraticResidues){
-			mpz_sub(quadraticResidue->solution0, quadraticResidue->solution0, m3);
-			mpz_powm_ui(quadraticResidue->solution0, quadraticResidue->solution0, 1, quadraticResidue->prime);
-			mpz_sub(quadraticResidue->solution1, quadraticResidue->solution1, m3);
-			mpz_powm_ui(quadraticResidue->solution1, quadraticResidue->solution1, 1, quadraticResidue->prime);
-			quadraticResidue->p0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->prime), NULL, 10);
-			quadraticResidue->s0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution0), NULL, 10);
-			quadraticResidue->s0Plus = quadraticResidue->s0;
-			quadraticResidue->s0Minus = quadraticResidue->s0 - quadraticResidue->p0;
-			quadraticResidue->s1 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution1), NULL, 10);
-			quadraticResidue->s1Plus = quadraticResidue->s1;
-			quadraticResidue->s1Minus = quadraticResidue->s1 - quadraticResidue->p0;
+	vector<Elements::PrimeOfQuadraticResidue*> *QuadraticSieve::AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue, mpz_t m3){
+		for(Elements::PrimeOfQuadraticResidue *primeOfQuadraticResidue : *primesOfQuadraticResidue){
+			mpz_sub(primeOfQuadraticResidue->solution0, primeOfQuadraticResidue->solution0, m3);
+			mpz_mod(primeOfQuadraticResidue->solution0, primeOfQuadraticResidue->solution0, primeOfQuadraticResidue->prime);
+			mpz_sub(primeOfQuadraticResidue->solution1, primeOfQuadraticResidue->solution1, m3);
+			mpz_mod(primeOfQuadraticResidue->solution1, primeOfQuadraticResidue->solution1, primeOfQuadraticResidue->prime);
+			primeOfQuadraticResidue->s0 = strtoll(mpz_get_str(NULL, 10, primeOfQuadraticResidue->solution0), NULL, 10);
+			primeOfQuadraticResidue->s0Plus = primeOfQuadraticResidue->s0;
+			primeOfQuadraticResidue->s0Minus = primeOfQuadraticResidue->s0 - primeOfQuadraticResidue->p0;
+			primeOfQuadraticResidue->s1 = strtoll(mpz_get_str(NULL, 10, primeOfQuadraticResidue->solution1), NULL, 10);
+			primeOfQuadraticResidue->s1Plus = primeOfQuadraticResidue->s1;
+			primeOfQuadraticResidue->s1Minus = primeOfQuadraticResidue->s1 - primeOfQuadraticResidue->p0;
 		}
-		return quadraticResidues;
+		return primesOfQuadraticResidue;
 	}
 
-	long long QuadraticSieve::GetUpperBoundOfPrimes(string input){
-		mpfr_t n, lnOfN, upperBound;
-		mpfr_inits(n, lnOfN, upperBound, NULL);
-		mpfr_set_str(n, input.c_str(), 10, MPFR_RNDU);
-		mpfr_log(lnOfN, n, MPFR_RNDU);
-		mpfr_log(upperBound, lnOfN, MPFR_RNDU);
-		mpfr_mul(upperBound, lnOfN, upperBound, MPFR_RNDU);
+	unsigned long QuadraticSieve::GetUpperBound(string input){
+		mpfr_t m0, ln, upperBound;
+		mpfr_inits(m0, ln, upperBound, NULL);
+		mpfr_set_str(m0, input.c_str(), 10, MPFR_RNDU);
+		mpfr_log(ln, m0, MPFR_RNDU);
+		mpfr_log(upperBound, ln, MPFR_RNDU);
+		mpfr_mul(upperBound, ln, upperBound, MPFR_RNDU);
 		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
 		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
 		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
-		long long result = mpfr_get_ui(upperBound, MPFR_RNDU);
-		mpfr_clears(n, lnOfN, upperBound, NULL);
+		unsigned long result = mpfr_get_ui(upperBound, MPFR_RNDU);
+		mpfr_clears(m0, ln, upperBound, NULL);
 		return result;
 	}
 }

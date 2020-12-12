@@ -6,22 +6,25 @@ namespace Abstracts {
 
 	PrimesBelowUpperBound::~PrimesBelowUpperBound() {}
 
-	vector<Elements::QuadraticResidue*> *PrimesBelowUpperBound::GetQuadraticResidues(long long upperBound, mpz_t m0){
-		vector<Elements::QuadraticResidue*> *quadraticResidues = new vector<Elements::QuadraticResidue*>();
-		quadraticResidues->push_back(new Elements::QuadraticResidue(2, 1, 1));
-		for(long long prime : this->SearchPrimes(upperBound)){
-			Elements::QuadraticResidue *quadraticResidue = new Elements::QuadraticResidue();
-			mpz_set_str(quadraticResidue->prime, to_string(prime).c_str(), 10);
-			if(mpz_legendre(m0, quadraticResidue->prime) == 1){
-				Solver::TonelliShanks::Solve(m0, quadraticResidue->prime, quadraticResidue->solution0, quadraticResidue->solution1);
-				quadraticResidue->p0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->prime), NULL, 10);
-				quadraticResidue->s0 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution0), NULL, 10);
-				quadraticResidue->s1 = strtoull(mpz_get_str(NULL, 10, quadraticResidue->solution1), NULL, 10);
-				quadraticResidues->push_back(quadraticResidue);
+	vector<Elements::PrimeOfQuadraticResidue*> *PrimesBelowUpperBound::GetPrimesOfQuadraticResidue(unsigned long upperBound, mpz_t m0){
+		vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = new vector<Elements::PrimeOfQuadraticResidue*>();
+		primesOfQuadraticResidue->push_back(new Elements::PrimeOfQuadraticResidue(2, 1, 1));
+		for(unsigned long long prime : this->GetPrimes(upperBound)){
+			if(prime > LLONG_MAX){
+				throw "Error: Abstracts::PrimesBelowUpperBound::GetPrimesOfQuadraticResidues\n";
+			}
+			Elements::PrimeOfQuadraticResidue *primeOfQuadraticResidue = new Elements::PrimeOfQuadraticResidue();
+			mpz_set_str(primeOfQuadraticResidue->prime, to_string(prime).c_str(), 10);
+			if(mpz_legendre(m0, primeOfQuadraticResidue->prime) == 1){
+				Solver::TonelliShanks::Solve(m0, primeOfQuadraticResidue->prime, primeOfQuadraticResidue->solution0, primeOfQuadraticResidue->solution1);
+				primeOfQuadraticResidue->p0 = strtoll(mpz_get_str(NULL, 10, primeOfQuadraticResidue->prime), NULL, 10);
+				primeOfQuadraticResidue->s0 = strtoll(mpz_get_str(NULL, 10, primeOfQuadraticResidue->solution0), NULL, 10);
+				primeOfQuadraticResidue->s1 = strtoll(mpz_get_str(NULL, 10, primeOfQuadraticResidue->solution1), NULL, 10);
+				primesOfQuadraticResidue->push_back(primeOfQuadraticResidue);
 			}else{
-				delete quadraticResidue;
+				delete primeOfQuadraticResidue;
 			}
 		}
-		return quadraticResidues;
+		return primesOfQuadraticResidue;
 	}
 }
