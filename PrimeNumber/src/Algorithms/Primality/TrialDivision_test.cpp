@@ -17,10 +17,12 @@ namespace Primality {
 		}
 	}
 	/* register the function as benchmark with arguments */
+	/*
 	BENCHMARK(BM_PrimalityTrialDivision_IsPrime)
 		->Arg(10)
 		->Arg(20);
 	BENCHMARK(BM_PrimalityTrialDivision_IsNotPrime)
 		->Arg(10)
 		->Arg(20);
+	*/
 }

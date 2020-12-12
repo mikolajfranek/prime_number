@@ -11,8 +11,10 @@ namespace Factorization {
 		}
 	}
 	/* register the function as benchmark with arguments */
+	/*
 	BENCHMARK(BM_FactorizationFermat)
 		->Arg(10)
 		->Arg(20)
 		->Arg(30);
+	*/
 }

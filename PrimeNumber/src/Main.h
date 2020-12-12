@@ -2,8 +2,8 @@
 #define MAIN_H_
 
 /* general */
-#include <cstring>
 #include <numeric>
+#include <unordered_map>
 
 /* gmp */
 #include <gmp.h>

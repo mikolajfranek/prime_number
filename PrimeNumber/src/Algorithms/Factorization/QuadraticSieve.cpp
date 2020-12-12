@@ -22,7 +22,7 @@ namespace Factorization {
 			mpz_div_ui(this->m2, this->m0, 2);
 		}else{
 			Abstracts::Primality *primality = new Primality::TrialDivision();
-			bool isPrime = primality->IsPrime(input.c_str());
+			bool isPrime = primality->IsPrime(input);
 			delete primality;
 			if(isPrime == true){
 				mpz_set_ui(this->m1, 1);
@@ -61,7 +61,6 @@ namespace Factorization {
 							}
 							//TODO
 							unsigned long upperBound = this->GetUpperBound(input);
-							long long sizeOfSieve = 10000;
 							printf("UpperBound: %ld\n", upperBound);
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
 							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(upperBound, this->m0);
@@ -78,53 +77,64 @@ namespace Factorization {
 
 
 
-							long long sizeOfFactorBase = primesOfQuadraticResidue->size()+1;
+
+
+
+
+
+							long long beginOfInterval = 0;
+							long long sizeOfInterval = 10000;
+
+
+
 							vector<vector<bool>> matrix;
 							vector<Elements::ElementOfQuadraticSieve*> smoothNumbers;
-							long long h = 0;
+
 							while(foundSmooth <= minimumSmooth){
-								map<long long, Elements::ElementOfQuadraticSieve*> sieve;
-								for(long long i = h; i < h + sizeOfSieve; i++){
-									sieve.insert(pair<long long, Elements::ElementOfQuadraticSieve*>(i, new Elements::ElementOfQuadraticSieve(i, m0, m3, sizeOfFactorBase)));
-									sieve.insert(pair<long long, Elements::ElementOfQuadraticSieve*>(-i, new Elements::ElementOfQuadraticSieve(-i, m0, m3, sizeOfFactorBase)));
+
+
+								unordered_map<string, Elements::ElementOfQuadraticSieve*> sieve;
+								for(long long i = beginOfInterval; i < beginOfInterval + sizeOfInterval; i++){
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(i), new Elements::ElementOfQuadraticSieve(i, m0, m3, primesOfQuadraticResidue->size()+1)));
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-i), new Elements::ElementOfQuadraticSieve(-i, m0, m3, primesOfQuadraticResidue->size()+1)));
 								}
-								h += sizeOfSieve;
+								beginOfInterval += sizeOfInterval;
 
 
 								//wykonaj dzielenie
-								long long ident = 1;
+								long long identOfPrime = 1;
 								for(Elements::PrimeOfQuadraticResidue* quadraticResidue : *primesOfQuadraticResidue){
 
 									//gmp_printf("%ld \t %ld %ld \n", quadraticResidue->p0, quadraticResidue->s0Minus, quadraticResidue->s0Plus);
 									//gmp_printf("%ld \t %ld %ld \n", quadraticResidue->p0, quadraticResidue->s1Minus, quadraticResidue->s1Plus);
 
-									while(quadraticResidue->s0Plus < h){
-										sieve[quadraticResidue->s0Plus]->divisors[ident] = 1;
-										mpz_div(sieve[quadraticResidue->s0Plus]->divisible, sieve[quadraticResidue->s0Plus]->divisible, quadraticResidue->prime);
+									while(quadraticResidue->s0Plus < beginOfInterval){
+										sieve.at(to_string(quadraticResidue->s0Plus))->divisors[identOfPrime] = 1;
+										mpz_div(sieve.at(to_string(quadraticResidue->s0Plus))->divisible, sieve.at(to_string(quadraticResidue->s0Plus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s0Plus += quadraticResidue->p0;
 									}
-									while(-h < quadraticResidue->s0Minus){
-										sieve[quadraticResidue->s0Minus]->divisors[ident] = 1;
-										mpz_div(sieve[quadraticResidue->s0Minus]->divisible, sieve[quadraticResidue->s0Minus]->divisible, quadraticResidue->prime);
+									while(-beginOfInterval < quadraticResidue->s0Minus){
+										sieve.at(to_string(quadraticResidue->s0Minus))->divisors[identOfPrime] = 1;
+										mpz_div(sieve.at(to_string(quadraticResidue->s0Minus))->divisible, sieve.at(to_string(quadraticResidue->s0Minus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s0Minus -= quadraticResidue->p0;
 									}
 									if(quadraticResidue->p0 == 2) continue;
-									while(quadraticResidue->s1Plus < h){
-										sieve[quadraticResidue->s1Plus]->divisors[ident] = 1;
-										mpz_div(sieve[quadraticResidue->s1Plus]->divisible, sieve[quadraticResidue->s1Plus]->divisible, quadraticResidue->prime);
+									while(quadraticResidue->s1Plus < beginOfInterval){
+										sieve.at(to_string(quadraticResidue->s1Plus))->divisors[identOfPrime] = 1;
+										mpz_div(sieve.at(to_string(quadraticResidue->s1Plus))->divisible, sieve.at(to_string(quadraticResidue->s1Plus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s1Plus += quadraticResidue->p0;
 									}
-									while(-h < quadraticResidue->s1Minus){
-										sieve[quadraticResidue->s1Minus]->divisors[ident] = 1;
-										mpz_div(sieve[quadraticResidue->s1Minus]->divisible, sieve[quadraticResidue->s1Minus]->divisible, quadraticResidue->prime);
+									while(-beginOfInterval < quadraticResidue->s1Minus){
+										sieve.at(to_string(quadraticResidue->s1Minus))->divisors[identOfPrime] = 1;
+										mpz_div(sieve.at(to_string(quadraticResidue->s1Minus))->divisible, sieve.at(to_string(quadraticResidue->s1Minus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s1Minus -= quadraticResidue->p0;
 									}
-									ident += 1;
+									identOfPrime += 1;
 								}
 
 
 
-								for(pair<long long, Elements::ElementOfQuadraticSieve*> element : sieve){
+								for(pair<string, Elements::ElementOfQuadraticSieve*> element : sieve){
 
 									//gmp_printf("%ld \t %Zd Zd \n", element.first, element.second->oryginal, element.second->divisible);
 
@@ -150,7 +160,12 @@ namespace Factorization {
 										delete element.second;
 									}
 								}
+
+
+
 							}
+
+
 
 
 
@@ -202,6 +217,8 @@ namespace Factorization {
 							for(Elements::ElementOfQuadraticSieve* element : smoothNumbers){
 								delete element;
 							}
+
+
 
 
 
