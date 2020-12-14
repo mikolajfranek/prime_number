@@ -138,17 +138,17 @@ namespace Elements {
 
 	void MyHelper::PrintMatrix(vector<vector<bool>> matrix){
 		for(vector<bool> row : matrix){
-			for(bool e : row){
-				printf("%d", e);
+			for(bool element : row){
+				printf("%d", element);
 			}
 			printf("\n");
 		}
 	}
 
-	vector<vector<bool>> MyHelper::GetIdentityMatrix(long long n){
+	vector<vector<bool>> MyHelper::GetIdentityMatrix(long long size){
 		vector<vector<bool>> r = {};
-		for(long long i = 0; i < n; i++){
-			vector<bool> row = vector<bool>(n, false);
+		for(long long i = 0; i < size; i++){
+			vector<bool> row = vector<bool>(size, false);
 			r.push_back(row);
 			r[i][i] = true;
 		}

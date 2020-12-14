@@ -12,14 +12,5 @@ namespace Factorization {
 	}
 	/* register the function as benchmark with arguments */
 	BENCHMARK(BM_FactorizationQuadraticSieve)
-		->Arg(20)
-		->Arg(30)
-		->Arg(40)
-		->Arg(50)
-		->Arg(60)
-		->Arg(70)
-		->Arg(80)
-		->Arg(90)
-		->Arg(100)
-		->Arg(110);
+		->Arg(20);
 }

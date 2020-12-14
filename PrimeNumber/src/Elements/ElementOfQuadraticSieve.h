@@ -6,12 +6,12 @@
 namespace Elements {
 	class ElementOfQuadraticSieve {
 	public:
-		ElementOfQuadraticSieve(long long d, mpz_t m0, mpz_t m3, long long sizeOfFactorBase);
+		ElementOfQuadraticSieve(long long ident, mpz_t m0, mpz_t m3, long long sizeOfDivisors);
 		virtual ~ElementOfQuadraticSieve();
 		mpz_t oryginal;
 		mpz_t divisible;
-		mpz_t ident;
-		bool hasOverMinusSqrt;
+		mpz_t element;
+		bool overMinusSqrt;
 		vector<bool> divisors;
 	};
 }
