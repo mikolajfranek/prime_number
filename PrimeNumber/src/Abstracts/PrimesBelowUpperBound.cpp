@@ -11,7 +11,8 @@ namespace Abstracts {
 		primesOfQuadraticResidue->push_back(new Elements::PrimeOfQuadraticResidue(2, 1, 1));
 		for(unsigned long long prime : this->GetPrimes(upperBound)){
 			if(prime > LLONG_MAX){
-				throw "Error: Abstracts::PrimesBelowUpperBound::GetPrimesOfQuadraticResidues\n";
+				printf("Error: Abstracts::PrimesBelowUpperBound::GetPrimesOfQuadraticResidues\n");
+				throw;
 			}
 			Elements::PrimeOfQuadraticResidue *primeOfQuadraticResidue = new Elements::PrimeOfQuadraticResidue();
 			mpz_set_str(primeOfQuadraticResidue->prime, to_string(prime).c_str(), 10);

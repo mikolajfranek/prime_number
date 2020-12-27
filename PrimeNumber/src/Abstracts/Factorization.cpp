@@ -18,6 +18,7 @@ namespace Abstracts {
 			gmp_printf("%Zd = %Zd * %Zd\n", this->m0, this->m1, this->m2);
 		}else{
 			printf("Error: Abstracts::Factorization::CheckResult\n");
+			throw;
 		}
 		mpz_clears(aim, NULL);
 	}

@@ -19,6 +19,7 @@ namespace Abstracts {
 			}
 		}else{
 			printf("Error: Abstracts::Primality::CheckResult\n");
+			throw;
 		}
 	}
 }
