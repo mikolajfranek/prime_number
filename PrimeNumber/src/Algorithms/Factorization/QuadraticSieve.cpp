@@ -9,15 +9,15 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t m5, m6, m7, m8, r0;
+		mpz_t m6, m7, m8, m9, r0;
 
 		//init
 		mpz_set_str(this->m0, input.c_str(), 10);
-		mpz_inits(m5, m6, m7, m8, r0, NULL);
+		mpz_inits(m6, m7, m8, m9, r0, NULL);
 
 		//algorithm
-		mpz_mod_ui(m8, this->m0, 2);
-		if(mpz_cmp_ui(m8, 0) == 0){
+		mpz_mod_ui(m9, this->m0, 2);
+		if(mpz_cmp_ui(m9, 0) == 0){
 			mpz_set_ui(this->m1, 2);
 			mpz_div_ui(this->m2, this->m0, 2);
 		}else{
@@ -29,14 +29,14 @@ namespace Factorization {
 				mpz_set(this->m2, this->m0);
 			}else{
 				unsigned long m3 = 2;
-				mpz_rootrem(r0, m8, this->m0, m3);
-				if(mpz_cmp_ui(m8, 0) == 0){
+				mpz_rootrem(r0, m9, this->m0, m3);
+				if(mpz_cmp_ui(m9, 0) == 0){
 					mpz_set(this->m1, r0);
 					mpz_div(this->m2, this->m0, r0);
 				}else{
 					m3 = 3;
-					mpz_rootrem(r0, m8, this->m0, m3);
-					if(mpz_cmp_ui(m8, 0) == 0){
+					mpz_rootrem(r0, m9, this->m0, m3);
+					if(mpz_cmp_ui(m9, 0) == 0){
 						mpz_set(this->m1, r0);
 						mpz_div(this->m2, this->m0, r0);
 					}else{
@@ -44,8 +44,8 @@ namespace Factorization {
 						short m4 = 2;
 						bool isPowerOfNumber = false;
 						do{
-							mpz_rootrem(r0, m8, this->m0, m3);
-							if(mpz_cmp_ui(m8, 0) == 0){
+							mpz_rootrem(r0, m9, this->m0, m3);
+							if(mpz_cmp_ui(m9, 0) == 0){
 								mpz_set(this->m1, r0);
 								mpz_div(this->m2, this->m0, r0);
 								isPowerOfNumber = true;
@@ -55,9 +55,11 @@ namespace Factorization {
 							m4 = 6 - m4;
 						}while(mpz_cmp_ui(r0, 1) > 0);
 						if(isPowerOfNumber == false){
-							mpz_sqrtrem(m5, m8, this->m0);
-							if(mpz_cmp_ui(m8, 0) != 0){
-								mpz_add_ui(m5, m5, 1);
+							unsigned long m5 = this->GetUpperBound(input);
+							printf("UpperBound: %ld\n", m5);
+							mpz_sqrtrem(m6, m9, this->m0);
+							if(mpz_cmp_ui(m9, 0) != 0){
+								mpz_add_ui(m6, m6, 1);
 							}
 
 
@@ -66,12 +68,20 @@ namespace Factorization {
 
 
 
-							unsigned long upperBound = this->GetUpperBound(input);
-							printf("UpperBound: %ld\n", upperBound);
+
+
+
+
+
+
+
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
-							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(upperBound, this->m0);
+							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(m5, this->m0);
 							delete primesBelowUpperBound;
-							primesOfQuadraticResidue = this->AdaptSolutionsToFunction(primesOfQuadraticResidue, m5);
+
+
+
+							primesOfQuadraticResidue = this->AdaptSolutionsToFunction(primesOfQuadraticResidue, m6);
 							unsigned long foundSmooth = 0;
 							unsigned long minimumSmooth = primesOfQuadraticResidue->size();
 							printf("Need to get more than %ld smooth number\n", minimumSmooth);
@@ -84,8 +94,8 @@ namespace Factorization {
 								unordered_map<string, Elements::ElementOfQuadraticSieve*> sieve;
 								endOfInterval = beginOfInterval + sizeOfInterval;
 								for(long long i = beginOfInterval; i < endOfInterval; i++){
-									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(i), new Elements::ElementOfQuadraticSieve(i, this->m0, m5, primesOfQuadraticResidue->size()+1)));
-									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-i), new Elements::ElementOfQuadraticSieve(-i, this->m0, m5, primesOfQuadraticResidue->size()+1)));
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(i), new Elements::ElementOfQuadraticSieve(i, this->m0, m6, primesOfQuadraticResidue->size()+1)));
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-i), new Elements::ElementOfQuadraticSieve(-i, this->m0, m6, primesOfQuadraticResidue->size()+1)));
 								}
 								beginOfInterval = endOfInterval;
 								long long identOfPrime = 1;
@@ -100,16 +110,18 @@ namespace Factorization {
 										mpz_div(sieve.at(to_string(quadraticResidue->s0Minus))->divisible, sieve.at(to_string(quadraticResidue->s0Minus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s0Minus -= quadraticResidue->p0;
 									}
-									if(quadraticResidue->p0 == 2) continue;
-									while(quadraticResidue->s1Plus < endOfInterval){
-										sieve.at(to_string(quadraticResidue->s1Plus))->divisors[identOfPrime] = 1;
-										mpz_div(sieve.at(to_string(quadraticResidue->s1Plus))->divisible, sieve.at(to_string(quadraticResidue->s1Plus))->divisible, quadraticResidue->prime);
-										quadraticResidue->s1Plus += quadraticResidue->p0;
-									}
-									while(-endOfInterval < quadraticResidue->s1Minus){
-										sieve.at(to_string(quadraticResidue->s1Minus))->divisors[identOfPrime] = 1;
-										mpz_div(sieve.at(to_string(quadraticResidue->s1Minus))->divisible, sieve.at(to_string(quadraticResidue->s1Minus))->divisible, quadraticResidue->prime);
-										quadraticResidue->s1Minus -= quadraticResidue->p0;
+									if(quadraticResidue->p0 != 2)
+									{
+										while(quadraticResidue->s1Plus < endOfInterval){
+											sieve.at(to_string(quadraticResidue->s1Plus))->divisors[identOfPrime] = 1;
+											mpz_div(sieve.at(to_string(quadraticResidue->s1Plus))->divisible, sieve.at(to_string(quadraticResidue->s1Plus))->divisible, quadraticResidue->prime);
+											quadraticResidue->s1Plus += quadraticResidue->p0;
+										}
+										while(-endOfInterval < quadraticResidue->s1Minus){
+											sieve.at(to_string(quadraticResidue->s1Minus))->divisors[identOfPrime] = 1;
+											mpz_div(sieve.at(to_string(quadraticResidue->s1Minus))->divisible, sieve.at(to_string(quadraticResidue->s1Minus))->divisible, quadraticResidue->prime);
+											quadraticResidue->s1Minus -= quadraticResidue->p0;
+										}
 									}
 									identOfPrime += 1;
 								}
@@ -135,31 +147,36 @@ namespace Factorization {
 									}
 								}
 							}
+
 							vector<vector<bool>> identity = Elements::MyHelper::GetIdentityMatrix(foundSmooth);
 							Solver::GaussianElimination::SolveMod2(matrix, identity);
 							for(unsigned long long i = 0; i < foundSmooth; i++){
 								if(accumulate(matrix[i].begin(), matrix[i].end(), 0) == 0){
-									mpz_set_ui(m6, 1);
 									mpz_set_ui(m7, 1);
+									mpz_set_ui(m8, 1);
 									for(unsigned long long j = 0; j < foundSmooth; j++){
 										if(identity[i][j] == true){
-											mpz_mul(m6, m6, smoothNumbers[j]->oryginal);
-											mpz_mul(m7, m7, smoothNumbers[j]->element);
+											mpz_mul(m7, m7, smoothNumbers[j]->oryginal);
+											mpz_mul(m8, m8, smoothNumbers[j]->element);
 										}
 									}
-									mpz_sqrt(m6, m6);
-									mpz_sqrt(m7, m7);
-									mpz_sub(m8, m6, m7);
-									mpz_mod(m8, m8, this->m0);
-									if(mpz_cmp_ui(m8, 0) != 0){
-										mpz_add(m8, m6, m7);
-										mpz_mod(m8, m8, this->m0);
-										if(mpz_cmp_ui(m8, 0) != 0){
-											mpz_sub(m8, m6, m7);
-											mpz_abs(m8, m8);
-											mpz_gcd(this->m1, m8, this->m0);
-											mpz_add(m8, m6, m7);
-											mpz_gcd(this->m2, m8, this->m0);
+									mpz_sub(m9, m7, m8);
+									mpz_mod(m9, m9, this->m0);
+									if(mpz_cmp_ui(m9, 0) == 0){
+										mpz_sqrt(m7, m7);
+										mpz_sqrt(m8, m8);
+										mpz_sub(m9, m7, m8);
+										mpz_mod(m9, m9, this->m0);
+										if(mpz_cmp_ui(m9, 0) != 0){
+											mpz_add(m9, m7, m8);
+											mpz_mod(m9, m9, this->m0);
+											if(mpz_cmp_ui(m9, 0) != 0){
+												mpz_sub(m9, m7, m8);
+												mpz_abs(m9, m9);
+												mpz_gcd(this->m1, m9, this->m0);
+												mpz_add(m9, m7, m8);
+												mpz_gcd(this->m2, m9, this->m0);
+											}
 										}
 									}
 								}
@@ -178,7 +195,7 @@ namespace Factorization {
 		}
 
 		//clear
-		mpz_clears(m5, m6, m7, m8, r0, NULL);
+		mpz_clears(m6, m7, m8, m9, r0, NULL);
 	}
 
 	vector<Elements::PrimeOfQuadraticResidue*> *QuadraticSieve::AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue, mpz_t m3){
@@ -198,17 +215,22 @@ namespace Factorization {
 	}
 
 	unsigned long QuadraticSieve::GetUpperBound(string input){
-		mpfr_t m0, ln, upperBound;
-		mpfr_inits(m0, ln, upperBound, NULL);
+		mpfr_t m0, lnOfm0, upperBound, ulongMax;
+		mpfr_inits(m0, lnOfm0, upperBound, ulongMax,  NULL);
 		mpfr_set_str(m0, input.c_str(), 10, MPFR_RNDU);
-		mpfr_log(ln, m0, MPFR_RNDU);
-		mpfr_log(upperBound, ln, MPFR_RNDU);
-		mpfr_mul(upperBound, ln, upperBound, MPFR_RNDU);
+		mpfr_log(lnOfm0, m0, MPFR_RNDU);
+		mpfr_log(upperBound, lnOfm0, MPFR_RNDU);
+		mpfr_mul(upperBound, lnOfm0, upperBound, MPFR_RNDU);
 		mpfr_sqrt(upperBound, upperBound, MPFR_RNDU);
 		mpfr_mul_d(upperBound, upperBound, 0.5, MPFR_RNDU);
 		mpfr_exp(upperBound, upperBound, MPFR_RNDU);
+		mpfr_set_str(ulongMax, to_string(ULONG_MAX).c_str(), 10, MPFR_RNDU);
+		if(mpfr_cmp(upperBound, ulongMax) > 0){
+			printf("Error: Algorithms::QuadraticSieve::GetUpperBound\n");
+			throw;
+		}
 		unsigned long result = mpfr_get_ui(upperBound, MPFR_RNDU);
-		mpfr_clears(m0, ln, upperBound, NULL);
+		mpfr_clears(m0, lnOfm0, upperBound, ulongMax, NULL);
 		return result;
 	}
 }
