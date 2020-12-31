@@ -150,7 +150,8 @@ namespace Factorization {
 
 							vector<vector<bool>> identity = Elements::MyHelper::GetIdentityMatrix(foundSmooth);
 							Solver::GaussianElimination::SolveMod2(matrix, identity);
-							for(unsigned long long i = 0; i < foundSmooth; i++){
+							bool foundSoultion = false;
+							for(unsigned long long i = 0; i < foundSmooth && foundSoultion == false; i++){
 								if(accumulate(matrix[i].begin(), matrix[i].end(), 0) == 0){
 									mpz_set_ui(m7, 1);
 									mpz_set_ui(m8, 1);
@@ -176,6 +177,7 @@ namespace Factorization {
 												mpz_gcd(this->m1, m9, this->m0);
 												mpz_add(m9, m7, m8);
 												mpz_gcd(this->m2, m9, this->m0);
+												foundSoultion = true;
 											}
 										}
 									}
