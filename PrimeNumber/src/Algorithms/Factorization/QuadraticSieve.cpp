@@ -69,19 +69,16 @@ namespace Factorization {
 
 
 
-
-
-
-
-
-
+							//rozwiązywanie kongruencji
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
 							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(m5, this->m0);
 							delete primesBelowUpperBound;
-
-
-
 							primesOfQuadraticResidue = this->AdaptSolutionsToFunction(primesOfQuadraticResidue, m6);
+
+
+
+
+							//przesiewanie
 							unsigned long foundSmooth = 0;
 							unsigned long minimumSmooth = primesOfQuadraticResidue->size();
 							printf("Need to get more than %ld smooth number\n", minimumSmooth);
@@ -148,8 +145,13 @@ namespace Factorization {
 								}
 							}
 
+
+							//rozwiązywanie układu równań
 							vector<vector<bool>> identity = Elements::MyHelper::GetIdentityMatrix(foundSmooth);
 							Solver::GaussianElimination::SolveMod2(matrix, identity);
+
+
+							//odszukwanie rozwiązania, bo na pewno istnieje?
 							bool foundSoultion = false;
 							for(unsigned long long i = 0; i < foundSmooth && foundSoultion == false; i++){
 								if(accumulate(matrix[i].begin(), matrix[i].end(), 0) == 0){
@@ -157,8 +159,8 @@ namespace Factorization {
 									mpz_set_ui(m8, 1);
 									for(unsigned long long j = 0; j < foundSmooth; j++){
 										if(identity[i][j] == true){
-											mpz_mul(m7, m7, smoothNumbers[j]->oryginal);
-											mpz_mul(m8, m8, smoothNumbers[j]->element);
+											mpz_mul(m7, m7, smoothNumbers[j]->element);
+											mpz_mul(m8, m8, smoothNumbers[j]->oryginal);
 										}
 									}
 									mpz_sub(m9, m7, m8);
@@ -173,7 +175,6 @@ namespace Factorization {
 											mpz_mod(m9, m9, this->m0);
 											if(mpz_cmp_ui(m9, 0) != 0){
 												mpz_sub(m9, m7, m8);
-												mpz_abs(m9, m9);
 												mpz_gcd(this->m1, m9, this->m0);
 												mpz_add(m9, m7, m8);
 												mpz_gcd(this->m2, m9, this->m0);
