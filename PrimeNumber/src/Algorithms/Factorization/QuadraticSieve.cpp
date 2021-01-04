@@ -69,52 +69,61 @@ namespace Factorization {
 
 
 
+
+
+
+
+
+
+
 							//rozwiązywanie kongruencji
 							Abstracts::PrimesBelowUpperBound *primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
-							vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue = primesBelowUpperBound->GetPrimesOfQuadraticResidue(m5, this->m0);
+							vector<Elements::PrimeOfQuadraticResidue*> *FB = primesBelowUpperBound->GetPrimesOfQuadraticResidue(m5, this->m0);
 							delete primesBelowUpperBound;
-							primesOfQuadraticResidue = this->AdaptSolutionsToFunction(primesOfQuadraticResidue, m6);
+							FB = this->AdaptSolutionsToFunction(FB, m6);
+
+
 
 
 
 
 							//przesiewanie
-							unsigned long foundSmooth = 0;
-							unsigned long minimumSmooth = primesOfQuadraticResidue->size();
-							printf("Need to get more than %ld smooth number\n", minimumSmooth);
-							long long beginOfInterval = 0;
-							long long endOfInterval = 0;
+							unsigned long found = 0;
+							unsigned long minimum = FB->size();
+							printf("Need to get more than %ld smooth number\n", minimum);
+							long long begin = 0;
+							long long end = 0;
 							long long sizeOfInterval = 10000;
 							vector<Elements::ElementOfQuadraticSieve*> smoothNumbers;
 							vector<vector<bool>> matrix;
-							while(foundSmooth <= minimumSmooth){
+							while(found <= minimum){
 								unordered_map<string, Elements::ElementOfQuadraticSieve*> sieve;
-								endOfInterval = beginOfInterval + sizeOfInterval;
-								for(long long i = beginOfInterval; i < endOfInterval; i++){
-									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(i), new Elements::ElementOfQuadraticSieve(i, this->m0, m6, primesOfQuadraticResidue->size()+1)));
-									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-i), new Elements::ElementOfQuadraticSieve(-i, this->m0, m6, primesOfQuadraticResidue->size()+1)));
+								end = begin + sizeOfInterval;
+								for(long long i = begin; i < end; i++){
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(i), new Elements::ElementOfQuadraticSieve(i, this->m0, m6, FB->size()+1)));
+									sieve.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-i), new Elements::ElementOfQuadraticSieve(-i, this->m0, m6, FB->size()+1)));
 								}
-								beginOfInterval = endOfInterval;
+								begin = end;
 								long long identOfPrime = 1;
-								for(Elements::PrimeOfQuadraticResidue* quadraticResidue : *primesOfQuadraticResidue){
-									while(quadraticResidue->s0Plus < endOfInterval){
+								for(Elements::PrimeOfQuadraticResidue* quadraticResidue : *FB){
+									while(quadraticResidue->s0Plus < end){
 										sieve.at(to_string(quadraticResidue->s0Plus))->divisors[identOfPrime] = 1;
 										mpz_div(sieve.at(to_string(quadraticResidue->s0Plus))->divisible, sieve.at(to_string(quadraticResidue->s0Plus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s0Plus += quadraticResidue->p0;
 									}
-									while(-endOfInterval < quadraticResidue->s0Minus){
+									while(-end < quadraticResidue->s0Minus){
 										sieve.at(to_string(quadraticResidue->s0Minus))->divisors[identOfPrime] = 1;
 										mpz_div(sieve.at(to_string(quadraticResidue->s0Minus))->divisible, sieve.at(to_string(quadraticResidue->s0Minus))->divisible, quadraticResidue->prime);
 										quadraticResidue->s0Minus -= quadraticResidue->p0;
 									}
 									if(quadraticResidue->p0 != 2)
 									{
-										while(quadraticResidue->s1Plus < endOfInterval){
+										while(quadraticResidue->s1Plus < end){
 											sieve.at(to_string(quadraticResidue->s1Plus))->divisors[identOfPrime] = 1;
 											mpz_div(sieve.at(to_string(quadraticResidue->s1Plus))->divisible, sieve.at(to_string(quadraticResidue->s1Plus))->divisible, quadraticResidue->prime);
 											quadraticResidue->s1Plus += quadraticResidue->p0;
 										}
-										while(-endOfInterval < quadraticResidue->s1Minus){
+										while(-end < quadraticResidue->s1Minus){
 											sieve.at(to_string(quadraticResidue->s1Minus))->divisors[identOfPrime] = 1;
 											mpz_div(sieve.at(to_string(quadraticResidue->s1Minus))->divisible, sieve.at(to_string(quadraticResidue->s1Minus))->divisible, quadraticResidue->prime);
 											quadraticResidue->s1Minus -= quadraticResidue->p0;
@@ -126,14 +135,15 @@ namespace Factorization {
 									bool foundMinusSmooth = mpz_cmp_si(element.second->divisible, -1) == 0;
 									bool foundPlusSmooth = mpz_cmp_ui(element.second->divisible, 1) == 0;
 									if(foundMinusSmooth == true || foundPlusSmooth == true){
-										if(foundMinusSmooth == true){
-											element.second->divisors[0] = 1;
-										}
 										if(element.second->overMinusSqrt == false){
+											if(foundMinusSmooth == true){
+												element.second->divisors[0] = 1;
+											}
+
 											//if(foundSmooth % 1000 == 0){
-												printf("Found %ld/%ld smooth numbers\n", foundSmooth, minimumSmooth);
+												printf("Found %ld/%ld smooth numbers\n", found, minimum);
 											//}
-											foundSmooth++;
+											found++;
 											smoothNumbers.push_back(element.second);
 											matrix.push_back(element.second->divisors);
 										}else{
@@ -147,17 +157,17 @@ namespace Factorization {
 
 
 							//rozwiązywanie układu równań
-							vector<vector<bool>> identity = Elements::MyHelper::GetIdentityMatrix(foundSmooth);
+							vector<vector<bool>> identity = Elements::MyHelper::GetIdentityMatrix(found);
 							Solver::GaussianElimination::SolveMod2(matrix, identity);
 
 
 							//odszukwanie rozwiązania, bo na pewno istnieje?
 							bool foundSoultion = false;
-							for(unsigned long long i = 0; i < foundSmooth && foundSoultion == false; i++){
+							for(unsigned long long i = 0; i < found && foundSoultion == false; i++){
 								if(accumulate(matrix[i].begin(), matrix[i].end(), 0) == 0){
 									mpz_set_ui(m7, 1);
 									mpz_set_ui(m8, 1);
-									for(unsigned long long j = 0; j < foundSmooth; j++){
+									for(unsigned long long j = 0; j < found; j++){
 										if(identity[i][j] == true){
 											mpz_mul(m7, m7, smoothNumbers[j]->element);
 											mpz_mul(m8, m8, smoothNumbers[j]->oryginal);
@@ -187,10 +197,10 @@ namespace Factorization {
 							for(Elements::ElementOfQuadraticSieve* elementOfQuadraticSieve : smoothNumbers){
 								delete elementOfQuadraticSieve;
 							}
-							for(Elements::PrimeOfQuadraticResidue* primeOfQuadraticResidue : *primesOfQuadraticResidue){
+							for(Elements::PrimeOfQuadraticResidue* primeOfQuadraticResidue : *FB){
 								delete primeOfQuadraticResidue;
 							}
-							delete primesOfQuadraticResidue;
+							delete FB;
 						}
 					}
 				}
