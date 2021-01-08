@@ -11,7 +11,7 @@ namespace Factorization {
 		void Factor(string input);
 	private:
 		unsigned long GetUpperBound(string input);
-		vector<Elements::PrimeOfQuadraticResidue*> *AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *primesOfQuadraticResidue, mpz_t m3);
+		vector<Elements::PrimeOfQuadraticResidue*> *AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *VF, mpz_t m6);
 	};
 }
 

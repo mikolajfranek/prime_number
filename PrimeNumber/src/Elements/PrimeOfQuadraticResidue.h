@@ -7,18 +7,16 @@ namespace Elements {
 	class PrimeOfQuadraticResidue {
 	public:
 		PrimeOfQuadraticResidue();
-		PrimeOfQuadraticResidue(short p0, short solution0, short solution1);
+		PrimeOfQuadraticResidue(short p0, short c0, short c1);
 		virtual ~PrimeOfQuadraticResidue();
-		mpz_t prime;
-		mpz_t solution0;
-		mpz_t solution1;
+		mpz_t vp;
+		mpz_t m7;
+		mpz_t m8;
 		long long p0;
-		long long s0;
-		long long s0Plus;
-		long long s0Minus;
-		long long s1;
-		long long s1Plus;
-		long long s1Minus;
+		long long c0;
+		long long c2;
+		long long c1;
+		long long c3;
 	};
 }
 

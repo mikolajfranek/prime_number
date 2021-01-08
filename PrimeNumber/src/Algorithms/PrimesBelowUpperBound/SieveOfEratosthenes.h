@@ -8,7 +8,7 @@ namespace PrimesBelowUpperBound {
 	public:
 		SieveOfEratosthenes();
 		virtual ~SieveOfEratosthenes();
-		vector<unsigned long long> GetPrimes(unsigned long long upperBound);
+		vector<unsigned long long>* GetPrimes(unsigned long long upperBound);
 	};
 }
 
