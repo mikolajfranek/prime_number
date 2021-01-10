@@ -2,19 +2,19 @@
 
 namespace Elements {
 
-	ElementOfQuadraticSieve::ElementOfQuadraticSieve(long long ident, mpz_t m0, mpz_t m3, long long sizeOfDivisors) {
-		mpz_inits(this->oryginal, this->divisible, this->element, NULL);
-		mpz_set_str(this->oryginal, to_string(ident).c_str(), 10);
-		mpz_add(this->oryginal, this->oryginal, m3);
-		this->overMinusSqrt = mpz_cmp_ui(this->oryginal, 0) < 0;
-		mpz_pow_ui(this->oryginal, this->oryginal, 2);
-		mpz_set(this->element, this->oryginal);
-		mpz_sub(this->oryginal, this->oryginal, m0);
-		mpz_set(this->divisible, this->oryginal);
-		this->divisors = vector<bool>(sizeOfDivisors);
+	ElementOfQuadraticSieve::ElementOfQuadraticSieve(long long x0, mpz_t m0, mpz_t m6, long long sizeOfDivisors) {
+		mpz_inits(this->c4, this->c5, this->c6, this->c7, NULL);
+		mpz_set_str(this->c7, to_string(x0).c_str(), 10);
+		mpz_add(this->c7, this->c7, m6);
+		mpz_set(this->c5, this->c7);
+		mpz_pow_ui(this->c5, this->c5, 2);
+		mpz_set(this->c6, this->c5);
+		mpz_sub(this->c5, this->c5, m0);
+		mpz_set(this->c4, this->c5);
+		this->VD = vector<bool>(sizeOfDivisors);
 	}
 
 	ElementOfQuadraticSieve::~ElementOfQuadraticSieve() {
-		mpz_clears(this->oryginal, this->divisible, this->element, NULL);
+		mpz_clears(this->c4, this->c5, this->c6, this->c7, NULL);
 	}
 }
