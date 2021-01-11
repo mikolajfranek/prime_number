@@ -9,15 +9,15 @@ namespace Factorization {
 	void QuadraticSieve::Factor(string input){
 
 		//declare
-		mpz_t m6, m17, m18, m19, r0;
+		mpz_t m6, m12, m13, m15, r0;
 
 		//init
 		mpz_set_str(this->m0, input.c_str(), 10);
-		mpz_inits(m6, m17, m18, m19, r0, NULL);
+		mpz_inits(m6, m12, m13, m15, r0, NULL);
 
 		//algorithm
-		mpz_mod_ui(m19, this->m0, 2);
-		if(mpz_cmp_ui(m19, 0) == 0){
+		mpz_mod_ui(m15, this->m0, 2);
+		if(mpz_cmp_ui(m15, 0) == 0){
 			mpz_set_ui(this->m1, 2);
 			mpz_div_ui(this->m2, this->m0, 2);
 		}else{
@@ -29,14 +29,14 @@ namespace Factorization {
 				mpz_set(this->m2, this->m0);
 			}else{
 				unsigned long m3 = 2;
-				mpz_rootrem(r0, m19, this->m0, m3);
-				if(mpz_cmp_ui(m19, 0) == 0){
+				mpz_rootrem(r0, m15, this->m0, m3);
+				if(mpz_cmp_ui(m15, 0) == 0){
 					mpz_set(this->m1, r0);
 					mpz_div(this->m2, this->m0, r0);
 				}else{
 					m3 = 3;
-					mpz_rootrem(r0, m19, this->m0, m3);
-					if(mpz_cmp_ui(m19, 0) == 0){
+					mpz_rootrem(r0, m15, this->m0, m3);
+					if(mpz_cmp_ui(m15, 0) == 0){
 						mpz_set(this->m1, r0);
 						mpz_div(this->m2, this->m0, r0);
 					}else{
@@ -44,8 +44,8 @@ namespace Factorization {
 						short m4 = 2;
 						bool isPowerOfNumber = false;
 						do{
-							mpz_rootrem(r0, m19, this->m0, m3);
-							if(mpz_cmp_ui(m19, 0) == 0){
+							mpz_rootrem(r0, m15, this->m0, m3);
+							if(mpz_cmp_ui(m15, 0) == 0){
 								mpz_set(this->m1, r0);
 								mpz_div(this->m2, this->m0, r0);
 								isPowerOfNumber = true;
@@ -57,8 +57,8 @@ namespace Factorization {
 						if(isPowerOfNumber == false){
 							unsigned long m5 = this->GetUpperBound(input);
 							printf("UpperBound: %ld\n", m5);
-							mpz_sqrtrem(m6, m19, this->m0);
-							if(mpz_cmp_ui(m19, 0) != 0){
+							mpz_sqrtrem(m6, m15, this->m0);
+							if(mpz_cmp_ui(m15, 0) != 0){
 								mpz_add_ui(m6, m6, 1);
 							}
 							Abstracts::PrimesBelowUpperBound* primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
@@ -130,60 +130,42 @@ namespace Factorization {
 									}
 								}
 							}
-
-
-
-
-							//TODO
 							vector<vector<bool>> MU = Elements::MyHelper::GetIdentityMatrix(n0);
 							Solver::GaussianElimination::SolveMod2(MD, MU);
-
-							//odszukwanie rozwiązania, bo na pewno istnieje?
-							bool foundSoultion = false;
-							for(unsigned long long i = 0; i < n0 && foundSoultion == false; i++){
-								if(accumulate(MD[i].begin(), MD[i].end(), 0) == 0){
-									mpz_set_ui(m17, 1);
-									mpz_set_ui(m18, 1);
-									for(unsigned long long j = 0; j < n0; j++){
-										if(MU[i][j] == true){
-											mpz_mul(m17, m17, VS[j]->c6);
-											mpz_mul(m18, m18, VS[j]->c4);
+							for(unsigned long long m11 = 0; m11 < n0; m11 = m11 + 1){
+								if(accumulate(MD[m11].begin(), MD[m11].end(), 0) == 0){
+									mpz_set_ui(m12, 1);
+									mpz_set_ui(m13, 1);
+									for(unsigned long long m14 = 0; m14 < n0; m14 = m14 + 1){
+										if(MU[m11][m14] == true){
+											mpz_mul(m12, m12, VS[m14]->c6);
+											mpz_mul(m13, m13, VS[m14]->c4);
 										}
 									}
-									mpz_sub(m19, m17, m18);
-									mpz_mod(m19, m19, this->m0);
-									if(mpz_cmp_ui(m19, 0) == 0){
-										mpz_sqrt(m17, m17);
-										mpz_sqrt(m18, m18);
-										mpz_sub(m19, m17, m18);
-										mpz_mod(m19, m19, this->m0);
-										if(mpz_cmp_ui(m19, 0) != 0){
-											mpz_add(m19, m17, m18);
-											mpz_mod(m19, m19, this->m0);
-											if(mpz_cmp_ui(m19, 0) != 0){
-												mpz_sub(m19, m17, m18);
-												mpz_gcd(this->m1, m19, this->m0);
-												mpz_add(m19, m17, m18);
-												mpz_gcd(this->m2, m19, this->m0);
-												foundSoultion = true;
+									mpz_sub(m15, m12, m13);
+									mpz_mod(m15, m15, this->m0);
+									if(mpz_cmp_ui(m15, 0) == 0){
+										mpz_sqrt(m12, m12);
+										mpz_sqrt(m13, m13);
+										mpz_sub(m15, m12, m13);
+										mpz_mod(m15, m15, this->m0);
+										if(mpz_cmp_ui(m15, 0) != 0){
+											mpz_add(m15, m12, m13);
+											mpz_mod(m15, m15, this->m0);
+											if(mpz_cmp_ui(m15, 0) != 0){
+												mpz_sub(m15, m12, m13);
+												mpz_gcd(this->m1, m15, this->m0);
+												mpz_add(m15, m12, m13);
+												mpz_gcd(this->m2, m15, this->m0);
+												break;
 											}
 										}
 									}
 								}
 							}
-							for(Elements::ElementOfQuadraticSieve* elementOfQuadraticSieve : VS){
-								delete elementOfQuadraticSieve;
+							for(Elements::ElementOfQuadraticSieve* vs : VS){
+								delete vs;
 							}
-
-
-
-
-
-
-
-
-
-
 							for(Elements::PrimeOfQuadraticResidue* vf : *VF){
 								delete vf;
 							}
@@ -195,7 +177,7 @@ namespace Factorization {
 		}
 
 		//clear
-		mpz_clears(m6, m17, m18, m19, r0, NULL);
+		mpz_clears(m6, m12, m13, m15, r0, NULL);
 	}
 
 	vector<Elements::PrimeOfQuadraticResidue*> *QuadraticSieve::AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *VF, mpz_t m6){

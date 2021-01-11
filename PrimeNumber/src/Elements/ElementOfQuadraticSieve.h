@@ -6,7 +6,7 @@
 namespace Elements {
 	class ElementOfQuadraticSieve {
 	public:
-		ElementOfQuadraticSieve(long long n3, mpz_t m0, mpz_t m6, long long sizeOfDivisors);
+		ElementOfQuadraticSieve(long long x0, mpz_t m0, mpz_t m6, long long sizeOfDivisors);
 		virtual ~ElementOfQuadraticSieve();
 		mpz_t c4;
 		mpz_t c5;
