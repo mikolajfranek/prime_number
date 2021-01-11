@@ -1,6 +1,6 @@
 #include "TrialDivision.h"
 
-namespace Primality {
+namespace AlgorithmsPrimality {
 
 	TrialDivision::TrialDivision() {}
 

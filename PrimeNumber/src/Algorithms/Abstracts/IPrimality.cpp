@@ -1,16 +1,16 @@
-#include "Primality.h"
+#include "IPrimality.h"
 
-namespace Abstracts {
+namespace AlgorithmsAbstracts {
 
-	Primality::Primality() {
+	IPrimality::IPrimality() {
 		mpz_inits(this->m0, NULL);
 	}
 
-	Primality::~Primality() {
+	IPrimality::~IPrimality() {
 		mpz_clears(this->m0, NULL);
 	}
 
-	void Primality::CheckResult(bool isPrime, bool prediction){
+	void IPrimality::CheckResult(bool isPrime, bool prediction){
 		if(isPrime == prediction){
 			if(isPrime){
 				gmp_printf("%Zd IS PRIME\n", this->m0);

@@ -1,10 +1,10 @@
 #include "Fermat.h"
 
-namespace Factorization {
+namespace AlgorithmsFactorization {
 	// Define benchmark
 	static void BM_FactorizationFermat(benchmark::State& state) {
 		for (auto _ : state){
-			Abstracts::Factorization *factorization = new Factorization::Fermat();
+			AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::Fermat();
 			factorization->Factor(Elements::MyHelper::GetSemiPrime(state.range(0)));
 			factorization->CheckResult();
 			delete factorization;

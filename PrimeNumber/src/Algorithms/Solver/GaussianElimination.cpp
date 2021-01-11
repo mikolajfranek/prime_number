@@ -1,6 +1,6 @@
 #include "GaussianElimination.h"
 
-namespace Solver {
+namespace AlgorithmsSolver {
 	void GaussianElimination::SolveMod2(vector<vector<bool>> &A, vector<vector<bool>> &B){
 		bool temp;
 		unsigned long long nonZero;

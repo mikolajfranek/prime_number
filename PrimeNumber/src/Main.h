@@ -4,6 +4,7 @@
 /* general */
 #include <numeric>
 #include <unordered_map>
+#include <fstream>
 
 /* gmp */
 #include <gmp.h>
@@ -17,6 +18,10 @@
 /* using */
 using namespace std;
 
+/* components */
+#include "Components/Abstracts/IFile.h"
+#include "Components/Files/FileWriter.h"
+
 /* elements */
 #include "Elements/PrimeOfQuadraticResidue.h"
 #include "Elements/ElementOfQuadraticSieve.h"
@@ -29,15 +34,15 @@ using namespace std;
 #include "Algorithms/Solver/GaussianElimination.h"
 
 /* primes below limit */
-#include "Abstracts/PrimesBelowUpperBound.h"
+#include "Algorithms/Abstracts/IPrimesBelowUpperBound.h"
 #include "Algorithms/PrimesBelowUpperBound/SieveOfEratosthenes.h"
 
 /* primality */
-#include "Abstracts/Primality.h"
+#include "Algorithms/Abstracts/IPrimality.h"
 #include "Algorithms/Primality/TrialDivision.h"
 
 /* factorization */
-#include "Abstracts/Factorization.h"
+#include "Algorithms/Abstracts/IFactorization.h"
 #include "Algorithms/Factorization/TrialDivision.h"
 #include "Algorithms/Factorization/Fermat.h"
 #include "Algorithms/Factorization/QuadraticSieve.h"

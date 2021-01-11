@@ -1,6 +1,6 @@
 #include "SieveOfEratosthenes.h"
 
-namespace PrimesBelowUpperBound {
+namespace AlgorithmsPrimesBelowUpperBound {
 
 	SieveOfEratosthenes::SieveOfEratosthenes() {}
 

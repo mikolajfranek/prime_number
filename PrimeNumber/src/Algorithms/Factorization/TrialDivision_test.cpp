@@ -1,10 +1,10 @@
 #include "TrialDivision.h"
 
-namespace Factorization {
+namespace AlgorithmsFactorization {
 	// Define benchmark
 	static void BM_FactorizationTrialDivision(benchmark::State& state) {
 		for (auto _ : state){
-			Abstracts::Factorization *factorization = new Factorization::TrialDivision();
+			AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::TrialDivision();
 			factorization->Factor(Elements::MyHelper::GetSemiPrime(state.range(0)));
 			factorization->CheckResult();
 			delete factorization;

@@ -1,16 +1,16 @@
-#include "Factorization.h"
+#include "IFactorization.h"
 
-namespace Abstracts {
+namespace AlgorithmsAbstracts {
 
-	Factorization::Factorization() {
+	IFactorization::IFactorization() {
 		mpz_inits(this->m0, this->m1, this->m2, NULL);
 	}
 
-	Factorization::~Factorization() {
+	IFactorization::~IFactorization() {
 		mpz_clears(this->m0, this->m1, this->m2, NULL);
 	}
 
-	void Factorization::CheckResult(){
+	void IFactorization::CheckResult(){
 		mpz_t aim;
 		mpz_inits(aim, NULL);
 		mpz_mul(aim, this->m1, this->m2);

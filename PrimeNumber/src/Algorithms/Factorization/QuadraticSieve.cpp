@@ -1,6 +1,6 @@
 #include "QuadraticSieve.h"
 
-namespace Factorization {
+namespace AlgorithmsFactorization {
 
 	QuadraticSieve::QuadraticSieve() {}
 
@@ -21,7 +21,7 @@ namespace Factorization {
 			mpz_set_ui(this->m1, 2);
 			mpz_div_ui(this->m2, this->m0, 2);
 		}else{
-			Abstracts::Primality* primality = new Primality::TrialDivision();
+			AlgorithmsAbstracts::IPrimality* primality = new AlgorithmsPrimality::TrialDivision();
 			bool isPrime = primality->IsPrime(input);
 			delete primality;
 			if(isPrime == true){
@@ -61,7 +61,7 @@ namespace Factorization {
 							if(mpz_cmp_ui(m15, 0) != 0){
 								mpz_add_ui(m6, m6, 1);
 							}
-							Abstracts::PrimesBelowUpperBound* primesBelowUpperBound = new PrimesBelowUpperBound::SieveOfEratosthenes();
+							AlgorithmsAbstracts::IPrimesBelowUpperBound* primesBelowUpperBound = new AlgorithmsPrimesBelowUpperBound::SieveOfEratosthenes();
 							vector<unsigned long long>* VP = primesBelowUpperBound->GetPrimes(m5);
 							vector<Elements::PrimeOfQuadraticResidue*>* VF = this->AdaptSolutionsToFunction(primesBelowUpperBound->GetPrimesOfQuadraticResidue(this->m0, VP), m6);
 							delete VP;
@@ -131,7 +131,7 @@ namespace Factorization {
 								}
 							}
 							vector<vector<bool>> MU = Elements::MyHelper::GetIdentityMatrix(n0);
-							Solver::GaussianElimination::SolveMod2(MD, MU);
+							AlgorithmsSolver::GaussianElimination::SolveMod2(MD, MU);
 							for(unsigned long long m11 = 0; m11 < n0; m11 = m11 + 1){
 								if(accumulate(MD[m11].begin(), MD[m11].end(), 0) == 0){
 									mpz_set_ui(m12, 1);

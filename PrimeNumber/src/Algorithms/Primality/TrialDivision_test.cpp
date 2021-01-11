@@ -1,17 +1,17 @@
 #include "TrialDivision.h"
 
-namespace Primality {
+namespace AlgorithmsPrimality {
 	// Define benchmark
 	static void BM_PrimalityTrialDivision_IsPrime(benchmark::State& state) {
 		for (auto _ : state){
-			Abstracts::Primality *primality = new Primality::TrialDivision();
+			AlgorithmsAbstracts::IPrimality *primality = new AlgorithmsPrimality::TrialDivision();
 			primality->CheckResult(primality->IsPrime(Elements::MyHelper::GetPrime(state.range(0))), true);
 			delete primality;
 		}
 	}
 	static void BM_PrimalityTrialDivision_IsNotPrime(benchmark::State& state) {
 		for (auto _ : state){
-			Abstracts::Primality *primality = new Primality::TrialDivision();
+			AlgorithmsAbstracts::IPrimality *primality = new AlgorithmsPrimality::TrialDivision();
 			primality->CheckResult(primality->IsPrime(Elements::MyHelper::GetSemiPrime(state.range(0))), false);
 			delete primality;
 		}

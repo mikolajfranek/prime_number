@@ -3,8 +3,8 @@
 #ifndef ALGORITHMS_FACTORIZATION_TRIALDIVISTION_H
 #define ALGORITHMS_FACTORIZATION_TRIALDIVISTION_H
 
-namespace Factorization {
-	class TrialDivision : public Abstracts::Factorization {
+namespace AlgorithmsFactorization {
+	class TrialDivision : public AlgorithmsAbstracts::IFactorization {
 	public:
 		TrialDivision();
 		virtual ~TrialDivision();

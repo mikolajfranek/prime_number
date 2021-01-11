@@ -1,5 +1,5 @@
 #include "TonelliShanks.h"
 
-namespace Solver {
+namespace AlgorithmsSolver {
 
 }

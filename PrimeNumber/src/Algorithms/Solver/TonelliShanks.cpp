@@ -1,6 +1,6 @@
 #include "TonelliShanks.h"
 
-namespace Solver {
+namespace AlgorithmsSolver {
 	void TonelliShanks::Solve(mpz_t n, mpz_t p, mpz_t solution1, mpz_t solution2){
 
 		mpz_t s, e, f, t, x, g, b, r, m, c, d, temp;

@@ -1,5 +1,5 @@
 #include "GaussianElimination.h"
 
-namespace Solver {
+namespace AlgorithmsSolver {
 
 }

@@ -3,8 +3,8 @@
 #ifndef ALGORITHMS_FACTORIZATION_FERMAT_H_
 #define ALGORITHMS_FACTORIZATION_FERMAT_H_
 
-namespace Factorization {
-	class Fermat : public Abstracts::Factorization  {
+namespace AlgorithmsFactorization {
+	class Fermat : public AlgorithmsAbstracts::IFactorization {
 	public:
 		Fermat();
 		virtual ~Fermat();

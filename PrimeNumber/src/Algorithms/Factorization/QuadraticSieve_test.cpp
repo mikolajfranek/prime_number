@@ -1,10 +1,10 @@
 #include "QuadraticSieve.h"
 
-namespace Factorization {
+namespace AlgorithmsFactorization {
 	// Define benchmark
 	static void BM_FactorizationQuadraticSieve(benchmark::State& state) {
 		for (auto _ : state){
-			Abstracts::Factorization *factorization = new Factorization::QuadraticSieve();
+			AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::QuadraticSieve();
 			factorization->Factor(Elements::MyHelper::GetSemiPrime(state.range(0)));
 			factorization->CheckResult();
 			delete factorization;

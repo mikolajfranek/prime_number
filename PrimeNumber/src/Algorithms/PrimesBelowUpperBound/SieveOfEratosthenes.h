@@ -3,8 +3,8 @@
 #ifndef ALGORITHMS_PRIMESBELOWLIMIT_SIEVEOFERATOSTHENES_H_
 #define ALGORITHMS_PRIMESBELOWLIMIT_SIEVEOFERATOSTHENES_H_
 
-namespace PrimesBelowUpperBound {
-	class SieveOfEratosthenes : public Abstracts::PrimesBelowUpperBound {
+namespace AlgorithmsPrimesBelowUpperBound {
+	class SieveOfEratosthenes : public AlgorithmsAbstracts::IPrimesBelowUpperBound {
 	public:
 		SieveOfEratosthenes();
 		virtual ~SieveOfEratosthenes();
