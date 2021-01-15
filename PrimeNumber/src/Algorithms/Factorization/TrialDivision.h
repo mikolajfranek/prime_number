@@ -9,6 +9,7 @@ namespace AlgorithmsFactorization {
 		TrialDivision();
 		virtual ~TrialDivision();
 		void Factor(string input);
+		void Factor(string input, mpz_t m3);
 	};
 }
 

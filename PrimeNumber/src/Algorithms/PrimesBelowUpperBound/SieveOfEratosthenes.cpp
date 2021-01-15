@@ -15,12 +15,12 @@ namespace AlgorithmsPrimesBelowUpperBound {
 				}
 			}
 		}
-		vector<unsigned long long>* primes = new vector<unsigned long long>();
+		vector<unsigned long long>* VP = new vector<unsigned long long>();
 		for(unsigned long long m0 = 2; m0 <= upperBound; m0++){
 			if(VB[m0] == true){
-				primes->push_back(m0);
+				VP->push_back(m0);
 			}
 		}
-		return primes;
+		return VP;
 	}
 }

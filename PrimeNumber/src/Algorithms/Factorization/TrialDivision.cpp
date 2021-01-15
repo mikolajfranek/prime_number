@@ -8,12 +8,33 @@ namespace AlgorithmsFactorization {
 
 	void TrialDivision::Factor(string input) {
 
+		//parent
+		AlgorithmsAbstracts::IFactorization::Factor(input);
+
 		//declare
-		mpz_t m3, m5, n0;
+		mpz_t m3;
 
 		//init
-		mpz_set_str(this->m0, input.c_str(), 10);
-		mpz_inits(m3, m5, n0, NULL);
+		mpz_inits(m3, NULL);
+
+		//algorithm
+		mpz_sqrt(m3, this->m0);
+		this->Factor(input, m3);
+
+		//clear
+		mpz_clears(m3, NULL);
+	}
+
+	void TrialDivision::Factor(string input, mpz_t m3) {
+
+		//parent
+		AlgorithmsAbstracts::IFactorization::Factor(input);
+
+		//declare
+		mpz_t m5, n0;
+
+		//init
+		mpz_inits(m5, n0, NULL);
 
 		//algorithm
 		mpz_mod_ui(n0, this->m0, 2);
@@ -26,7 +47,6 @@ namespace AlgorithmsFactorization {
 				mpz_set_ui(this->m1, 3);
 				mpz_div_ui(this->m2, this->m0, 3);
 			}else{
-				mpz_sqrt(m3, this->m0);
 				short m4 = 4;
 				bool isPrime = true;
 				for(mpz_set_ui(m5, 5); mpz_cmp(m5, m3) <= 0; mpz_add_ui(m5, m5, m4)){
@@ -47,6 +67,6 @@ namespace AlgorithmsFactorization {
 		}
 
 		//clear
-		mpz_clears(m3, m5, n0, NULL);
+		mpz_clears(m5, n0, NULL);
 	}
 }

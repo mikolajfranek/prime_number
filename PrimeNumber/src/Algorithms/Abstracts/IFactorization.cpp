@@ -10,6 +10,10 @@ namespace AlgorithmsAbstracts {
 		mpz_clears(this->m0, this->m1, this->m2, NULL);
 	}
 
+	void IFactorization::Factor(string input){
+		mpz_set_str(this->m0, input.c_str(), 10);
+	}
+
 	void IFactorization::CheckResult(){
 		mpz_t aim;
 		mpz_inits(aim, NULL);
@@ -20,5 +24,14 @@ namespace AlgorithmsAbstracts {
 			throw;
 		}
 		mpz_clears(aim, NULL);
+	}
+
+	bool IFactorization::AreFactorsTrivial(){
+		return
+		(
+			(mpz_cmp_ui(this->m1, 1) == 0 && mpz_cmp(this->m2, this->m0) == 0)
+			||
+			(mpz_cmp_ui(this->m2, 1) == 0 && mpz_cmp(this->m1, this->m0) == 0)
+		);
 	}
 }

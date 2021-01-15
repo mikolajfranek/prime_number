@@ -8,19 +8,27 @@ namespace AlgorithmsFactorization {
 
 	void QuadraticSieve::Factor(string input){
 
+		//parent
+		AlgorithmsAbstracts::IFactorization::Factor(input);
+
 		//declare
-		mpz_t m6, m12, m13, m15, r0;
+		mpz_t m6, m12, m13, n4, r0;
 
 		//init
-		mpz_set_str(this->m0, input.c_str(), 10);
-		mpz_inits(m6, m12, m13, m15, r0, NULL);
+		mpz_inits(m6, m12, m13, n4, r0, NULL);
 
 		//algorithm
-		mpz_mod_ui(m15, this->m0, 2);
-		if(mpz_cmp_ui(m15, 0) == 0){
-			mpz_set_ui(this->m1, 2);
-			mpz_div_ui(this->m2, this->m0, 2);
-		}else{
+		unsigned long m3 = this->GetUpperBound(input);
+		mpz_set_ui(n4, m3);
+		AlgorithmsFactorization::TrialDivision *trialDivision = new AlgorithmsFactorization::TrialDivision();
+		trialDivision->Factor(input, n4);
+		bool foundSolution = trialDivision->AreFactorsTrivial() == false;
+		if(foundSolution){
+			mpz_set(this->m1, trialDivision->m1);
+			mpz_set(this->m2, trialDivision->m2);
+		}
+		delete trialDivision;
+		if(foundSolution == false){
 			AlgorithmsAbstracts::IPrimality* primality = new AlgorithmsPrimality::TrialDivision();
 			bool isPrime = primality->IsPrime(input);
 			delete primality;
@@ -28,141 +36,217 @@ namespace AlgorithmsFactorization {
 				mpz_set_ui(this->m1, 1);
 				mpz_set(this->m2, this->m0);
 			}else{
-				unsigned long m3 = 2;
-				mpz_rootrem(r0, m15, this->m0, m3);
-				if(mpz_cmp_ui(m15, 0) == 0){
+				unsigned long m4 = 2;
+				mpz_rootrem(r0, n4, this->m0, m4);
+				if(mpz_cmp_ui(n4, 0) == 0){
 					mpz_set(this->m1, r0);
 					mpz_div(this->m2, this->m0, r0);
 				}else{
-					m3 = 3;
-					mpz_rootrem(r0, m15, this->m0, m3);
-					if(mpz_cmp_ui(m15, 0) == 0){
+					m4 = 3;
+					mpz_rootrem(r0, n4, this->m0, m4);
+					if(mpz_cmp_ui(n4, 0) == 0){
 						mpz_set(this->m1, r0);
 						mpz_div(this->m2, this->m0, r0);
 					}else{
-						m3 = 5;
-						short m4 = 2;
+						m4 = 5;
+						short m5 = 2;
 						bool isPowerOfNumber = false;
 						do{
-							mpz_rootrem(r0, m15, this->m0, m3);
-							if(mpz_cmp_ui(m15, 0) == 0){
+							mpz_rootrem(r0, n4, this->m0, m4);
+							if(mpz_cmp_ui(n4, 0) == 0){
 								mpz_set(this->m1, r0);
 								mpz_div(this->m2, this->m0, r0);
 								isPowerOfNumber = true;
 								break;
 							}
-							m3 = m3 + m4;
-							m4 = 6 - m4;
+							m4 = m4 + m5;
+							m5 = 6 - m5;
 						}while(mpz_cmp_ui(r0, 1) > 0);
 						if(isPowerOfNumber == false){
-							unsigned long m5 = this->GetUpperBound(input);
-							printf("UpperBound: %ld\n", m5);
-							mpz_sqrtrem(m6, m15, this->m0);
-							if(mpz_cmp_ui(m15, 0) != 0){
+							mpz_sqrtrem(m6, n4, this->m0);
+							if(mpz_cmp_ui(n4, 0) != 0){
 								mpz_add_ui(m6, m6, 1);
 							}
 							AlgorithmsAbstracts::IPrimesBelowUpperBound* primesBelowUpperBound = new AlgorithmsPrimesBelowUpperBound::SieveOfEratosthenes();
-							vector<unsigned long long>* VP = primesBelowUpperBound->GetPrimes(m5);
+							vector<unsigned long long>* VP = primesBelowUpperBound->GetPrimes(m3);
 							vector<Elements::PrimeOfQuadraticResidue*>* VF = this->AdaptSolutionsToFunction(primesBelowUpperBound->GetPrimesOfQuadraticResidue(this->m0, VP), m6);
 							delete VP;
 							delete primesBelowUpperBound;
+							//...
+							bool foundCongruence = false;
+
+
+
+
+
+
+
+
+
+
+
+
+							//wyszukanie n0 rozwiązań nie oznacza odnalezienia kongruencji tej głównej, ponieważ może wystąpić np:
+							//zachodzi główna kongruencja
+							//ale kongruencja m7 != m8 nie musi być wtedy spełniona!, stąd należy poprawić kod
+							//
+
+
+
+							//identity trzeba tworzyć przed petlą while(foundCongruence == false){
+
+
+
+
+							bool firstFails = true;
+
+
+
+
 							unsigned long long n0 = 0;
 							long long n1 = 0;
 							long long n2 = 0;
+							long long n3 = 0;
 							unsigned long m9 = VF->size();
 							vector<vector<bool>> MD;
 							vector<Elements::ElementOfQuadraticSieve*> VS;
 							printf("Need to get more than %ld smooth number\n", m9);
-							while(n0 <= m9){
-								unordered_map<string, Elements::ElementOfQuadraticSieve*> VQ;
-								n2 = n1 + 10000;
-								for(long long n3 = n1; n3 < n2; n3 = n3 + 1){
-									VQ.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(n3), new Elements::ElementOfQuadraticSieve(n3, this->m0, m6, m9+1)));
-									VQ.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-n3), new Elements::ElementOfQuadraticSieve(-n3, this->m0, m6, m9+1)));
-								}
-								n1 = n2;
-								long long m10 = 1;
-								for(Elements::PrimeOfQuadraticResidue* vf : *VF){
-									while(vf->c0 < n2){
-										VQ.at(to_string(vf->c0))->VD[m10] = 1;
-										mpz_div(VQ.at(to_string(vf->c0))->c5, VQ.at(to_string(vf->c0))->c5, vf->vp);
-										vf->c0 = vf->c0 + vf->p0;
+							while(foundCongruence == false){
+								printf("Trying searching congruence\n");
+
+
+
+								while(n0 <= m9 || n0 == n3){
+									unordered_map<string, Elements::ElementOfQuadraticSieve*> VQ;
+									n2 = n1 + 10000;
+									for(long long n3 = n1; n3 < n2; n3 = n3 + 1){
+										VQ.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(n3), new Elements::ElementOfQuadraticSieve(n3, this->m0, m6, m9+1)));
+										VQ.insert(pair<string, Elements::ElementOfQuadraticSieve*>(to_string(-n3), new Elements::ElementOfQuadraticSieve(-n3, this->m0, m6, m9+1)));
 									}
-									while(-n2 < vf->c2){
-										VQ.at(to_string(vf->c2))->VD[m10] = 1;
-										mpz_div(VQ.at(to_string(vf->c2))->c5, VQ.at(to_string(vf->c2))->c5, vf->vp);
-										vf->c2 = vf->c2 - vf->p0;
-									}
-									if(vf->p0 != 2)
-									{
-										while(vf->c1 < n2){
-											VQ.at(to_string(vf->c1))->VD[m10] = 1;
-											mpz_div(VQ.at(to_string(vf->c1))->c5, VQ.at(to_string(vf->c1))->c5, vf->vp);
-											vf->c1 = vf->c1 + vf->p0;
+									n1 = n2;
+									long long m10 = 1;
+									for(Elements::PrimeOfQuadraticResidue* vf : *VF){
+										while(vf->c0 < n2){
+											VQ.at(to_string(vf->c0))->VD[m10] = 1;
+											mpz_div(VQ.at(to_string(vf->c0))->c5, VQ.at(to_string(vf->c0))->c5, vf->vp);
+											vf->c0 = vf->c0 + vf->p0;
 										}
-										while(-n2 < vf->c3){
-											VQ.at(to_string(vf->c3))->VD[m10] = 1;
-											mpz_div(VQ.at(to_string(vf->c3))->c5, VQ.at(to_string(vf->c3))->c5, vf->vp);
-											vf->c3 = vf->c3 - vf->p0;
+										while(-n2 < vf->c2){
+											VQ.at(to_string(vf->c2))->VD[m10] = 1;
+											mpz_div(VQ.at(to_string(vf->c2))->c5, VQ.at(to_string(vf->c2))->c5, vf->vp);
+											vf->c2 = vf->c2 - vf->p0;
 										}
-									}
-									m10 = m10 + 1;
-								}
-								for(pair<string, Elements::ElementOfQuadraticSieve*> vq : VQ){
-									bool foundPlusSmooth = mpz_cmp_ui(vq.second->c5, 1) == 0;
-									bool foundMinusSmooth = mpz_cmp_si(vq.second->c5, -1) == 0;
-									if(foundPlusSmooth == true || foundMinusSmooth == true){
-										if(mpz_cmp_ui(vq.second->c7, 0) >= 0){
-											if(foundMinusSmooth == true){
-												vq.second->VD[0] = 1;
+										if(vf->p0 != 2)
+										{
+											while(vf->c1 < n2){
+												VQ.at(to_string(vf->c1))->VD[m10] = 1;
+												mpz_div(VQ.at(to_string(vf->c1))->c5, VQ.at(to_string(vf->c1))->c5, vf->vp);
+												vf->c1 = vf->c1 + vf->p0;
 											}
-											MD.push_back(vq.second->VD);
-											VS.push_back(vq.second);
-											n0 = n0 + 1;
-											//if(foundSmooth % 1000 == 0){
-												printf("Found %ld/%ld smooth numbers\n", n0, m9);
-											//}
+											while(-n2 < vf->c3){
+												VQ.at(to_string(vf->c3))->VD[m10] = 1;
+												mpz_div(VQ.at(to_string(vf->c3))->c5, VQ.at(to_string(vf->c3))->c5, vf->vp);
+												vf->c3 = vf->c3 - vf->p0;
+											}
+										}
+										m10 = m10 + 1;
+									}
+									for(pair<string, Elements::ElementOfQuadraticSieve*> vq : VQ){
+										bool foundPlusSmooth = mpz_cmp_ui(vq.second->c5, 1) == 0;
+										bool foundMinusSmooth = mpz_cmp_si(vq.second->c5, -1) == 0;
+										if(foundPlusSmooth == true || foundMinusSmooth == true){
+											if(mpz_cmp_ui(vq.second->c7, 0) >= 0){
+												if(foundMinusSmooth == true){
+													vq.second->VD[0] = 1;
+												}
+												MD.push_back(vq.second->VD);
+												VS.push_back(vq.second);
+												n0 = n0 + 1;
+												//if(foundSmooth % 1000 == 0){
+													printf("Found %ld/%ld smooth numbers\n", n0, m9);
+												//}
+											}else{
+												delete vq.second;
+											}
 										}else{
 											delete vq.second;
 										}
-									}else{
-										delete vq.second;
 									}
 								}
-							}
-							vector<vector<bool>> MU = Elements::MyHelper::GetIdentityMatrix(n0);
-							AlgorithmsSolver::GaussianElimination::SolveMod2(MD, MU);
-							for(unsigned long long m11 = 0; m11 < n0; m11 = m11 + 1){
-								if(accumulate(MD[m11].begin(), MD[m11].end(), 0) == 0){
-									mpz_set_ui(m12, 1);
-									mpz_set_ui(m13, 1);
-									for(unsigned long long m14 = 0; m14 < n0; m14 = m14 + 1){
-										if(MU[m11][m14] == true){
-											mpz_mul(m12, m12, VS[m14]->c6);
-											mpz_mul(m13, m13, VS[m14]->c4);
-										}
+								n3 = n0;
+
+
+
+
+								vector<vector<bool>> MU = Elements::MyHelper::GetIdentityMatrix(n0);
+
+								printf("before \n");
+								Elements::MyHelper::PrintMatrix(MD);
+
+								AlgorithmsSolver::GaussianElimination::SolveMod2(MD, MU);
+
+								printf("after \n");
+								Elements::MyHelper::PrintMatrix(MD);
+
+								for(unsigned long long m11 = 0; m11 < n0; m11 = m11 + 1){
+
+									if(firstFails) {
+
+										firstFails = false;
+										break;
 									}
-									mpz_sub(m15, m12, m13);
-									mpz_mod(m15, m15, this->m0);
-									if(mpz_cmp_ui(m15, 0) == 0){
-										mpz_sqrt(m12, m12);
-										mpz_sqrt(m13, m13);
-										mpz_sub(m15, m12, m13);
-										mpz_mod(m15, m15, this->m0);
-										if(mpz_cmp_ui(m15, 0) != 0){
-											mpz_add(m15, m12, m13);
-											mpz_mod(m15, m15, this->m0);
-											if(mpz_cmp_ui(m15, 0) != 0){
-												mpz_sub(m15, m12, m13);
-												mpz_gcd(this->m1, m15, this->m0);
-												mpz_add(m15, m12, m13);
-												mpz_gcd(this->m2, m15, this->m0);
-												break;
+
+									if(accumulate(MD[m11].begin(), MD[m11].end(), 0) == 0){
+										mpz_set_ui(m12, 1);
+										mpz_set_ui(m13, 1);
+										for(unsigned long long m14 = 0; m14 < n0; m14 = m14 + 1){
+											if(MU[m11][m14] == true){
+												mpz_mul(m12, m12, VS[m14]->c6);
+												mpz_mul(m13, m13, VS[m14]->c4);
+											}
+										}
+										mpz_sub(n4, m12, m13);
+										mpz_mod(n4, n4, this->m0);
+										if(mpz_cmp_ui(n4, 0) == 0){
+											mpz_sqrt(m12, m12);
+											mpz_sqrt(m13, m13);
+											mpz_sub(n4, m12, m13);
+											mpz_mod(n4, n4, this->m0);
+											if(mpz_cmp_ui(n4, 0) != 0){
+												mpz_add(n4, m12, m13);
+												mpz_mod(n4, n4, this->m0);
+												if(mpz_cmp_ui(n4, 0) != 0){
+													mpz_sub(n4, m12, m13);
+													mpz_gcd(this->m1, n4, this->m0);
+													mpz_add(n4, m12, m13);
+													mpz_gcd(this->m2, n4, this->m0);
+													foundCongruence = true;
+													break;
+												}
 											}
 										}
 									}
 								}
-							}
+
+
+
+
+
+
+							}//while foundCongruence == false
+
+
+
+
+
+
+
+
+
+
+
+
+
 							for(Elements::ElementOfQuadraticSieve* vs : VS){
 								delete vs;
 							}
@@ -170,6 +254,13 @@ namespace AlgorithmsFactorization {
 								delete vf;
 							}
 							delete VF;
+
+
+
+
+
+
+
 						}
 					}
 				}
@@ -177,7 +268,7 @@ namespace AlgorithmsFactorization {
 		}
 
 		//clear
-		mpz_clears(m6, m12, m13, m15, r0, NULL);
+		mpz_clears(m6, m12, m13, n4, r0, NULL);
 	}
 
 	vector<Elements::PrimeOfQuadraticResidue*> *QuadraticSieve::AdaptSolutionsToFunction(vector<Elements::PrimeOfQuadraticResidue*> *VF, mpz_t m6){
@@ -211,6 +302,7 @@ namespace AlgorithmsFactorization {
 		}
 		unsigned long result = mpfr_get_ui(upperBound, MPFR_RNDU);
 		mpfr_clears(m0, lnOfm0, upperBound, ulongMax, NULL);
+		printf("UpperBound: %ld\n", result);
 		return result;
 	}
 }

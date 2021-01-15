@@ -10,7 +10,7 @@ namespace AlgorithmsAbstracts {
 		virtual ~IFactorization();
 		virtual void Factor(string input) = 0;
 		void CheckResult();
-	protected:
+		bool AreFactorsTrivial();
 		mpz_t m0, m1, m2;
 	};
 }
