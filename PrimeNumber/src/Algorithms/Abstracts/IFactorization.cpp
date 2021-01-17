@@ -26,6 +26,10 @@ namespace AlgorithmsAbstracts {
 		mpz_clears(aim, NULL);
 	}
 
+	bool IFactorization::AreFactorsSet(){
+		return (mpz_cmp_ui(this->m1, 0) == 0 && mpz_cmp_ui(this->m2, 0) == 0) == false;
+	}
+
 	bool IFactorization::AreFactorsTrivial(){
 		return
 		(

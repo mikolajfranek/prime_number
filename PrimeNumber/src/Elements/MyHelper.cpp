@@ -157,6 +157,17 @@ namespace Elements {
 		return r;
 	}
 
+	void MyHelper::FitIdentityMatrix(vector<vector<bool>> &MU, long long size){
+		for(long long i = 0; i < MU.size(); i++){
+			MU[i].resize(size);
+		}
+		for(long long i = MU.size(); i < size; i++){
+			vector<bool> row = vector<bool>(size, false);
+			MU.push_back(row);
+			MU[i][i] = true;
+		}
+	}
+
 	void MyHelper::PowCExpD(mpz_t r, mpz_t c, mpz_t d){
 		mpz_t i;
 		mpz_inits(i, NULL);

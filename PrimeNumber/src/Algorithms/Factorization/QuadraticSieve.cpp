@@ -22,13 +22,13 @@ namespace AlgorithmsFactorization {
 		mpz_set_ui(n4, m3);
 		AlgorithmsFactorization::TrialDivision *trialDivision = new AlgorithmsFactorization::TrialDivision();
 		trialDivision->Factor(input, n4);
-		bool foundSolution = trialDivision->AreFactorsTrivial() == false;
-		if(foundSolution){
+		bool foundNotTrivial = trialDivision->AreFactorsTrivial() == false;
+		if(foundNotTrivial){
 			mpz_set(this->m1, trialDivision->m1);
 			mpz_set(this->m2, trialDivision->m2);
 		}
 		delete trialDivision;
-		if(foundSolution == false){
+		if(foundNotTrivial == false){
 			AlgorithmsAbstracts::IPrimality* primality = new AlgorithmsPrimality::TrialDivision();
 			bool isPrime = primality->IsPrime(input);
 			delete primality;
@@ -72,50 +72,17 @@ namespace AlgorithmsFactorization {
 							vector<Elements::PrimeOfQuadraticResidue*>* VF = this->AdaptSolutionsToFunction(primesBelowUpperBound->GetPrimesOfQuadraticResidue(this->m0, VP), m6);
 							delete VP;
 							delete primesBelowUpperBound;
-							//...
-							bool foundCongruence = false;
-
-
-
-
-
-
-
-
-
-
-
-
-							//wyszukanie n0 rozwiązań nie oznacza odnalezienia kongruencji tej głównej, ponieważ może wystąpić np:
-							//zachodzi główna kongruencja
-							//ale kongruencja m7 != m8 nie musi być wtedy spełniona!, stąd należy poprawić kod
-							//
-
-
-
-							//identity trzeba tworzyć przed petlą while(foundCongruence == false){
-
-
-
-
-							bool firstFails = true;
-
-
-
-
+							bool firstIteration = true;
 							unsigned long long n0 = 0;
 							long long n1 = 0;
 							long long n2 = 0;
-							long long n3 = 0;
+							unsigned long long n3 = 0;
 							unsigned long m9 = VF->size();
 							vector<vector<bool>> MD;
+							vector<vector<bool>> MU;
 							vector<Elements::ElementOfQuadraticSieve*> VS;
-							printf("Need to get more than %ld smooth number\n", m9);
-							while(foundCongruence == false){
-								printf("Trying searching congruence\n");
-
-
-
+							while(this->AreFactorsSet() == false){
+								printf("Need to get more than %ld smooth number\n", m9);
 								while(n0 <= m9 || n0 == n3){
 									unordered_map<string, Elements::ElementOfQuadraticSieve*> VQ;
 									n2 = n1 + 10000;
@@ -162,7 +129,7 @@ namespace AlgorithmsFactorization {
 												MD.push_back(vq.second->VD);
 												VS.push_back(vq.second);
 												n0 = n0 + 1;
-												//if(foundSmooth % 1000 == 0){
+												//if(foundSmooth % 100 == 0){
 													printf("Found %ld/%ld smooth numbers\n", n0, m9);
 												//}
 											}else{
@@ -174,28 +141,14 @@ namespace AlgorithmsFactorization {
 									}
 								}
 								n3 = n0;
-
-
-
-
-								vector<vector<bool>> MU = Elements::MyHelper::GetIdentityMatrix(n0);
-
-								printf("before \n");
-								Elements::MyHelper::PrintMatrix(MD);
-
+								if(firstIteration){
+									firstIteration = false;
+									MU = Elements::MyHelper::GetIdentityMatrix(n0);
+								}else{
+									Elements::MyHelper::FitIdentityMatrix(MU, n0);
+								}
 								AlgorithmsSolver::GaussianElimination::SolveMod2(MD, MU);
-
-								printf("after \n");
-								Elements::MyHelper::PrintMatrix(MD);
-
 								for(unsigned long long m11 = 0; m11 < n0; m11 = m11 + 1){
-
-									if(firstFails) {
-
-										firstFails = false;
-										break;
-									}
-
 									if(accumulate(MD[m11].begin(), MD[m11].end(), 0) == 0){
 										mpz_set_ui(m12, 1);
 										mpz_set_ui(m13, 1);
@@ -220,33 +173,13 @@ namespace AlgorithmsFactorization {
 													mpz_gcd(this->m1, n4, this->m0);
 													mpz_add(n4, m12, m13);
 													mpz_gcd(this->m2, n4, this->m0);
-													foundCongruence = true;
 													break;
 												}
 											}
 										}
 									}
 								}
-
-
-
-
-
-
-							}//while foundCongruence == false
-
-
-
-
-
-
-
-
-
-
-
-
-
+							}
 							for(Elements::ElementOfQuadraticSieve* vs : VS){
 								delete vs;
 							}
@@ -254,13 +187,6 @@ namespace AlgorithmsFactorization {
 								delete vf;
 							}
 							delete VF;
-
-
-
-
-
-
-
 						}
 					}
 				}
