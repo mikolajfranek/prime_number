@@ -11,6 +11,8 @@ namespace AlgorithmsFactorization {
 		}
 	}
 	/* register the function as benchmark with arguments */
-	BENCHMARK(BM_FactorizationQuadraticSieve)
+	/*
+	 BENCHMARK(BM_FactorizationQuadraticSieve)
 		->Arg(20);
+	 */
 }

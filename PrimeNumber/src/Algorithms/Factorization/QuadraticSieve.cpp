@@ -23,7 +23,7 @@ namespace AlgorithmsFactorization {
 		AlgorithmsFactorization::TrialDivision *trialDivision = new AlgorithmsFactorization::TrialDivision();
 		trialDivision->Factor(input, n4);
 		bool foundNotTrivial = trialDivision->AreFactorsTrivial() == false;
-		if(foundNotTrivial){
+		if(foundNotTrivial == true){
 			mpz_set(this->m1, trialDivision->m1);
 			mpz_set(this->m2, trialDivision->m2);
 		}
@@ -141,7 +141,7 @@ namespace AlgorithmsFactorization {
 									}
 								}
 								n3 = n0;
-								if(firstIteration){
+								if(firstIteration == true){
 									firstIteration = false;
 									MU = Elements::MyHelper::GetIdentityMatrix(n0);
 								}else{
