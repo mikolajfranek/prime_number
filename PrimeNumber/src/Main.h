@@ -4,10 +4,12 @@
 /* general */
 #include <numeric>
 #include <unordered_map>
+#include <unordered_set>
 #include <fstream>
 
 /* gmp */
 #include <gmp.h>
+#include <gmpxx.h>
 
 /* mpfr */
 #include <mpfr.h>
