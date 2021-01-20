@@ -18,9 +18,8 @@ namespace AlgorithmsFactorization {
 		mpz_inits(m3, m4, n0, r0, NULL);
 
 
-		unordered_set<string> setTwoDigit( {
-			"00", "01", "04", "09", "16", "21", "24", "25", "29", "36", "41",
-			"44", "49", "56", "61", "64", "69", "76", "81", "84", "89", "96"
+		unordered_set<int> setTwoDigit( {
+			0, 1, 4, 9
 		} );
 
 
@@ -46,7 +45,7 @@ namespace AlgorithmsFactorization {
 				mpz_add(m4, m4, n0);
 
 
-
+/*
 				char m4String[mpz_sizeinbase(m4, 10) + 2];
 				mpz_get_str(m4String, 10, m4);
 				string lastTwoDigits(m4String);
@@ -57,6 +56,15 @@ namespace AlgorithmsFactorization {
 			    }else{
 			    	//notIn++;
 			    }
+*/
+
+				mpz_mod_ui(n0, m4, 16);
+				if(setTwoDigit.find (mpz_get_ui(n0)) != setTwoDigit.end()){
+					mpz_sqrtrem(r0, n0, m4);
+					//isIn ++;
+				}else{
+					//notIn++;
+				}
 
 
 
