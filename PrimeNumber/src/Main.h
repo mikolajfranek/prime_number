@@ -9,7 +9,6 @@
 
 /* gmp */
 #include <gmp.h>
-#include <gmpxx.h>
 
 /* mpfr */
 #include <mpfr.h>
