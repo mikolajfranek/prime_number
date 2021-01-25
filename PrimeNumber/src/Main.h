@@ -4,7 +4,6 @@
 /* general */
 #include <numeric>
 #include <unordered_map>
-#include <unordered_set>
 #include <fstream>
 
 /* gmp */

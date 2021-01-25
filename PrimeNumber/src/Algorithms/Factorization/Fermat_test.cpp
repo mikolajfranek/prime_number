@@ -6,12 +6,11 @@ namespace AlgorithmsFactorization {
 		for (auto _ : state){
 			AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::Fermat();
 			factorization->Factor(Elements::MyHelper::GetSemiPrime(state.range(0)));
-			//factorization->CheckResult();
+			factorization->CheckResult();
 			delete factorization;
 		}
 	}
 	/* register the function as benchmark with arguments */
 	BENCHMARK(BM_FactorizationFermat)
-
 		->Arg(20);
 }
