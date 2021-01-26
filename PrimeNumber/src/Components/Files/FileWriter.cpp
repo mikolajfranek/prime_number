@@ -1,6 +1,6 @@
 #include "FileWriter.h"
 
-namespace ComponentsAbstracts {
+namespace ComponentsFiles {
 
 	FileWriter::FileWriter(string pathOfFile) : ComponentsAbstracts::IFile(pathOfFile) {}
 

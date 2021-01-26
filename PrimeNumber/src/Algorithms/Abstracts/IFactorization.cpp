@@ -14,11 +14,13 @@ namespace AlgorithmsAbstracts {
 		mpz_set_str(this->m0, input.c_str(), 10);
 	}
 
-	void IFactorization::CheckResult(){
+	void IFactorization::CheckResult(bool printResult){
 		mpz_t aim;
 		mpz_inits(aim, NULL);
 		mpz_mul(aim, this->m1, this->m2);
-		gmp_printf("%Zd = %Zd * %Zd\n", this->m0, this->m1, this->m2);
+		if(printResult == true){
+			gmp_printf("%Zd = %Zd * %Zd\n", this->m0, this->m1, this->m2);
+		}
 		if(mpz_cmp(aim, this->m0) != 0){
 			printf("Error: Abstracts::Factorization::CheckResult\n");
 			throw;

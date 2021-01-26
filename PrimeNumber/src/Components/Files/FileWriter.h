@@ -3,7 +3,7 @@
 #ifndef COMPONENTS_FILES_FILEWRITER_H_
 #define COMPONENTS_FILES_FILEWRITER_H_
 
-namespace ComponentsAbstracts {
+namespace ComponentsFiles {
 	class FileWriter : public ComponentsAbstracts::IFile {
 	private:
 		ofstream file;
