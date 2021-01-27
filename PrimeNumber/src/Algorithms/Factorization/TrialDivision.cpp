@@ -9,7 +9,7 @@ namespace AlgorithmsFactorization {
 	void TrialDivision::Factor(string input) {
 
 		//parent
-		AlgorithmsAbstracts::IFactorization::Factor(input);
+		AlgorithmsAbstracts::IFactorization::SetInput(input);
 
 		//declare
 		mpz_t m3;
@@ -28,7 +28,7 @@ namespace AlgorithmsFactorization {
 	void TrialDivision::Factor(string input, mpz_t m3) {
 
 		//parent
-		AlgorithmsAbstracts::IFactorization::Factor(input);
+		AlgorithmsAbstracts::IFactorization::SetInput(input);
 
 		//declare
 		mpz_t m4, n0;

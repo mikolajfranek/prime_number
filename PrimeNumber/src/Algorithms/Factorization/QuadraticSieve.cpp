@@ -9,7 +9,7 @@ namespace AlgorithmsFactorization {
 	void QuadraticSieve::Factor(string input){
 
 		//parent
-		AlgorithmsAbstracts::IFactorization::Factor(input);
+		AlgorithmsAbstracts::IFactorization::SetInput(input);
 
 		//declare
 		mpz_t m6, m12, m13, n4, r0;

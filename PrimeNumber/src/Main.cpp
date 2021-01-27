@@ -4,8 +4,8 @@
 //BENCHMARK_MAIN();
 
 int main(int argc, char *argv[]){
-	AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::Fermat();
-	factorization->Factor(Elements::MyHelper::GetSemiPrime(20));
+	AlgorithmsAbstracts::IFactorization *factorization = new AlgorithmsFactorization::TrialDivision();
+	factorization->Factor(Elements::MyHelper::GetSemiPrime(10));
 	factorization->CheckResult(true);
 	delete factorization;
 	return 0;

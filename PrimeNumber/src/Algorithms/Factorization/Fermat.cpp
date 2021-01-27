@@ -9,7 +9,7 @@ namespace AlgorithmsFactorization {
 	void Fermat::Factor(string input){
 
 		//parent
-		AlgorithmsAbstracts::IFactorization::Factor(input);
+		AlgorithmsAbstracts::IFactorization::SetInput(input);
 
 		//declare
 		mpz_t m3, m4, n0, r0;

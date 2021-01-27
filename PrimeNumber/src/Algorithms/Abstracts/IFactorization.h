@@ -9,6 +9,7 @@ namespace AlgorithmsAbstracts {
 		IFactorization();
 		virtual ~IFactorization();
 		virtual void Factor(string input) = 0;
+		void SetInput(string input);
 		void CheckResult(bool printResult);
 		bool AreFactorsSet();
 		bool AreFactorsTrivial();

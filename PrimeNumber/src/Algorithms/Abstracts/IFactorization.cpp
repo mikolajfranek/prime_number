@@ -10,22 +10,22 @@ namespace AlgorithmsAbstracts {
 		mpz_clears(this->m0, this->m1, this->m2, NULL);
 	}
 
-	void IFactorization::Factor(string input){
+	void IFactorization::SetInput(string input){
 		mpz_set_str(this->m0, input.c_str(), 10);
 	}
 
 	void IFactorization::CheckResult(bool printResult){
-		mpz_t aim;
-		mpz_inits(aim, NULL);
-		mpz_mul(aim, this->m1, this->m2);
+		mpz_t guess;
+		mpz_inits(guess, NULL);
+		mpz_mul(guess, this->m1, this->m2);
 		if(printResult == true){
 			gmp_printf("%Zd = %Zd * %Zd\n", this->m0, this->m1, this->m2);
 		}
-		if(mpz_cmp(aim, this->m0) != 0){
-			printf("Error: Abstracts::Factorization::CheckResult\n");
+		if(mpz_cmp(guess, this->m0) != 0){
+			printf("Error: AlgorithmsAbstracts::IFactorization::CheckResult\n");
 			throw;
 		}
-		mpz_clears(aim, NULL);
+		mpz_clears(guess, NULL);
 	}
 
 	bool IFactorization::AreFactorsSet(){
