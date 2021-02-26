@@ -28,6 +28,7 @@ using namespace std;
 
 /* other */
 #include "Elements/MyHelper.h"
+#include "Elements/TestData.h"
 
 /* solver */
 #include "Algorithms/Solver/TonelliShanks.h"
