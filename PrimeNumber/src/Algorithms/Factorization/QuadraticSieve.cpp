@@ -21,7 +21,7 @@ namespace AlgorithmsFactorization {
 		unsigned long m3 = this->GetUpperBound(input);
 		mpz_set_ui(n4, m3);
 		AlgorithmsFactorization::TrialDivision *trialDivision = new AlgorithmsFactorization::TrialDivision();
-		trialDivision->Factor(input, n4);
+		//trialDivision->Factor(input, n4);
 		bool foundNotTrivial = trialDivision->AreFactorsTrivial() == false;
 		if(foundNotTrivial == true){
 			mpz_set(this->m1, trialDivision->m1);
