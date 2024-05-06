@@ -1,22 +1,6 @@
 # prime_number
 Prime number
 
-#### install eclipse
-1. "apt install -y openjdk-11-jdk wget make build-essential m4 libgmp3-dev cmake gdb"
-2. "wget http://mirror.umd.edu/eclipse/technology/epp/downloads/release/2020-06/R/eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz"
-3. "tar -zxvf eclipse-java-2020-06-R-linux-gtk-x86_64.tar.gz -C /usr/"
-4. "ln -s /usr/eclipse/eclipse /usr/bin/eclipse"
-5. "nano /usr/share/applications/eclipse.desktop" with value:
-[Desktop Entry]
-Encoding=UTF-8
-Name=Eclipse IDE
-Comment=Eclipse IDE
-Exec=/usr/bin/eclipse
-Icon=/usr/eclipse/icon.xpm
-Categories=Application;Development;Java;IDE
-Type=Application
-Terminal=0
-
 #### install library gmp
 1. "./configure --prefix= --build= --enable-cxx --with-gnu-ld" 
 2. "make" 
