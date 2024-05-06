@@ -1,3 +1,3 @@
 project('Refaktoryzacja', 'c')
-executable('Refaktoryzacja', 'Refaktoryzacja.c')
+executable('Refaktoryzacja', 'main.c')
 
